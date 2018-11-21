@@ -14,7 +14,7 @@ void grid_init(){										// function to initialise the twodimentional array an
 			}
 			if(i == 0 || i == (gridHeight-1)){				// make horizontal walls
 				gridLayout[j][i] = wall;
-				drawCell(j,i,wall);	
+				drawCell(j,i,wall);
 			}
 		
 		

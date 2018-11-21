@@ -7,7 +7,7 @@ static player_t *player;
 // Initialize the game state.
 void game_init() {
     // Create the player and show the lives on the 7-segment display.
-    player = player_new();
+    player = player_new(1,1);
     player_show_lives(player); // Never updated, so this is fine.
 }
 
@@ -21,6 +21,10 @@ bool game_update() {
     should_update = false;
 
     // TODO: Handle input.
+
+    if(/*bomb button is pressed*/){
+        player_place_bomb(player);
+    }
     // TODO: Handle networking.
 
     // Update all entities.
