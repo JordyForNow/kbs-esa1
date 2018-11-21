@@ -4,23 +4,20 @@
 #include <Arduino.h>
 #include <Wire.h>
 
+#define DEBUG 0
+
 int main() {
     init();
-
-    Serial.begin(9600);
     Wire.begin();
 
-    while (1) {
-        for (int i = 0; i < 10; i++) {
-            segments_show(i);
-            _delay_ms(200);
-        }
-    }
+    #if DEBUG
+    Serial.begin(9600);
+    #endif
 
-    // game_init();
-    //
-    // while (1) {
-    //     game_update();
-    // }
+    game_init();
+
+    while (1) {
+        game_update();
+    }
     return 0;
 }
