@@ -1,8 +1,10 @@
 #ifndef GAME_H
 #define GAME_H
 
+#include <stdbool.h>
+
 void game_init();
-void game_update();
+bool game_update();
 void game_trigger_update();
 
 #endif
