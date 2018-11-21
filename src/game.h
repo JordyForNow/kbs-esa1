@@ -3,6 +3,6 @@
 
 void game_init();
 void game_update();
-
+void game_trigger_update();
 
 #endif
