@@ -1,6 +1,5 @@
 #include "game.h"
 #include "player.h"
-#include <stdbool.h>
 
 static bool should_update = false;
 static player_t *player;
