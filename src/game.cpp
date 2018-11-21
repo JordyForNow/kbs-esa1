@@ -13,10 +13,10 @@ void game_init() {
 }
 
 // Update the game, or do nothing if an update hasn't been triggered.
-void game_update() {
+bool game_update() {
     // Don't update unless our timer tells us it's time.
     if (!should_update)
-        return;
+        return false;
 
     // Make sure we don't keep updating.
     should_update = false;
@@ -26,6 +26,8 @@ void game_update() {
 
     // Update all entities.
     player_update(player);
+
+    return true;
 }
 
 // Trigger a game update the next time game_update() is called.

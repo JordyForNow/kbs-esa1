@@ -2,7 +2,7 @@
 #define GAME_H
 
 void game_init();
-void game_update();
+bool game_update();
 void game_trigger_update();
 
 #endif
