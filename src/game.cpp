@@ -1,7 +1,10 @@
 #include "game.h"
 #include "player.h"
+#include <avr/io.h>
+#include <Arduino.h>
+#include "defines.h"
 
-static bool should_update = false;
+volatile bool should_update = false;
 static player_t *player;
 
 // Initialize the game state.
@@ -18,6 +21,9 @@ bool game_update() {
         return false;
 
     // Make sure we don't keep updating.
+    #if DEBUG
+    Serial.println("updating game");
+    #endif
     should_update = false;
 
     // TODO: Handle input.
