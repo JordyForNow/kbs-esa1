@@ -1,11 +1,11 @@
 #ifndef GRID_H
 #define GRID_H
 
-#include <stdint.h>
-#include <stdio.h>
-#include <Arduino.h>
 #include <Adafruit_GFX.h> // Core graphics library
 #include <Adafruit_ILI9341.h>
+#include <Arduino.h>
+#include <stdint.h>
+#include <stdio.h>
 
 // the size of one cell  -------possible other size: 19, width: 17, height 13------- 14, 23,17
 #define cellSize 19
@@ -18,8 +18,7 @@
 extern int currentcolor; // temp variable not needed for the bomberman
 extern Adafruit_ILI9341 tft;
 
-typedef enum cellTypes
-{
+typedef enum cellTypes {
     playerOne,
     playerTwo,
     wall,
