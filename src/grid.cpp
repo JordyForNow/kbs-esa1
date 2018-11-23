@@ -2,20 +2,20 @@
 
 Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC);
 
-cellTypes_t grid_layout[grid_width][grid_height];  // The array where the grid items are stored.
+cellTypes_t grid_layout[GRID_WIDTH][GRID_HEIGHT];  // The array where the grid items are stored.
 
 // Function to initialise the twodimentional array and draw the walls.
 void grid_init() {
-    for (int i = 0; i < grid_height; i++) {
-        for (int j = 0; j < grid_width; j++) {  // Make verticale walls.
-            if (j == 0 || j == (grid_width - 1)) {
+    for (int i = 0; i < GRID_HEIGHT; i++) {
+        for (int j = 0; j < GRID_WIDTH; j++) {  // Make verticale walls.
+            if (j == 0 || j == (GRID_WIDTH - 1)) {
                 change_cell(j, i, wall);
             }
-            if (i == 0 || i == (grid_height - 1)) {  // Make horizontal walls.
+            if (i == 0 || i == (GRID_HEIGHT - 1)) {  // Make horizontal walls.
                 change_cell(j, i, wall);
             }
 
-            if (i > 0 && i < (grid_height - 1) && j > 0 && j < (grid_width - 1)) {  // If it isn't a sidewall, make a sidewall.
+            if (i > 0 && i < (GRID_HEIGHT - 1) && j > 0 && j < (GRID_WIDTH - 1)) {  // If it isn't a sidewall, make a sidewall.
                 if (i % 2 == 0 && j % 2 == 0) {
                     change_cell(j, i, wall);
                 } else {  // Make box or make empty
@@ -33,27 +33,27 @@ void grid_init() {
     }
     // Clear the corners so a player can start and doesn't directly get hit by a bomb.
     for (int k = 1; k < 4; k++) {
-        int change_width = grid_width - 1 - k;
-        int change_height = grid_height - 1 - k;
+        int change_width = GRID_WIDTH - 1 - k;
+        int change_height = GRID_HEIGHT - 1 - k;
 
         change_cell(k, 1, empty);  // Clear horizontal y=1
         change_cell(change_width, 1, empty);
 
-        change_cell(k, (grid_height - 2), empty);  // Clear horizontal y=(grid_height-2).
-        change_cell(change_width, (grid_height - 2), empty);
+        change_cell(k, (GRID_HEIGHT - 2), empty);  // Clear horizontal y=(GRID_HEIGHT-2).
+        change_cell(change_width, (GRID_HEIGHT - 2), empty);
 
         change_cell(1, k, empty);  // Clear verticale x=1.
         change_cell(1, change_height, empty);
 
-        change_cell((grid_width - 2), k, empty);  // Clear verticale x=(grid_width-2).
-        change_cell((grid_width - 2), change_height, empty);
+        change_cell((GRID_WIDTH - 2), k, empty);  // Clear verticale x=(GRID_WIDTH-2).
+        change_cell((GRID_WIDTH - 2), change_height, empty);
     }
 }
 
 // Draw any cell, x -> horizontal coord, y-> verticale coord, type -> what needs to be drawn.
 void draw_cell(int x, int y, cellTypes_t type) {
-    x = cell_size * x;
-    y = cell_size * y;
+    x = CELL_SIZE * x;
+    y = CELL_SIZE * y;
 
     switch (type) {
         case player_one:
@@ -95,36 +95,36 @@ cellTypes_t get_cell_content(int x, int y) {
 }
 
 void draw_player_one(int x, int y) {
-    x += (cell_size / 2);
-    y += (cell_size / 2);
+    x += (CELL_SIZE / 2);
+    y += (CELL_SIZE / 2);
 
-    tft.fillCircle(x, y, (cell_size / 2), ILI9341_BLUE);
+    tft.fillCircle(x, y, (CELL_SIZE / 2), ILI9341_BLUE);
 }
 
 void draw_player_two(int x, int y) {
-    x += (cell_size / 2);
-    y += (cell_size / 2);
-    tft.fillCircle(x, y, (cell_size / 2), ILI9341_GREEN);
+    x += (CELL_SIZE / 2);
+    y += (CELL_SIZE / 2);
+    tft.fillCircle(x, y, (CELL_SIZE / 2), ILI9341_GREEN);
 }
 
 void draw_wall(int x, int y) {
-    tft.fillRect(x, y, cell_size, cell_size, ILI9341_DARKGREY);
+    tft.fillRect(x, y, CELL_SIZE, CELL_SIZE, ILI9341_DARKGREY);
 }
 
 void draw_bomb(int x, int y) {
-    tft.fillRect(x, y, cell_size, cell_size, ILI9341_LIGHTGREY);
-    x += (cell_size / 2);
-    y += (cell_size / 2);
-    tft.fillCircle(x, y, (cell_size / 2), ILI9341_OLIVE);
+    tft.fillRect(x, y, CELL_SIZE, CELL_SIZE, ILI9341_LIGHTGREY);
+    x += (CELL_SIZE / 2);
+    y += (CELL_SIZE / 2);
+    tft.fillCircle(x, y, (CELL_SIZE / 2), ILI9341_OLIVE);
 }
 void draw_exploding_bomb(int x, int y) {
-    tft.fillRect(x, y, cell_size, cell_size, ILI9341_WHITE);
+    tft.fillRect(x, y, CELL_SIZE, CELL_SIZE, ILI9341_WHITE);
 }
 
 void draw_box(int x, int y) {
-    tft.fillRect(x, y, cell_size, cell_size, ILI9341_NAVY);
+    tft.fillRect(x, y, CELL_SIZE, CELL_SIZE, ILI9341_NAVY);
 }
 
 void draw_empty(int x, int y) {
-    tft.fillRect(x, y, cell_size, cell_size, ILI9341_BLACK);
+    tft.fillRect(x, y, CELL_SIZE, CELL_SIZE, ILI9341_BLACK);
 }

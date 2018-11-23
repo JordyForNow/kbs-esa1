@@ -7,13 +7,7 @@
 #include <stdint.h>
 #include <stdio.h>
 
-// The size of one cell, possible other size: 14, width: 23, height 17.
-#define cell_size 19
-#define grid_width 17
-#define grid_height 13
-
-#define TFT_CS 10
-#define TFT_DC 9
+#include "defines.h"
 
 extern Adafruit_ILI9341 tft;
 
