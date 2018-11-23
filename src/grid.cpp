@@ -56,12 +56,6 @@ void draw_cell(int x, int y, cellTypes_t type) {
     y = CELL_SIZE * y;
 
     switch (type) {
-        case player_one:
-            draw_player_one(x, y);
-            break;
-        case player_two:
-            draw_player_two(x, y);
-            break;
         case wall:
             draw_wall(x, y);
             break;
@@ -94,6 +88,17 @@ cellTypes_t get_cell_content(int x, int y) {
     return grid_layout[x][y];
 }
 
+void draw_rect(int x, int y, uint16_t color){
+    tft.fillRect(x, y, CELL_SIZE, CELL_SIZE, color);
+}
+
+void draw_circle(int x, int y, uint16_t color){
+    x += (CELL_SIZE / 2);
+    y += (CELL_SIZE / 2);
+
+    tft.fillCircle(x, y, (CELL_SIZE / 2), color);
+}
+
 void draw_player_one(int x, int y) {
     x += (CELL_SIZE / 2);
     y += (CELL_SIZE / 2);
@@ -106,6 +111,8 @@ void draw_player_two(int x, int y) {
     y += (CELL_SIZE / 2);
     tft.fillCircle(x, y, (CELL_SIZE / 2), ILI9341_GREEN);
 }
+
+
 
 void draw_wall(int x, int y) {
     tft.fillRect(x, y, CELL_SIZE, CELL_SIZE, ILI9341_DARKGREY);

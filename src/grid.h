@@ -14,7 +14,7 @@ extern Adafruit_ILI9341 tft;
 // The possible items a cell can contain.
 typedef enum cell_types {
     player_one,
-    player_two,
+    //player_two,
     wall,
     bomb,
     box,
@@ -30,6 +30,8 @@ void draw_bomb(int x, int y);
 void draw_exploding_bomb(int x, int y);
 void draw_box(int x, int y);
 void draw_empty(int x, int y);
+void draw_rect(int x, int y, uint16_t color);
+void draw_circle(int x, int y, uint16_t color);
 
 cellTypes_t get_cell_content(int x, int y);
 
