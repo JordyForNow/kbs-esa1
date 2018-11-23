@@ -1,7 +1,7 @@
 #ifndef GRID_H
 #define GRID_H
 
-#include <Adafruit_GFX.h> // Core graphics library
+#include <Adafruit_GFX.h>  // Core graphics library
 #include <Adafruit_ILI9341.h>
 #include <Arduino.h>
 #include <stdint.h>
@@ -15,9 +15,10 @@
 #define TFT_CS 10
 #define TFT_DC 9
 
-extern int currentcolor; // temp variable not needed for the bomberman
+extern int currentcolor;  // temp variable not needed for the bomberman
 extern Adafruit_ILI9341 tft;
 
+// the possible items a cell can contain
 typedef enum cellTypes {
     playerOne,
     playerTwo,
