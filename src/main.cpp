@@ -5,7 +5,7 @@
 #include <Wire.h>
 #include "defines.h"
 
-void timer_1_init();
+void timer1_init();
 
 int main() {
     init();
@@ -15,7 +15,7 @@ int main() {
     Serial.begin(9600);
     #endif
 
-    timer_1_init();
+    timer1_init();
     game_init();
 
     while (1) {
@@ -29,7 +29,7 @@ ISR(TIMER1_OVF_vect)
     game_trigger_update();
 }
 
-void timer_1_init()
+void timer1_init()
 {
     cli();
     #if DEBUG
