@@ -22,7 +22,6 @@ int main() {
     Serial.begin(9600);
     #endif
 
-<<<<<<< HEAD
 	tft.begin();
 	#if DEBUG
 	Serial.print("TFT started!");
@@ -32,9 +31,7 @@ int main() {
   	tft.fillScreen(ILI9341_BLACK);    // paint black background
 
 
-=======
     timer1_init();
->>>>>>> b00f6d670b6272c0ac60b916ff8cfe9c419b0e01
     game_init();
 	grid_init();
 
