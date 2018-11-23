@@ -5,13 +5,12 @@
 #include "segments.h"
 #include <Arduino.h>
 #include <Wire.h>
-
+#include "defines.h"
 #include <Adafruit_GFX.h>    // Core graphics library
 #include <SPI.h>
 #include <Adafruit_ILI9341.h>
 #include <Adafruit_STMPE610.h>    // for the touchscreen
 
-#define DEBUG 0
 
 int main() {
     init();
