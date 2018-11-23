@@ -12,7 +12,7 @@ void grid_init()
         for (int j = 0; j < gridWidth; j++)
         { // make verticale walls
             if (j == 0 || j == (gridWidth - 1))
-            {
+            {   
                 changeCell(j, i, wall);
             }
             if (i == 0 || i == (gridHeight - 1))
@@ -63,7 +63,7 @@ void grid_init()
     }
 }
 
- // draw any cell, x -> horizontal coord, y-> verticale coord, type -> what needs to be drawn
+// draw any cell, x -> horizontal coord, y-> verticale coord, type -> what needs to be drawn
 void drawCell(int x, int y, cellTypes_t type)
 {
 

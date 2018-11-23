@@ -20,13 +20,13 @@ extern Adafruit_ILI9341 tft;
 
 typedef enum cellTypes
 {
-	playerOne,
-	playerTwo,
-	wall,
-	bomb,
-	box,
-	empty,
-	explodingBomb,
+    playerOne,
+    playerTwo,
+    wall,
+    bomb,
+    box,
+    empty,
+    explodingBomb,
 } cellTypes_t;
 
 void drawCell(int x, int y, cellTypes_t type);
