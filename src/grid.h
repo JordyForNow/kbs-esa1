@@ -27,8 +27,9 @@ typedef enum cellTypes{
 	wall,
 	bomb,
 	box,
-	empty
-	} cellTypes_t ;
+	empty,
+	explodingBomb,
+} cellTypes_t ;
 	
 	
 void drawCell(int x, int y, cellTypes_t type);
@@ -36,7 +37,14 @@ void drawPlayerOne(int x, int y);
 void drawPlayerTwo(int x, int y);
 void drawWall(int x, int y);
 void drawBomb(int x, int y);
+void drawExplodingBomb(int x, int y);
 void drawBox(int x, int y);
+void drawEmpty(int x, int y);
+
+cellTypes_t getCellContent(int x, int y);
+
+
+int changeCell(int x, int y, cellTypes_t changeTo);
 
 void grid_init();
 
