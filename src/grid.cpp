@@ -1,4 +1,4 @@
-#include "Grid.h"
+#include "grid.h"
 
 Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC);
 

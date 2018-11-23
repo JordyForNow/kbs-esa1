@@ -1,4 +1,4 @@
-#include "Grid.h"
+#include "grid.h"
 #include "game.h"
 
 #include <Arduino.h>
