@@ -1,4 +1,5 @@
 #include "segments.h"
+#include "defines.h"
 #include <Wire.h>
 
 static uint8_t segments_numbers[] = {
@@ -15,13 +16,17 @@ static uint8_t segments_numbers[] = {
 };
 
 void segments_show(uint8_t num) {
+    #if SEGMENTS_ENABLE
     Wire.beginTransmission(56);
     Wire.write((unsigned int) segments_numbers[num]);
     Wire.endTransmission();
+    #endif
 }
 
 void segments_hide() {
+    #if SEGMENTS_ENABLE
     Wire.beginTransmission(56);
     Wire.write((unsigned int) 0xFF);
     Wire.endTransmission();
+    #endif
 }

@@ -3,8 +3,7 @@
 #include "segments.h"
 #include <Arduino.h>
 #include <Wire.h>
-
-#define DEBUG 0
+#include "defines.h"
 
 int main() {
     init();
