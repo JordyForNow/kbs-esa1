@@ -13,10 +13,8 @@ extern Adafruit_ILI9341 tft;
 
 // The possible items a cell can contain.
 typedef enum cell_types {
-    player_one,
-    //player_two,
-    wall,
     bomb,
+    wall,
     box,
     empty,
     exploding_bomb,
