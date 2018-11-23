@@ -7,7 +7,7 @@
 #include <stdint.h>
 #include <stdio.h>
 
-// the size of one cell  -------possible other size: 19, width: 17, height 13------- 14, 23,17
+// The size of one cell, possible other size: 14, width: 23, height 17.
 #define cell_size 19
 #define grid_width 17
 #define grid_height 13
@@ -17,7 +17,7 @@
 
 extern Adafruit_ILI9341 tft;
 
-// the possible items a cell can contain
+// The possible items a cell can contain.
 typedef enum cell_types {
     player_one,
     player_two,

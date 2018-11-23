@@ -2,23 +2,23 @@
 
 Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC);
 
-cellTypes_t grid_layout[grid_width][grid_height];  // the array where the grid items are stored
+cellTypes_t grid_layout[grid_width][grid_height];  // The array where the grid items are stored.
 
-// function to initialise the twodimentional array and draw the walls
+// Function to initialise the twodimentional array and draw the walls.
 void grid_init() {
     for (int i = 0; i < grid_height; i++) {
-        for (int j = 0; j < grid_width; j++) {  // make verticale walls
+        for (int j = 0; j < grid_width; j++) {  // Make verticale walls.
             if (j == 0 || j == (grid_width - 1)) {
                 change_cell(j, i, wall);
             }
-            if (i == 0 || i == (grid_height - 1)) {  // make horizontal walls
+            if (i == 0 || i == (grid_height - 1)) {  // Make horizontal walls.
                 change_cell(j, i, wall);
             }
 
-            if (i > 0 && i < (grid_height - 1) && j > 0 && j < (grid_width - 1)) {  // if it isn't a sidewall
-                if (i % 2 == 0 && j % 2 == 0) {                                   // make wall
+            if (i > 0 && i < (grid_height - 1) && j > 0 && j < (grid_width - 1)) {  // If it isn't a sidewall, make a sidewall.
+                if (i % 2 == 0 && j % 2 == 0) {
                     change_cell(j, i, wall);
-                } else {  // make box or make empty
+                } else {  // Make box or make empty
                     grid_layout[j][i] = empty;
                     randomSeed(TCNT1);
                     int box_bool = random(0, 2);
@@ -31,26 +31,26 @@ void grid_init() {
             }
         }
     }
-    // clear the corners so a player can start and doesn't directly get hit by a bomb
+    // Clear the corners so a player can start and doesn't directly get hit by a bomb.
     for (int k = 1; k < 4; k++) {
         int change_width = grid_width - 1 - k;
         int change_height = grid_height - 1 - k;
 
-        change_cell(k, 1, empty);  // clear horizontal y=1
+        change_cell(k, 1, empty);  // Clear horizontal y=1
         change_cell(change_width, 1, empty);
 
-        change_cell(k, (grid_height - 2), empty);  // clear horizontal y=(grid_height-1)
+        change_cell(k, (grid_height - 2), empty);  // Clear horizontal y=(grid_height-2).
         change_cell(change_width, (grid_height - 2), empty);
 
-        change_cell(1, k, empty);  // clear verticale x=1
+        change_cell(1, k, empty);  // Clear verticale x=1.
         change_cell(1, change_height, empty);
 
-        change_cell((grid_width - 2), k, empty);  // clear verticale x=(grid_width-1)
+        change_cell((grid_width - 2), k, empty);  // Clear verticale x=(grid_width-2).
         change_cell((grid_width - 2), change_height, empty);
     }
 }
 
-// draw any cell, x -> horizontal coord, y-> verticale coord, type -> what needs to be drawn
+// Draw any cell, x -> horizontal coord, y-> verticale coord, type -> what needs to be drawn.
 void draw_cell(int x, int y, cellTypes_t type) {
     x = cell_size * x;
     y = cell_size * y;
@@ -80,7 +80,7 @@ void draw_cell(int x, int y, cellTypes_t type) {
     }
 }
 
-//void used to change the cell. returns 1 if succeeded, 0 if failed because cell is a wall
+// function used to change the cell. returns 1 if succeeded, 0 if failed because cell is a wall.
 int change_cell(int x, int y, cellTypes_t change_to) {
     if (grid_layout[x][y] != wall) {
         grid_layout[x][y] = change_to;
