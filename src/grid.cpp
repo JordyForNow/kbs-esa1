@@ -1,22 +1,22 @@
 #include "grid.h"
 
-cell_type_t grid_layout[GRID_WIDTH][GRID_HEIGHT];  // The array where the grid items are stored.
+// The array where the grid items are stored.
+cell_type_t grid_layout[GRID_WIDTH][GRID_HEIGHT];
 
 // Function to initialise the two-dimensional array and draw the walls.
 void grid_init() {
     for (int y = 0; y < GRID_HEIGHT; y++) {
-        for (int x = 0; x < GRID_WIDTH; x++) {  // Make vertical walls.
-            if (x == 0 || x == (GRID_WIDTH - 1)) {
+        for (int x = 0; x < GRID_WIDTH; x++) {
+            // Make vertical and horizontal walls.
+            if (x == 0 || x == (GRID_WIDTH - 1) || y == 0 || y == (GRID_HEIGHT - 1))
                 change_cell(x, y, WALL);
-            }
-            if (y == 0 || y == (GRID_HEIGHT - 1)) {  // Make horizontal walls.
-                change_cell(x, y, WALL);
-            }
 
-            if (y > 0 && y < (GRID_HEIGHT - 1) && x > 0 && x < (GRID_WIDTH - 1)) {  // If it isn't a sidewall, make a sidewall.
+            // If it isn't a sidewall, make a sidewall.
+            if (y > 0 && y < (GRID_HEIGHT - 1) && x > 0 && x < (GRID_WIDTH - 1)) {
                 if (y % 2 == 0 && x % 2 == 0) {
                     change_cell(x, y, WALL);
-                } else {  // Make box or make empty
+                  // Make box or make empty.
+                } else {
                     grid_layout[x][y] = EMPTY;
                     randomSeed(TCNT0);
                     int box_bool = random(0, 2);
@@ -29,21 +29,26 @@ void grid_init() {
             }
         }
     }
+
     // Clear the corners so a player can start and doesn't directly get hit by a bomb.
     for (int i = 1; i < 4; i++) {
         int change_width = GRID_WIDTH - 1 - i;
         int change_height = GRID_HEIGHT - 1 - i;
 
-        change_cell(i, 1, EMPTY);  // Clear horizontal y=1
+        // Clear horizontal y=1
+        change_cell(i, 1, EMPTY);
         change_cell(change_width, 1, EMPTY);
 
-        change_cell(i, (GRID_HEIGHT - 2), EMPTY);  // Clear horizontal y=(GRID_HEIGHT-2).
+        // Clear horizontal y=(GRID_HEIGHT-2).
+        change_cell(i, (GRID_HEIGHT - 2), EMPTY);  
         change_cell(change_width, (GRID_HEIGHT - 2), EMPTY);
 
-        change_cell(1, i, EMPTY);  // Clear vertical x=1.
+        // Clear vertical x=1.
+        change_cell(1, i, EMPTY);
         change_cell(1, change_height, EMPTY);
 
-        change_cell((GRID_WIDTH - 2), i, EMPTY);  // Clear vertical x=(GRID_WIDTH-2).
+        // Clear vertical x=(GRID_WIDTH-2).
+        change_cell((GRID_WIDTH - 2), i, EMPTY);
         change_cell((GRID_WIDTH - 2), change_height, EMPTY);
     }
 }
