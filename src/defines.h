@@ -10,7 +10,7 @@
 #define GRID_HEIGHT 13
 
 // The length to clear the corner from boxes.
-#define CLEAR_CORNER 4
+#define GAME_STARTING_AREA 4
 
 // The ports which the screen is connected to.
 #define TFT_CS 10

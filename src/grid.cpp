@@ -25,7 +25,7 @@ void grid_init() {
     }
 
     // Clear the corners so a player can start and doesn't directly get hit by a bomb.
-    for (int i = 1; i < CLEAR_CORNER; i++) {
+    for (int i = 1; i < GAME_STARTING_AREA; i++) {
         // Clear top-left corner.
         grid_change_cell(i, 1, EMPTY);
         grid_change_cell(1, i, EMPTY);
