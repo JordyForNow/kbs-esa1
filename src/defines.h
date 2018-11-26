@@ -7,12 +7,20 @@
 #define DEBUG 1
 #define SEGMENTS_ENABLE 1
 
+// The inputs are read from the nunchuck once during every game
+// update and are stored in a single uint8_t when they are passed
+// around to other functions, such as player_update(..). The below
+// defines are used as bitmasks (for example: 1 << INPUT_RIGHT).
 #define INPUT_UP 0
 #define INPUT_RIGHT 1
 #define INPUT_DOWN 2
 #define INPUT_LEFT 3
 #define INPUT_BUTTON_Z 4
 #define INPUT_BUTTON_C 5
+
+//
+#define INPUT_THRESHOLD 50
+#define INPUT_MAX 255
 
 // Logging macros that only do something when DEBUG is enabled.
 // They print messages in the following style: [src/game.cpp] updating()

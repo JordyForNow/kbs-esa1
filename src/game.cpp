@@ -33,10 +33,17 @@ bool game_update() {
     if (nunchuck_get_data()) {
         uint8_t x = nunchuck_joyx();
         uint8_t y = nunchuck_joyy();
-        inputs |= (x < 50) << INPUT_LEFT;
-        inputs |= (x > 205) << INPUT_RIGHT;
-        inputs |= (y < 50) << INPUT_DOWN;
-        inputs |= (y > 205) << INPUT_UP;
+
+        // If the joystick is within INPUT_THRESHOLD distance of either
+        // the lower or higher boundary on either the X or Y axis, then
+        // it will flip the bit for said movement direction HIGH. The
+        // '<' and '>' operators return a 1 for true, so we OR that
+        // single high bit into the input mask.
+        inputs |= (x <  INPUT_THRESHOLD)                << INPUT_LEFT;
+        inputs |= (x > (INPUT_MAX - INPUT_THRESHOLD))   << INPUT_RIGHT;
+        inputs |= (y <  INPUT_THRESHOLD)                << INPUT_DOWN;
+        inputs |= (y > (INPUT_MAX - INPUT_THRESHOLD))   << INPUT_UP;
+
         inputs |= (nunchuck_zbutton()) << INPUT_BUTTON_Z;
         inputs |= (nunchuck_cbutton()) << INPUT_BUTTON_C;
     }

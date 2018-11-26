@@ -37,7 +37,6 @@ void player_update(player_t *player, uint8_t inputs) {
     }
 
     // TODO: Draw player.
-
     // TODO: Place bomb if: inputs & (1 << INPUT_BUTTON_Z).
 }
 
