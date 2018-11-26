@@ -1,44 +1,33 @@
 #ifndef GRID_H
 #define GRID_H
 
-#include <stdint.h>
-#include <stdio.h>
-#include <Arduino.h>
-#include <Adafruit_GFX.h>    // Core graphics library
+#include <Adafruit_GFX.h>
 #include <Adafruit_ILI9341.h>
+#include <Arduino.h>
 
+#include "defines.h"
 
-
-
-#define cellSize 19				// the size of one cell  -------possible other size: 19, width: 17, height 13------- 14, 23,17
-#define gridWidth 17
-#define gridHeight 13
-
-#define TFT_CS 10
-#define TFT_DC 9
-
-extern int currentcolor;		// temp variable not needed for the bomberman
 extern Adafruit_ILI9341 tft;
 
+// The possible items a cell can contain.
+typedef enum  {
+    BOMB,
+    WALL,
+    BOX,
+    EMPTY,
+    EXPLODING_BOMB,
+} cell_type_t;
 
-typedef enum cellTypes{
-	playerOne,
-	playerTwo,
-	wall,
-	bomb,
-	box,
-	empty
-	} cellTypes_t ;
-	
-	
-void drawCell(int x, int y, cellTypes_t type);
-void drawPlayerOne(int x, int y);
-void drawPlayerTwo(int x, int y);
-void drawWall(int x, int y);
-void drawBomb(int x, int y);
-void drawBox(int x, int y);
+void draw_cell(int x, int y, cell_type_t type);
+void draw_player_one(int x, int y);
+void draw_player_two(int x, int y);
+void draw_rect(int x, int y, uint16_t color);
+void draw_circle(int x, int y, uint16_t color);
+
+cell_type_t get_cell_content(int x, int y);
+
+int change_cell(int x, int y, cell_type_t changeTo);
 
 void grid_init();
-
 
 #endif /* GRID_H */
