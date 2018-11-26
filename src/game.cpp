@@ -1,8 +1,8 @@
 #include "game.h"
 #include "player.h"
-#include <avr/io.h>
-#include <Arduino.h>
+#include "nunchuck_funcs.h"
 #include "defines.h"
+#include <stdbool.h>
 
 volatile bool should_update = false;
 static player_t *player;
@@ -12,18 +12,20 @@ void game_init() {
     // Create the player and show the lives on the 7-segment display.
     player = player_new();
     player_show_lives(player); // Never updated, so this is fine.
+
+    // Initialize the nunchuck.
+    nunchuck_send_request();
 }
 
 // Update the game, or do nothing if an update hasn't been triggered.
 bool game_update() {
+
     // Don't update unless our timer tells us it's time.
     if (!should_update)
         return false;
 
     // Make sure we don't keep updating.
-    #if DEBUG
-    Serial.println("updating game");
-    #endif
+    LOGLN("updating()");
     should_update = false;
 
     // TODO: Handle input.
