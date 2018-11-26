@@ -5,6 +5,9 @@ cell_type_t grid_layout[GRID_WIDTH][GRID_HEIGHT];
 
 // Function to initialise the two-dimensional array and draw the walls.
 void grid_init() {
+    // TODO find better source of randomness
+    randomSeed(TCNT0);
+
     for (int y = 0; y < GRID_HEIGHT; y++) {
         for (int x = 0; x < GRID_WIDTH; x++) {
             // Make vertical and horizontal walls.
@@ -18,7 +21,6 @@ void grid_init() {
                   // Make box or make empty.
                 } else {
                     grid_layout[x][y] = EMPTY;
-                    randomSeed(TCNT0);
                     int box_bool = random(0, 2);
                     if (box_bool) {
                         change_cell(x, y, BOX);
