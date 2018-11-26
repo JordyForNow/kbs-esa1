@@ -1,5 +1,6 @@
 #include "grid.h"
 #include "game.h"
+#include "render.h"
 
 #include <Arduino.h>
 #include <Wire.h>

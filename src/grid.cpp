@@ -49,31 +49,6 @@ void grid_init() {
     }
 }
 
-// Draw any cell, x -> horizontal coord, y-> verticale coord, type -> what needs to be drawn.
-void draw_cell(int x, int y, cell_type_t type) {
-    x = CELL_SIZE * x;
-    y = CELL_SIZE * y;
-
-    switch (type) {
-        case BOMB:
-            draw_rect(x, y, ILI9341_LIGHTGREY);
-            draw_circle(x, y, ILI9341_OLIVE);
-            break;
-        case WALL:
-            draw_rect(x, y, ILI9341_DARKGREY);
-            break;
-        case BOX:
-            draw_rect(x, y, ILI9341_NAVY);
-            break;
-        case EMPTY:
-            draw_rect(x, y, ILI9341_BLACK);
-            break;
-        case EXPLODING_BOMB:
-            draw_rect(x, y, ILI9341_WHITE);
-            break;
-    }
-}
-
 // function used to change the cell. returns 1 if succeeded, 0 if failed because cell is a wall.
 int change_cell(int x, int y, cell_type_t change_to) {
     if (grid_layout[x][y] != WALL) {

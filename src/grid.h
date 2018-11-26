@@ -1,14 +1,13 @@
 #ifndef GRID_H
 #define GRID_H
 
-#include "render.h"
 #include "defines.h"
 
 #include <Adafruit_ILI9341.h>
 
 
 // The possible items a cell can contain.
-typedef enum  {
+typedef enum {
     BOMB,
     WALL,
     BOX,
@@ -19,8 +18,6 @@ typedef enum  {
 void grid_init();
 cell_type_t get_cell_content(int x, int y);
 int change_cell(int x, int y, cell_type_t changeTo);
-void draw_cell(int x, int y, cell_type_t type);
 
-
-
+#include "render.h"
 #endif /* GRID_H */
