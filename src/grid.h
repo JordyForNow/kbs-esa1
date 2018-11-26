@@ -16,7 +16,7 @@ typedef enum {
 
 void grid_init();
 cell_type_t get_cell_content(int x, int y);
-int change_cell(int x, int y, cell_type_t changeTo);
+int grid_change_cell(int x, int y, cell_type_t changeTo);
 
 #include "render.h"
 #endif /* GRID_H */
