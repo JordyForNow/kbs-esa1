@@ -38,6 +38,6 @@ void draw_circle(int x, int y, uint16_t color) {
     tft.fillCircle(x, y, (GRID_CELL_SIZE / 2), color);
 }
 
-void draw_player(player_t *player){
+void draw_player(player_t *player) {
     draw_circle(GRID_CELL_SIZE * player->x, GRID_CELL_SIZE * player->y, ILI9341_BLUE);
 }
