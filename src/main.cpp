@@ -16,12 +16,10 @@ int main() {
     init();
     Wire.begin();
 
+    tft.begin();
+
 #if DEBUG
     Serial.begin(9600);
-#endif
-
-    tft.begin();
-#if DEBUG
     Serial.print("TFT started!");
 #endif
 

@@ -54,6 +54,6 @@ int grid_change_cell(int x, int y, cell_type_t change_to) {
     return 0;
 }
 
-cell_type_t get_cell_content(int x, int y) {
+cell_type_t grid_get_cell_type(int x, int y) {
     return grid_layout[x][y];
 }
