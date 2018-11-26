@@ -4,10 +4,10 @@ Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC);
 
 cell_type_t grid_layout[GRID_WIDTH][GRID_HEIGHT];  // The array where the grid items are stored.
 
-// Function to initialise the twodimentional array and draw the walls.
+// Function to initialise the two-dimensional array and draw the walls.
 void grid_init() {
     for (int i = 0; i < GRID_HEIGHT; i++) {
-        for (int j = 0; j < GRID_WIDTH; j++) {  // Make verticale walls.
+        for (int j = 0; j < GRID_WIDTH; j++) {  // Make vertical walls.
             if (j == 0 || j == (GRID_WIDTH - 1)) {
                 change_cell(j, i, WALL);
             }

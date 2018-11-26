@@ -3,7 +3,6 @@
 
 #include <Arduino.h>
 #include <Wire.h>
-#include <util/delay.h>
 #include "defines.h"
 #include "segments.h"
 
