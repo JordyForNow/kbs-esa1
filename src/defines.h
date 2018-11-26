@@ -11,6 +11,8 @@
 #define INPUT_RIGHT 1
 #define INPUT_DOWN 2
 #define INPUT_LEFT 3
+#define INPUT_BUTTON_Z 4
+#define INPUT_BUTTON_C 5
 
 #if DEBUG
 #define LOG_INIT() Serial.begin(115200);

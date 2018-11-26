@@ -28,11 +28,23 @@ bool game_update() {
     LOGLN("updating()");
     should_update = false;
 
-    // TODO: Handle input.
+    // Read the inputs and store them as a single byte.
+    uint8_t inputs = 0;
+    if (nunchuck_get_data()) {
+        uint8_t x = nunchuck_joyx();
+        uint8_t y = nunchuck_joyy();
+        inputs |= (x < 50) << INPUT_LEFT;
+        inputs |= (x > 205) << INPUT_RIGHT;
+        inputs |= (y < 50) << INPUT_DOWN;
+        inputs |= (y > 205) << INPUT_UP;
+        inputs |= (nunchuck_zbutton()) << INPUT_BUTTON_Z;
+        inputs |= (nunchuck_cbutton()) << INPUT_BUTTON_C;
+    }
+
     // TODO: Handle networking.
 
     // Update all entities.
-    player_update(player);
+    player_update(player, inputs);
 
     return true;
 }
