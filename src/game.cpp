@@ -15,6 +15,9 @@ void game_init() {
 
     // Initialize the nunchuck.
     nunchuck_send_request();
+
+    // Draw the grid with blocks and walls.
+    grid_init();
 }
 
 // Update the game, or do nothing if an update hasn't been triggered.
