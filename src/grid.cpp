@@ -1,6 +1,5 @@
 #include "grid.h"
 
-Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC);
 
 cell_type_t grid_layout[GRID_WIDTH][GRID_HEIGHT];  // The array where the grid items are stored.
 
@@ -20,7 +19,7 @@ void grid_init() {
                     change_cell(j, i, WALL);
                 } else {  // Make box or make empty
                     grid_layout[j][i] = EMPTY;
-                    randomSeed(TCNT1);
+                    randomSeed(TCNT0);
                     int box_bool = random(0, 2);
                     if (box_bool) {
                         change_cell(j, i, BOX);
@@ -87,28 +86,4 @@ int change_cell(int x, int y, cell_type_t change_to) {
 
 cell_type_t get_cell_content(int x, int y) {
     return grid_layout[x][y];
-}
-
-void draw_rect(int x, int y, uint16_t color) {
-    tft.fillRect(x, y, CELL_SIZE, CELL_SIZE, color);
-}
-
-void draw_circle(int x, int y, uint16_t color) {
-    x += (CELL_SIZE / 2);
-    y += (CELL_SIZE / 2);
-
-    tft.fillCircle(x, y, (CELL_SIZE / 2), color);
-}
-
-void draw_player_one(int x, int y) {
-    x += (CELL_SIZE / 2);
-    y += (CELL_SIZE / 2);
-
-    tft.fillCircle(x, y, (CELL_SIZE / 2), ILI9341_BLUE);
-}
-
-void draw_player_two(int x, int y) {
-    x += (CELL_SIZE / 2);
-    y += (CELL_SIZE / 2);
-    tft.fillCircle(x, y, (CELL_SIZE / 2), ILI9341_GREEN);
 }
