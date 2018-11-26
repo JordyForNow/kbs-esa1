@@ -7,10 +7,10 @@
 
 // The possible items a cell can contain.
 typedef enum {
+    EMPTY,
     BOMB,
     WALL,
     BOX,
-    EMPTY,
     EXPLODING_BOMB,
 } cell_type_t;
 

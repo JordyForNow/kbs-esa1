@@ -40,10 +40,10 @@ void grid_init() {
         change_cell(i, (GRID_HEIGHT - 2), EMPTY);  // Clear horizontal y=(GRID_HEIGHT-2).
         change_cell(change_width, (GRID_HEIGHT - 2), EMPTY);
 
-        change_cell(1, i, EMPTY);  // Clear verticale x=1.
+        change_cell(1, i, EMPTY);  // Clear vertical x=1.
         change_cell(1, change_height, EMPTY);
 
-        change_cell((GRID_WIDTH - 2), i, EMPTY);  // Clear verticale x=(GRID_WIDTH-2).
+        change_cell((GRID_WIDTH - 2), i, EMPTY);  // Clear vertical x=(GRID_WIDTH-2).
         change_cell((GRID_WIDTH - 2), change_height, EMPTY);
     }
 }
