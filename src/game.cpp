@@ -60,7 +60,7 @@ bool game_update() {
     return true;
 }
 
-// Trigger a game update the next time game_update() is called.
+// Trigger a game-update the next time game_update() is called.
 void game_trigger_update() {
     should_update = true;
 }

@@ -4,10 +4,10 @@
 #define DEBUG 1
 #define SEGMENTS_ENABLE 1
 
-// The inputs are read from the nunchuck once during every game
-// update and are stored in a single uint8_t when they are passed
-// around to other functions, such as player_update(..). The below
-// defines are used as bitmasks (for example: 1 << INPUT_JOY_RIGHT).
+// The inputs are read from the nunchuck once during every game-update
+// and are stored in a single uint8_t when they are passed around to
+// other functions, such as player_update(..). The below defines are
+// used as bitmasks (for example: 1 << INPUT_JOY_RIGHT).
 #define INPUT_JOY_UP 0
 #define INPUT_JOY_RIGHT 1
 #define INPUT_JOY_DOWN 2
