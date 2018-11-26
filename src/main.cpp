@@ -11,9 +11,13 @@ void timer1_init();
 int main() {
     init();
     Wire.begin();
+
+    // Use pins A2 and A3 for power for the nunchuck, and then
+    // initialize the connection to the device.
     nunchuck_setpowerpins();
     nunchuck_init();
 
+    // Serial.begin() but only if DEBUG is high.
     LOG_INIT();
 
     timer1_init();
