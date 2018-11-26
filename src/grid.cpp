@@ -21,11 +21,8 @@ void grid_init() {
                 } 
                 // Put boxes in some places in the field.
                 else {
-                    grid_layout[x][y] = EMPTY;
-                    int box_bool = random(0, 2);
-                    if (box_bool) {
+                    if (random(0, 2))
                         change_cell(x, y, BOX);
-                    } 
                 }
             }
         }
@@ -54,7 +51,7 @@ void grid_init() {
     }
 }
 
-// Function used to change the cell. returns 1 if succeeded, 0 if failed because cell is a wall.
+// Function used to change the cell. Returns 1 if succeeded, 0 if failed because cell is a wall.
 int change_cell(int x, int y, cell_type_t change_to) {
     if (grid_layout[x][y] != WALL) {
         grid_layout[x][y] = change_to;

@@ -1,4 +1,3 @@
-#include "grid.h"
 #include "game.h"
 #include "render.h"
 #include "defines.h"
@@ -26,15 +25,13 @@ int main() {
     Serial.print("TFT started!");
 #endif
 
-    // Use the screen in landscape.
+    // Use the screen in landscape mode and paint the background black.
     tft.setRotation(1);
-     // Paint black background.
     tft.fillScreen(ILI9341_BLACK);
 
     timer1_init();
     game_init();
-    // Draw the grid with blocks and walls.
-    grid_init();
+
 
     while (1) {
         game_update();

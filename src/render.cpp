@@ -2,7 +2,7 @@
 
 Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC);
 
-// Draw any cell, x -> horizontal coord, y-> vertical coord, type -> what needs to be drawn.
+// Draw any cell.
 void draw_cell(int x, int y, cell_type_t type) {
     x = CELL_SIZE * x;
     y = CELL_SIZE * y;

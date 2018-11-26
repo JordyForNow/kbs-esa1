@@ -12,6 +12,9 @@ void game_init() {
     // Create the player and show the lives on the 7-segment display.
     player = player_new();
     player_show_lives(player); // Never updated, so this is fine.
+
+    // Draw the grid with blocks and walls.
+    grid_init();
 }
 
 // Update the game, or do nothing if an update hasn't been triggered.
