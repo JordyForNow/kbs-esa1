@@ -13,13 +13,11 @@ void grid_init() {
             // Make vertical and horizontal walls.
             if (x == 0 || x == (GRID_WIDTH - 1) || y == 0 || y == (GRID_HEIGHT - 1)) {
                 grid_change_cell(x, y, WALL);
-            }
-            else if (y > 0 && y < (GRID_HEIGHT - 1) && x > 0 && x < (GRID_WIDTH - 1)) {
-                // If it isn't a sidewall, put walls in the field or put some boxes in the field.
+            } else if (y > 0 && y < (GRID_HEIGHT - 1) && x > 0 && x < (GRID_WIDTH - 1)) {
+            // If it isn't a sidewall, put walls in the field or put some boxes in the field.
                 if (y % 2 == 0 && x % 2 == 0) { 
                     grid_change_cell(x, y, WALL);
-                } 
-                else if (random(0, 2)) {
+                } else if (random(0, 2)) {
                     grid_change_cell(x, y, BOX);
                 }
             }
