@@ -30,24 +30,18 @@ void grid_init() {
 
     // Clear the corners so a player can start and doesn't directly get hit by a bomb.
     for (int i = 1; i < 4; i++) {
-        int change_width = GRID_WIDTH - 1 - i;
-        int change_height = GRID_HEIGHT - 1 - i;
+        int corner_width = GRID_WIDTH - 1 - i;
+        int corner_height = GRID_HEIGHT - 1 - i;
 
-        // Clear horizontal y=1
+        // Clear left-top corner
         change_cell(i, 1, EMPTY);
-        change_cell(change_width, 1, EMPTY);
-
-        // Clear horizontal y=(GRID_HEIGHT-2).
-        change_cell(i, (GRID_HEIGHT - 2), EMPTY);  
-        change_cell(change_width, (GRID_HEIGHT - 2), EMPTY);
-
-        // Clear vertical x=1.
         change_cell(1, i, EMPTY);
-        change_cell(1, change_height, EMPTY);
 
-        // Clear vertical x=(GRID_WIDTH-2).
-        change_cell((GRID_WIDTH - 2), i, EMPTY);
-        change_cell((GRID_WIDTH - 2), change_height, EMPTY);
+        // Clear right bottom corner
+        change_cell(corner_width, (GRID_HEIGHT - 2), EMPTY);
+        change_cell((GRID_WIDTH - 2), corner_height, EMPTY);
+
+
     }
 }
 
