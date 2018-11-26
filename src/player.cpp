@@ -32,13 +32,13 @@ void player_update(player_t *player, uint8_t inputs) {
     uint8_t prev_y = player->y;
 
     // Process user input.
-    if (inputs & (1 << INPUT_LEFT)) {
+    if (inputs & (1 << INPUT_JOY_LEFT)) {
         player->x--;
-    } else if (inputs & (1 << INPUT_RIGHT)) {
+    } else if (inputs & (1 << INPUT_JOY_RIGHT)) {
         player->x++;
-    } else if (inputs & (1 << INPUT_UP)) {
+    } else if (inputs & (1 << INPUT_JOY_UP)) {
         player->y--;
-    } else if (inputs & (1 << INPUT_DOWN)) {
+    } else if (inputs & (1 << INPUT_JOY_DOWN)) {
         player->y++;
     }
 
