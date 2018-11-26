@@ -16,5 +16,4 @@ void draw_circle(int x, int y, uint16_t color);
 
 void draw_cell(int x, int y, cell_type_t type);
 
-
 #endif /* RENDER_H */

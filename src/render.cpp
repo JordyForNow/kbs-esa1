@@ -27,7 +27,6 @@ void draw_cell(int x, int y, cell_type_t type) {
     }
 }
 
-
 void draw_rect(int x, int y, uint16_t color) {
     tft.fillRect(x, y, CELL_SIZE, CELL_SIZE, color);
 }
