@@ -18,15 +18,14 @@ void grid_init() {
             if (y > 0 && y < (GRID_HEIGHT - 1) && x > 0 && x < (GRID_WIDTH - 1)) {
                 if (y % 2 == 0 && x % 2 == 0) {
                     change_cell(x, y, WALL);
-                  // Make box or make empty.
-                } else {
+                } 
+                // Put boxes in some places in the field.
+                else {
                     grid_layout[x][y] = EMPTY;
                     int box_bool = random(0, 2);
                     if (box_bool) {
                         change_cell(x, y, BOX);
-                    } else {
-                        grid_layout[x][y] = EMPTY;
-                    }
+                    } 
                 }
             }
         }
