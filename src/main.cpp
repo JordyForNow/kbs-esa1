@@ -26,12 +26,12 @@ int main() {
     Serial.print("TFT started!");
 #endif
 
-    tft.setRotation(1);             // use the screen in landscape
-    tft.fillScreen(ILI9341_BLACK);  // paint black background
+    tft.setRotation(1);             // Use the screen in landscape.
+    tft.fillScreen(ILI9341_BLACK);  // Paint black background.
 
     timer1_init();
     game_init();
-    grid_init();  // draw the grid with blocks and walls
+    grid_init();  // Draw the grid with blocks and walls.
 
     while (1) {
         game_update();

@@ -48,7 +48,7 @@ void grid_init() {
     }
 }
 
-// function used to change the cell. returns 1 if succeeded, 0 if failed because cell is a wall.
+// Function used to change the cell. returns 1 if succeeded, 0 if failed because cell is a wall.
 int change_cell(int x, int y, cell_type_t change_to) {
     if (grid_layout[x][y] != WALL) {
         grid_layout[x][y] = change_to;
