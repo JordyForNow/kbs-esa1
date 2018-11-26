@@ -4,26 +4,26 @@ cell_type_t grid_layout[GRID_WIDTH][GRID_HEIGHT];  // The array where the grid i
 
 // Function to initialise the two-dimensional array and draw the walls.
 void grid_init() {
-    for (int i = 0; i < GRID_HEIGHT; i++) {
-        for (int j = 0; j < GRID_WIDTH; j++) {  // Make vertical walls.
-            if (j == 0 || j == (GRID_WIDTH - 1)) {
-                change_cell(j, i, WALL);
+    for (int y = 0; y < GRID_HEIGHT; y++) {
+        for (int x = 0; x < GRID_WIDTH; x++) {  // Make vertical walls.
+            if (x == 0 || x == (GRID_WIDTH - 1)) {
+                change_cell(x, y, WALL);
             }
-            if (i == 0 || i == (GRID_HEIGHT - 1)) {  // Make horizontal walls.
-                change_cell(j, i, WALL);
+            if (y == 0 || y == (GRID_HEIGHT - 1)) {  // Make horizontal walls.
+                change_cell(x, y, WALL);
             }
 
-            if (i > 0 && i < (GRID_HEIGHT - 1) && j > 0 && j < (GRID_WIDTH - 1)) {  // If it isn't a sidewall, make a sidewall.
-                if (i % 2 == 0 && j % 2 == 0) {
-                    change_cell(j, i, WALL);
+            if (y > 0 && y < (GRID_HEIGHT - 1) && x > 0 && x < (GRID_WIDTH - 1)) {  // If it isn't a sidewall, make a sidewall.
+                if (y % 2 == 0 && x % 2 == 0) {
+                    change_cell(x, y, WALL);
                 } else {  // Make box or make empty
-                    grid_layout[j][i] = EMPTY;
+                    grid_layout[x][y] = EMPTY;
                     randomSeed(TCNT0);
                     int box_bool = random(0, 2);
                     if (box_bool) {
-                        change_cell(j, i, BOX);
+                        change_cell(x, y, BOX);
                     } else {
-                        grid_layout[j][i] = EMPTY;
+                        grid_layout[x][y] = EMPTY;
                     }
                 }
             }
