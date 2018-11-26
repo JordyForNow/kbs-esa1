@@ -1,12 +1,12 @@
 #ifndef RENDER_H
 #define RENDER_H
 
+#include "defines.h"
+#include "grid.h"
+
 #include <Adafruit_GFX.h>
 #include <Adafruit_ILI9341.h>
 #include <Arduino.h>
-
-#include "defines.h"
-#include "grid.h"
 
 extern Adafruit_ILI9341 tft;
 

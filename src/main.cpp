@@ -1,11 +1,11 @@
 #include "grid.h"
 #include "game.h"
 #include "render.h"
+#include "defines.h"
+#include "segments.h"
 
 #include <Arduino.h>
 #include <Wire.h>
-#include "defines.h"
-#include "segments.h"
 
 #include <Adafruit_GFX.h>
 #include <Adafruit_ILI9341.h>
