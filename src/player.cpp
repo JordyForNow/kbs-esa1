@@ -1,7 +1,9 @@
 #include "player.h"
 #include "defines.h"
-#include <stdlib.h>
 #include "segments.h"
+#include "render.h"
+
+#include <stdlib.h>
 #include <Arduino.h>
 
 // Create a new player struct.
@@ -25,6 +27,10 @@ void player_free(player_t *player) {
 // Update a player.
 void player_update(player_t *player, uint8_t inputs) {
 
+    // Store the previous position of the player.
+    uint8_t prev_x = player->x;
+    uint8_t prev_y = player->y;
+
     // Process user input.
     if (inputs & (1 << INPUT_LEFT)) {
         player->x--;
@@ -36,7 +42,13 @@ void player_update(player_t *player, uint8_t inputs) {
         player->y++;
     }
 
-    // TODO: Draw player.
+    // If we moved, redraw the cell the player came from and render the
+    // player on top of the cell where the player is going.
+    if (player->x != prev_x || player->y != prev_y) {
+        grid_redraw_cell(prev_x, prev_y);
+        draw_player(player);
+    }
+
     // TODO: Place bomb if: inputs & (1 << INPUT_BUTTON_Z).
 }
 
