@@ -1,9 +1,6 @@
 #ifndef DEFINES_H
 #define DEFINES_H
 
-#include <stdio.h>
-#include <stdarg.h>
-
 #define DEBUG 1
 #define SEGMENTS_ENABLE 1
 
@@ -20,7 +17,7 @@
 
 // The threshold for activation for the joystick on the nunchuck.
 // If the joystick is within INPUT_THRESHOLD from either the lower (0)
-// or higher (INPUT_MAX) bound, then the movement will be registered. 
+// or higher (INPUT_MAX) bound, then the movement will be registered.
 #define INPUT_THRESHOLD 50
 #define INPUT_MAX 255
 
