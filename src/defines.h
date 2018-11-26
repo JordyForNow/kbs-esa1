@@ -21,6 +21,18 @@
 #define INPUT_JOY_THRESHOLD 50
 #define INPUT_JOY_MAX 255
 
+// The size of one cell, possible other size: 14, width: 23, height 17.
+#define GRID_CELL_SIZE 19
+#define GRID_WIDTH 17
+#define GRID_HEIGHT 13
+
+// The length to clear the corner from boxes.
+#define GAME_STARTING_AREA 4
+
+// The ports which the screen is connected to.
+#define TFT_CS 10
+#define TFT_DC 9
+
 // Logging macros that only do something when DEBUG is enabled.
 // They print messages in the following style: [src/game.cpp] updating()
 // It includes the source file where the logging call originated from.
@@ -35,17 +47,5 @@
 #define LOG(msg) ;
 #define LOGLN(msg) ;
 #endif
-
-// The size of one cell, possible other size: 14, width: 23, height 17.
-#define GRID_CELL_SIZE 19
-#define GRID_WIDTH 17
-#define GRID_HEIGHT 13
-
-// The length to clear the corner from boxes.
-#define GAME_STARTING_AREA 4
-
-// The ports which the screen is connected to.
-#define TFT_CS 10
-#define TFT_DC 9
 
 #endif
