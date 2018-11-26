@@ -42,10 +42,8 @@ void draw_player(int x, int y, int player){
     x = (GRID_CELL_SIZE * x);
     y = (GRID_CELL_SIZE * y);
 
-    if(player == 0){
+    if(player == 0)
         draw_circle(x, y, ILI9341_BLUE);
-    }
-    else{
+    else
         draw_circle(x, y, ILI9341_GREEN);
-    }
 }

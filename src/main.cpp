@@ -30,7 +30,6 @@ int main() {
     timer1_init();
     game_init();
 
-
     while (1) {
         game_update();
     }

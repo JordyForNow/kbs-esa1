@@ -5,7 +5,7 @@ cell_type_t grid_layout[GRID_WIDTH][GRID_HEIGHT];
 
 // Function to initialise the two-dimensional array and draw the walls.
 void grid_init() {
-    // TODO find better source of randomness
+    // TODO: Find better source of randomness.
     randomSeed(TCNT0);
 
     for (int y = 0; y < GRID_HEIGHT; y++) {
@@ -30,7 +30,7 @@ void grid_init() {
         grid_change_cell(i, 1, EMPTY);
         grid_change_cell(1, i, EMPTY);
 
-        // Clear bottom right corner.
+        // Clear bottom-right corner.
         grid_change_cell((GRID_WIDTH - 1 - i), (GRID_HEIGHT - 2), EMPTY);
         grid_change_cell((GRID_WIDTH - 2), (GRID_HEIGHT - 1 - i), EMPTY);
     }
