@@ -16,13 +16,10 @@ void grid_init() {
 
             // If it isn't a sidewall, put walls in the field or put some boxes in the field.
             if (y > 0 && y < (GRID_HEIGHT - 1) && x > 0 && x < (GRID_WIDTH - 1)) {
-                if (y % 2 == 0 && x % 2 == 0) {
-                    grid_change_cell(x, y, WALL);
-                } 
-                else {
-                    if (random(0, 2))
+                if (y % 2 == 0 && x % 2 == 0) 
+                    grid_change_cell(x, y, WALL); 
+                else if (random(0, 2))
                         grid_change_cell(x, y, BOX);
-                }
             }
         }
     }
