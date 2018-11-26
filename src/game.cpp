@@ -2,7 +2,6 @@
 #include "player.h"
 #include "nunchuck_funcs.h"
 #include "defines.h"
-#include <stdbool.h>
 
 volatile bool should_update = false;
 static player_t *player;
