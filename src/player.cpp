@@ -9,7 +9,7 @@
 // Create a new player struct.
 player_t *player_new() {
     player_t *player = (player_t*) malloc(sizeof(player_t));
-    if (player == NULL)
+    if (!player)
         return player;
 
     player->x = 0;
@@ -24,7 +24,7 @@ void player_free(player_t *player) {
         free(player);
 }
 
-// Update a player.
+// Process user input and optionally rerender the player.
 void player_update(player_t *player, uint8_t inputs) {
 
     // Store the previous position of the player.
@@ -42,8 +42,7 @@ void player_update(player_t *player, uint8_t inputs) {
         player->y++;
     }
 
-    // If we moved, redraw the cell the player came from and render the
-    // player on top of the cell where the player is going.
+    // If we move, redraw the old cell and draw our player over the new cell.
     if (player->x != prev_x || player->y != prev_y) {
         grid_redraw_cell(prev_x, prev_y);
         draw_player(player);
