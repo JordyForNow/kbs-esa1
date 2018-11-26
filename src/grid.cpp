@@ -1,6 +1,5 @@
 #include "grid.h"
 
-
 cell_type_t grid_layout[GRID_WIDTH][GRID_HEIGHT];  // The array where the grid items are stored.
 
 // Function to initialise the two-dimensional array and draw the walls.

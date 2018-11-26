@@ -10,7 +10,6 @@
 
 extern Adafruit_ILI9341 tft;
 
-
 void draw_player(int x, int y, int player);
 void draw_rect(int x, int y, uint16_t color);
 void draw_circle(int x, int y, uint16_t color);

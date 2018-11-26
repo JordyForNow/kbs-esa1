@@ -5,7 +5,6 @@
 
 #include <Adafruit_ILI9341.h>
 
-
 // The possible items a cell can contain.
 typedef enum {
     BOMB,
