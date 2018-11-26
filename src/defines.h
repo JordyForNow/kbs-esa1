@@ -18,7 +18,9 @@
 #define INPUT_BUTTON_Z 4
 #define INPUT_BUTTON_C 5
 
-//
+// The threshold for activation for the joystick on the nunchuck.
+// If the joystick is within INPUT_THRESHOLD from either the lower (0)
+// or higher (INPUT_MAX) bound, then the movement will be registered. 
 #define INPUT_THRESHOLD 50
 #define INPUT_MAX 255
 
