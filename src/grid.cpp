@@ -51,10 +51,10 @@ int grid_change_cell(int x, int y, cell_type_t change_to) {
 // Redraws the cell at the given position.
 void grid_redraw_cell(int x, int y, player_t *player) {
     draw_cell(x, y, grid_layout[x][y]);
-    if(player->bomb->x == x && player->bomb->y == y && player->bomb->life_state < EXPLODE_STATE){
+    if (player->bomb->x == x && player->bomb->y == y && player->bomb->life_state < EXPLODE_STATE) {
         draw_cell(x, y, BOMB);
     }
-    if(player->x == x && player->y == y){
+    if (player->x == x && player->y == y) {
         draw_player(player);
     }
 }
