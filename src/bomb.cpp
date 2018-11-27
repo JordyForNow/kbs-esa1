@@ -1,6 +1,6 @@
 #include "bomb.h"
 #include "defines.h"
-#include "grid.h"
+#include "world.h"
 #include "player.h"
 
 // Addition for x and y axis in every direction
@@ -26,10 +26,10 @@ void bomb_free(bomb_t *bomb) {
 }
 
 // Update a bomb.
-void bomb_update(bomb_t *bomb) {
+void bomb_update(world_t *world, bomb_t *bomb) {
     if (bomb) {
         if (bomb->life_state == EXPLODE_STATE) {
-            bomb_explosion_toggle(bomb, EXPLODING_BOMB);
+            bomb_explosion_toggle(world, bomb, EXPLODING_BOMB);
         }
         bomb->life_state++;
     }
@@ -37,9 +37,9 @@ void bomb_update(bomb_t *bomb) {
 }
 
 // The action variable given with this function will determine whether to show or hide the explosion.
-void bomb_explosion_toggle(bomb_t *bomb, cell_type_t action) {
+void bomb_explosion_toggle(world_t *world, bomb_t *bomb, tile_t action) {
     // Change bombs position to exploded.
-    grid_change_cell(bomb->x, bomb->y, action);
+    world_set_tile(world, bomb->x, bomb->y, action);
 
     // Loop through directions.
     for (int i = 0; i < DIRECTIONS; i++) {
@@ -54,17 +54,17 @@ void bomb_explosion_toggle(bomb_t *bomb, cell_type_t action) {
             y_temp += bomb_explode_addition[i][1];
 
             // A wall can't be broken.
-            if (grid_get_cell_type(x_temp, y_temp) == WALL) {
+            if (world_get_tile(world, x_temp, y_temp) == WALL) {
                 break;
             }
             // After a box the explosion should stop.
-            else if (grid_get_cell_type(x_temp, y_temp) == BOX) {
+            else if (world_get_tile(world, x_temp, y_temp) == BOX) {
                 if (action == EXPLODING_BOMB)
-                    grid_change_cell(x_temp, y_temp, action);
+                    world_set_tile(world, x_temp, y_temp, action);
                 break;
             }
 
-            grid_change_cell(x_temp, y_temp, action);
+            world_set_tile(world, x_temp, y_temp, action);
         }
     }
 }

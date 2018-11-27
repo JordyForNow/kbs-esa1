@@ -1,7 +1,7 @@
 #include "player.h"
 #include "bomb.h"
 #include "defines.h"
-#include "grid.h"
+#include "world.h"
 #include "render.h"
 #include "segments.h"
 
@@ -31,7 +31,7 @@ void player_free(player_t *player) {
 }
 
 // Process user input and optionally rerender the player.
-void player_update(player_t *player, uint8_t inputs) {
+void player_update(world_t *world, player_t *player, uint8_t inputs) {
     // Make a variable in which the new location of the player will be stored
     uint8_t new_x = player->x;
     uint8_t new_y = player->y;
@@ -39,26 +39,26 @@ void player_update(player_t *player, uint8_t inputs) {
     uint8_t prev_y;
 
     // Check if player is walking inside an exploded bomb.
-    if (grid_get_cell_type(player->x, player->y) == EXPLODING_BOMB && !player->is_hit) {
+    if (world_get_tile(world, player->x, player->y) == EXPLODING_BOMB && !player->is_hit) {
         player->is_hit = INVINSIBILITY_LENGTH;
         player->lives--;
         on_explosion = 1;
 
         player_show_lives(player);
-        grid_redraw_cell(player->x, player->y, player);
+        world_redraw_tile(world, player->x, player->y);
     }
 
     // If player is currently hit.
     if (player->is_hit) {
         player->is_hit--;
 
-        if (on_explosion && grid_get_cell_type(player->x, player->y) != EXPLODING_BOMB) {
+        if (on_explosion && world_get_tile(world, player->x, player->y) != EXPLODING_BOMB) {
             on_explosion = 0;
-            grid_redraw_cell(player->x, player->y, player);
+            world_redraw_tile(world, player->x, player->y);
         }
 
         if (!player->is_hit) {
-            grid_redraw_cell(player->x, player->y, player);
+            world_redraw_tile(world, player->x, player->y);
         }
     }
 
@@ -74,7 +74,7 @@ void player_update(player_t *player, uint8_t inputs) {
     }
 
     // Get the type of the new cell.
-    cell_type_t new_cell = grid_get_cell_type(new_x, new_y);
+    tile_t new_cell = world_get_tile(world, new_x, new_y);
 
     // Check if the player is allowed to move to the new cell.
     if (new_cell != EMPTY && new_cell != EXPLODING_BOMB)
@@ -91,7 +91,7 @@ void player_update(player_t *player, uint8_t inputs) {
         player->y = new_y;
 
         // Redraw the current cell.
-        grid_redraw_cell(prev_x, prev_y, player);
+        world_redraw_tile(prev_x, prev_y, player);
 
         // Draw the player on the new position.
         draw_player(player);
@@ -99,14 +99,14 @@ void player_update(player_t *player, uint8_t inputs) {
 
     // TODO: Place bomb if: inputs & (1 << INPUT_BUTTON_Z).
     if (inputs & (1 << INPUT_BUTTON_Z) && !player->bomb) {
-        player_place_bomb(player);
+        player_place_bomb(world, player);
     }
 
     if (player->bomb) {
-        bomb_update(player->bomb);
+        bomb_update(world, player->bomb);
         if (player->bomb->life_state == DEATH_STATE) {
             //delete bomb
-            bomb_explosion_toggle(player->bomb, EMPTY);
+            bomb_explosion_toggle(world, player->bomb, EMPTY);
             bomb_free(player->bomb);
             player->bomb = NULL;
             return;
@@ -120,9 +120,9 @@ void player_show_lives(player_t *player) {
 }
 
 //place a bomb on the map
-void player_place_bomb(player_t *player) {
+void player_place_bomb(world_t *world, player_t *player) {
     if (!player->bomb) {                                           //if this player doesn't already have a bomb on the map
         player->bomb = bomb_new(player->x, player->y);             //create a bomb
-        grid_change_cell(player->bomb->x, player->bomb->y, BOMB);  //draw the bomb on the map
+        world_set_tile(world, player->bomb->x, player->bomb->y, BOMB);  //draw the bomb on the map
     }
 }
