@@ -51,9 +51,11 @@ int grid_change_cell(int x, int y, cell_type_t change_to) {
 // Redraws the cell at the given position.
 void grid_redraw_cell(int x, int y, player_t *player) {
     draw_cell(x, y, grid_layout[x][y]);
+    // If there is a bomb on this cell, draw it.
     if (player->bomb->x == x && player->bomb->y == y && player->bomb->life_state < EXPLODE_STATE) {
         draw_cell(x, y, BOMB);
     }
+    // If the player is on this cell, draw it.
     if (player->x == x && player->y == y) {
         draw_player(player);
     }

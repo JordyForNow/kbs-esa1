@@ -3,6 +3,7 @@
 #include "grid.h"
 #include "player.h"
 
+// Addition for x and y axis in every direction
 int bomb_explode_addition[4][2] = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
 
 // Create a new bomb struct.

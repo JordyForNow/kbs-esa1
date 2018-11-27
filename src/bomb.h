@@ -18,4 +18,4 @@ void bomb_free(bomb_t *bomb);
 void bomb_update(bomb_t *bomb);
 void bomb_explosion_toggle(bomb_t *bomb, cell_type_t action);
 
-#endif
+#endif /* BOMB_H */
