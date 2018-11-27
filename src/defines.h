@@ -32,6 +32,12 @@
 // The frequency with which the game updates.
 #define GAME_UPDATE_FREQUENCY 5
 
+// These variables define when a bomb explodes and when it will die.
+#define EXPLODE_STATE 15
+#define DEATH_STATE 20
+#define DIRECTIONS 4
+#define INVISIBILITY_LENGTH 25
+
 // The ports which the screen is connected to.
 #define TFT_CS 10
 #define TFT_DC 9

@@ -1,5 +1,6 @@
 #include "grid.h"
 #include "defines.h"
+#include "render.h"
 
 // The array where the grid items are stored.
 cell_type_t grid_layout[GRID_WIDTH][GRID_HEIGHT];
@@ -48,9 +49,14 @@ int grid_change_cell(int x, int y, cell_type_t change_to) {
 }
 
 // Redraws the cell at the given position.
-void grid_redraw_cell(int x, int y) {
+void grid_redraw_cell(int x, int y, player_t *player) {
     draw_cell(x, y, grid_layout[x][y]);
-    // TODO: Draw potential players or bombs.
+    if(player->bomb->x == x && player->bomb->y == y && player->bomb->life_state < EXPLODE_STATE){
+        draw_cell(x, y, BOMB);
+    }
+    if(player->x == x && player->y == y){
+        draw_player(player);
+    }
 }
 
 cell_type_t grid_get_cell_type(int x, int y) {

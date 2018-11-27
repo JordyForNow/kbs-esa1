@@ -5,11 +5,16 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-typedef struct {
+struct player_t;
+
+#include "bomb.h"
+
+typedef struct player_t {
     uint8_t x;
     uint8_t y;
     uint8_t lives;
     bomb_t *bomb;
+    uint8_t is_hit;
 } player_t;
 
 player_t *player_new(uint8_t x, uint8_t y);

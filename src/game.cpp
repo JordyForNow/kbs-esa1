@@ -2,6 +2,7 @@
 #include "defines.h"
 #include "grid.h"
 #include "player.h"
+#include "render.h"
 
 volatile bool should_update = false;
 static player_t *player;
