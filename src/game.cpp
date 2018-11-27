@@ -1,8 +1,7 @@
 #include "game.h"
-#include "player.h"
 #include "defines.h"
-
-#include <nunchuck_funcs.h>
+#include "grid.h"
+#include "player.h"
 
 volatile bool should_update = false;
 static player_t *player;

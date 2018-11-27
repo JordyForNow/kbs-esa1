@@ -1,7 +1,6 @@
 #ifndef RENDER_H
 #define RENDER_H
 
-#include "defines.h"
 #include "grid.h"
 #include "player.h"
 

@@ -1,3 +1,5 @@
+#ifndef NUNCHUCK_FUNCS
+#define NUNCHUCK_FUNCS
 /*
  * Nunchuck functions  -- Talk to a Wii Nunchuck
  *
@@ -206,3 +208,4 @@ static int nunchuck_accelz()
 {
     return nunchuck_buf[4];   // FIXME: this leaves out 2-bits of the data
 }
+#endif
