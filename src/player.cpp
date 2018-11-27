@@ -1,10 +1,8 @@
 #include "player.h"
 #include "defines.h"
-#include "segments.h"
+#include "grid.h"
 #include "render.h"
-
-#include <stdlib.h>
-#include <Arduino.h>
+#include "segments.h"
 
 // Create a new player struct.
 player_t *player_new() {
