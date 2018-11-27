@@ -57,6 +57,6 @@ void timer1_init() {
     // Interrupts: overflow
     TIMSK1 = (1 << TOIE1);
     // Set the OCR1A register to 15625 so the timer overflows each second (16.000.000 / 1024 = 15625).
-    OCR1A = 15625;
+    OCR1A = 15625 / GAME_UPDATE_FREQUENCY;
     sei();
 }

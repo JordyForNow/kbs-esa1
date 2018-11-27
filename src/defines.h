@@ -4,6 +4,8 @@
 #define DEBUG 1
 #define SEGMENTS_ENABLE 1
 
+#define GAME_UPDATE_FREQUENCY 1
+
 // The inputs are read from the nunchuck once during every game-update
 // and are stored in a single uint8_t when they are passed around to
 // other functions, such as player_update(..). The below defines are
