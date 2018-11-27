@@ -1,10 +1,10 @@
-#ifndef RENDER_H
-#define RENDER_H
-
-#include "defines.h"
+#ifndef TOUCH_H
+#define TOUCH_H
 
 #include <Adafruit_STMPE610.h>
 
 void touch_init();
+void draw_menu();
 
-#endif /* RENDER_H */
+
+#endif /* TOUCH_H */

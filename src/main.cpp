@@ -4,12 +4,9 @@
 #include "segments.h"
 #include "touch.h"
 
-<<<<<<< HEAD
 #include <Arduino.h>
 #include <Wire.h>
 #include <nunchuck_funcs.h>
-=======
->>>>>>> 3d85cc4edc93266e17c1ddd006f801a20d0c0e79
 #include <Adafruit_GFX.h>
 #include <Adafruit_ILI9341.h>
 #include <Adafruit_STMPE610.h>
@@ -34,12 +31,16 @@ int main() {
 
     LOGLN("TFT started!");
 
+    touch_init();
+
     // Use the screen in landscape mode and paint the background black.
     tft.setRotation(1);
-    tft.fillScreen(ILI9341_BLACK);
+    draw_background(ILI9341_BLACK);
 
     timer1_init();
     game_init();
+
+    draw_menu();
 
     while (1) {
         game_update();
