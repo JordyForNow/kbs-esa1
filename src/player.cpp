@@ -1,11 +1,15 @@
 #include "player.h"
-#include <stdlib.h>
+#include "defines.h"
 #include "segments.h"
+#include "render.h"
+
+#include <stdlib.h>
+#include <Arduino.h>
 
 // Create a new player struct.
 player_t *player_new() {
     player_t *player = (player_t*) malloc(sizeof(player_t));
-    if (player == NULL)
+    if (!player)
         return player;
 
     player->x = 0;
@@ -20,8 +24,31 @@ void player_free(player_t *player) {
         free(player);
 }
 
-// Update a player.
-void player_update(player_t *player) {
+// Process user input and optionally rerender the player.
+void player_update(player_t *player, uint8_t inputs) {
+
+    // Store the previous position of the player.
+    uint8_t prev_x = player->x;
+    uint8_t prev_y = player->y;
+
+    // Process user input.
+    if (inputs & (1 << INPUT_JOY_LEFT)) {
+        player->x--;
+    } else if (inputs & (1 << INPUT_JOY_RIGHT)) {
+        player->x++;
+    } else if (inputs & (1 << INPUT_JOY_UP)) {
+        player->y--;
+    } else if (inputs & (1 << INPUT_JOY_DOWN)) {
+        player->y++;
+    }
+
+    // If we move, redraw the old cell and draw our player over the new cell.
+    if (player->x != prev_x || player->y != prev_y) {
+        grid_redraw_cell(prev_x, prev_y);
+        draw_player(player);
+    }
+
+    // TODO: Place bomb if: inputs & (1 << INPUT_BUTTON_Z).
 }
 
 // Show the lives of the given player on the seven segment display using TWI.

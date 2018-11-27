@@ -15,7 +15,7 @@ void grid_init() {
                 grid_change_cell(x, y, WALL);
             } else if (y > 0 && y < (GRID_HEIGHT - 1) && x > 0 && x < (GRID_WIDTH - 1)) {
             // If it isn't a sidewall, put walls in the field or put some boxes in the field.
-                if (y % 2 == 0 && x % 2 == 0) { 
+                if (y % 2 == 0 && x % 2 == 0) {
                     grid_change_cell(x, y, WALL);
                 } else if (random(0, 2)) {
                     grid_change_cell(x, y, BOX);
@@ -44,6 +44,12 @@ int grid_change_cell(int x, int y, cell_type_t change_to) {
         return 1;
     }
     return 0;
+}
+
+// Redraws the cell at the given position.
+void grid_redraw_cell(int x, int y) {
+    draw_cell(x, y, grid_layout[x][y]);
+    // TODO: Draw potential players or bombs.
 }
 
 cell_type_t grid_get_cell_type(int x, int y) {
