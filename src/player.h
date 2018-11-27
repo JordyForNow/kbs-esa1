@@ -1,7 +1,9 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
+#include <Arduino.h>
 #include <stdint.h>
+#include <stdlib.h>
 
 typedef struct {
     uint8_t x;

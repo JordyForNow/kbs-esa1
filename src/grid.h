@@ -1,8 +1,6 @@
 #ifndef GRID_H
 #define GRID_H
 
-#include "defines.h"
-
 #include <Adafruit_ILI9341.h>
 
 // The possible items a cell can contain.

@@ -1,8 +1,7 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include "grid.h"
-
+#include <nunchuck_funcs.h>
 #include <stdbool.h>
 
 void game_init();

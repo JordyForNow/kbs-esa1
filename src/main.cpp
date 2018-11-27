@@ -1,16 +1,21 @@
+#include "defines.h"
 #include "game.h"
 #include "render.h"
-#include "defines.h"
 #include "segments.h"
 #include "touch.h"
 
+<<<<<<< HEAD
 #include <Arduino.h>
 #include <Wire.h>
 #include <nunchuck_funcs.h>
+=======
+>>>>>>> 3d85cc4edc93266e17c1ddd006f801a20d0c0e79
 #include <Adafruit_GFX.h>
 #include <Adafruit_ILI9341.h>
 #include <Adafruit_STMPE610.h>
+#include <Arduino.h>
 #include <SPI.h>
+#include <Wire.h>
 
 void timer1_init();
 
