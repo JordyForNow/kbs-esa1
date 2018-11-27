@@ -33,9 +33,9 @@
 #define GAME_UPDATE_FREQUENCY 5
 
 // Defines after how many game updates the bomb should explode.
-#define EXPLODE_STATE 15
+#define EXPLODE_STATE (3 * GAME_UPDATE_FREQUENCY)
 // Defines after how many game updates the bomb should die.
-#define DEATH_STATE 20
+#define DEATH_STATE (4 * GAME_UPDATE_FREQUENCY)
 // Magic number of how many directions to loop through.
 #define DIRECTIONS 4
 // How long a player should be invinsible to bombs after being hit.
