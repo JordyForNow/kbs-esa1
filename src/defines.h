@@ -32,14 +32,16 @@
 // The frequency with which the game updates.
 #define GAME_UPDATE_FREQUENCY 5
 
+// Defines how large a bombs explosion should be.
+#define BOMB_EXPLODE_SIZE 2
 // Defines after how many game updates the bomb should explode.
-#define EXPLODE_STATE (3 * GAME_UPDATE_FREQUENCY)
+#define BOMB_EXPLODE_AGE (3 * GAME_UPDATE_FREQUENCY)
 // Defines after how many game updates the bomb should die.
-#define DEATH_STATE (4 * GAME_UPDATE_FREQUENCY)
+#define BOMB_DESTROY_AGE (4 * GAME_UPDATE_FREQUENCY)
 // Magic number of how many directions to loop through.
-#define DIRECTIONS 4
+#define BOMB_DIRECTION_COUNT 4
 // How long a player should be invinsible to bombs after being hit.
-#define INVINSIBILITY_LENGTH 25
+#define HIT_DURATION 25
 
 // The ports which the screen is connected to.
 #define TFT_CS 10

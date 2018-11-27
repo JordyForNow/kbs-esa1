@@ -3,12 +3,10 @@
 
 #include <stdint.h>
 
-// Define bomb_t with according variables.
 typedef struct {
     uint8_t x;
     uint8_t y;
-    uint8_t life_state;
-    uint8_t explode_size;
+    uint8_t age;
 } bomb_t;
 
 #include "grid.h"

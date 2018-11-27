@@ -16,7 +16,7 @@ void game_init() {
     grid_init();
 
     // Create the player and show the lives on the 7-segment display.
-    player = player_new(1,1);
+    player = player_new(1, 1);
     player_show_lives(player); // Never updated, so this is fine.
     draw_player(player);
 }
