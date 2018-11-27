@@ -4,7 +4,6 @@
 #define DEBUG 1
 #define SEGMENTS_ENABLE 1
 
-
 // The inputs are read from the nunchuck once during every game-update
 // and are stored in a single uint8_t when they are passed around to
 // other functions, such as player_update(..). The below defines are
@@ -30,7 +29,7 @@
 // The length to clear the corner from boxes.
 #define GAME_STARTING_AREA 4
 
-// The fequency with which the game updates
+// The frequency with which the game updates.
 #define GAME_UPDATE_FREQUENCY 5
 
 // The ports which the screen is connected to.

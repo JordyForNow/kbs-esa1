@@ -6,7 +6,7 @@
 
 // Create a new player struct.
 player_t *player_new() {
-    player_t *player = (player_t*) malloc(sizeof(player_t));
+    player_t *player = (player_t *) malloc(sizeof(player_t));
     if (!player)
         return player;
 
@@ -39,9 +39,11 @@ void player_update(player_t *player, uint8_t inputs) {
         new_y++;
     }
 
-    cell_type_t object = grid_get_cell_type(new_x, new_y);
-
-    if (object != EMPTY && object != EXPLODING_BOMB)
+    // Get the type of the new cell.
+    cell_type_t new_cell = grid_get_cell_type(new_x, new_y);
+    
+    // Check if the player is allowed to move to the new cell.
+    if (new_cell != EMPTY && new_cell != EXPLODING_BOMB)
         return;
 
     // If we move, redraw the old cell and draw our player over the new cell.

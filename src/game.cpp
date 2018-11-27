@@ -16,7 +16,7 @@ void game_init() {
 
     // Create the player and show the lives on the 7-segment display.
     player = player_new();
-    player_show_lives(player);  // Never updated, so this is fine.
+    player_show_lives(player); // Never updated, so this is fine.
     draw_player(player);
 }
 
@@ -41,9 +41,9 @@ bool game_update() {
         // it will flip the bit for said movement direction HIGH. The
         // '<' and '>' operators return a 1 for true, so we OR that
         // single high bit into the input mask.
-        inputs |= (x < INPUT_JOY_THRESHOLD) << INPUT_JOY_LEFT;
+        inputs |= (x < INPUT_JOY_THRESHOLD)                   << INPUT_JOY_LEFT;
         inputs |= (x > (INPUT_JOY_MAX - INPUT_JOY_THRESHOLD)) << INPUT_JOY_RIGHT;
-        inputs |= (y < INPUT_JOY_THRESHOLD) << INPUT_JOY_DOWN;
+        inputs |= (y < INPUT_JOY_THRESHOLD)                   << INPUT_JOY_DOWN;
         inputs |= (y > (INPUT_JOY_MAX - INPUT_JOY_THRESHOLD)) << INPUT_JOY_UP;
 
         inputs |= (nunchuck_zbutton()) << INPUT_BUTTON_Z;
