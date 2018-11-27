@@ -13,6 +13,7 @@
 void timer1_init();
 
 int main() {
+
     init();
     Wire.begin();
 
@@ -56,6 +57,8 @@ void timer1_init() {
     TCCR1B |= (1 << CS12) | (0 << CS11) | (1 << CS10);
     // Interrupts: overflow
     TIMSK1 = (1 << TOIE1);
+    // Reset couter so the game does not freeze the first couple of seconds
+    TCNT1 = 0;
     // Set the OCR1A register to 15625 so the timer overflows each second (16.000.000 / 1024 = 15625).
     OCR1A = 15625 / GAME_UPDATE_FREQUENCY;
     sei();
