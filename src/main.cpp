@@ -2,10 +2,10 @@
 #include "render.h"
 #include "defines.h"
 #include "segments.h"
+#include "touch.h"
 
 #include <Arduino.h>
 #include <Wire.h>
-
 #include <nunchuck_funcs.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_ILI9341.h>
