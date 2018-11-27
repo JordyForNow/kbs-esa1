@@ -31,34 +31,33 @@ void player_free(player_t *player) {
 
 // Process user input and optionally rerender the player.
 void player_update(world_t *world, player_t *player, uint8_t inputs) {
-    // Make a variable in which the new location of the player will be stored
-    uint8_t new_x = player->x;
-    uint8_t new_y = player->y;
-    uint8_t prev_x;
-    uint8_t prev_y;
+    uint8_t redraw = 0;
 
-    // Check if player is walking inside an exploding bomb.
-    if (world_get_tile(world, player->x, player->y) == EXPLODING_BOMB && !player->hit_duration) {
-        player->hit_duration = HIT_DURATION;
-        player->lives--;
-        player->on_explosion = 1;
-
-        player_show_lives(player);
-        world_redraw_tile(world, player->x, player->y);
-    }
-
+    // Decrease our invincibility.
     if (player->hit_duration) {
         player->hit_duration--;
 
-        if (player->on_explosion && world_get_tile(world, player->x, player->y) != EXPLODING_BOMB) {
-            player->on_explosion = 0;
-            world_redraw_tile(world, player->x, player->y);
-        }
-
+        // If we are no longer invincible, redraw.
         if (!player->hit_duration) {
-            world_redraw_tile(world, player->x, player->y);
+            redraw++;
         }
     }
+
+    // Update the bomb. It will return the bomb_t so long as it
+    // is alive, and NULL once the bomb has died and has been free()d.
+    if (player->bomb) {
+        player->bomb = bomb_update(world, player->bomb);
+    }
+
+    // Place a bomb if necessary.
+    if (!player->bomb && inputs & (1 << INPUT_BUTTON_Z)) {
+        player_place_bomb(world, player);
+        redraw++;
+    }
+
+    // Check where we are going.
+    uint8_t new_x = player->x;
+    uint8_t new_y = player->y;
 
     // Process user input.
     if (inputs & (1 << INPUT_JOY_LEFT)) {
@@ -71,41 +70,36 @@ void player_update(world_t *world, player_t *player, uint8_t inputs) {
         new_y++;
     }
 
-    // Get the type of the new cell.
-    tile_t new_cell = world_get_tile(world, new_x, new_y);
+    // Check the tile where we are going.
+    tile_t new_tile = world_get_tile(world, new_x, new_y);
 
-    // Check if the player is allowed to move to the new cell.
-    if (new_cell != EMPTY && new_cell != EXPLODING_BOMB)
-        return;
+    // Check if we can move into the new tile.
+    if ((new_x != player->x || new_y != player->y)
+    && (new_tile == EMPTY || new_tile == EXPLODING_BOMB)) {
+        // Store where we were, so we can rerender the tile once we've moved.
+        uint8_t old_x = player->x;
+        uint8_t old_y = player->y;
 
-    // If we move, redraw the old cell and draw our player over the new cell.
-    if (player->x != new_x || player->y != new_y) {
-        // Save previous location.
-        prev_x = player->x;
-        prev_y = player->y;
-
-        // Update the player location.
+        // Update the player position.
         player->x = new_x;
         player->y = new_y;
 
-        // Redraw the current cell.
-        world_redraw_tile(world, prev_x, prev_y);
+        // Damage the player if they are walking into an exploding bomb,
+        // but only if they are not already invincible.
+        if (new_tile == EXPLODING_BOMB && !player->hit_duration) {
+            player->hit_duration = HIT_DURATION;
+            player->lives--;
+            player_show_lives(player);
+        }
 
-        // Draw the player on the new position.
+        // Rerender the tile we came from, and render the player on top of the new tile.
+        world_redraw_tile(world, old_x, old_y);
+        redraw++;
+    }
+
+    // Redraw our player only if we have to.
+    if (redraw)
         draw_player(player);
-    }
-
-    // Place a bomb when the player doesn't have a bomb yet and when
-    // the correct button is pressed by the user.
-    if (inputs & (1 << INPUT_BUTTON_Z) && !player->bomb) {
-        player_place_bomb(world, player);
-    }
-
-    // Update the bomb. It will return the bomb_t so long as it
-    // is alive, and NULL once the bomb has died and has been free()d.
-    if (player->bomb) {
-        player->bomb = bomb_update(world, player->bomb);
-    }
 }
 
 // Show the lives of the given player on the seven segment display using TWI.

@@ -7,11 +7,13 @@ world_t *world_new(uint8_t player_count) {
     if (!world)
         return NULL;
 
-    world->players = calloc(sizeof(player_t*), player_count);
+    world->player_count = player_count;
+    world->players = (player_t**) calloc(sizeof(player_t*), player_count);
     if (!world->players) {
         free(world);
         return NULL;
     }
+
 
     return world;
 }
