@@ -16,4 +16,13 @@
 #define TFT_CS 10
 #define TFT_DC 9
 
+// The STMPE610 uses hardware SPI on the shield, and #8
+#define STMPE_CS 8
+
+// This is calibration data for the raw touch data to the screen coordinates.
+#define TS_MINX 150
+#define TS_MINY 130
+#define TS_MAXX 3800
+#define TS_MAXY 4000
+
 #endif
