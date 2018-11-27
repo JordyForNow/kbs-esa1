@@ -11,8 +11,8 @@ void grid_init() {
 
     for (int y = 0; y < GRID_HEIGHT; y++) {
         for (int x = 0; x < GRID_WIDTH; x++) {
-            // Make vertical and horizontal walls.
             if (x == 0 || x == (GRID_WIDTH - 1) || y == 0 || y == (GRID_HEIGHT - 1)) {
+                // Make vertical and horizontal walls.
                 grid_change_cell(x, y, WALL);
             } else if (y > 0 && y < (GRID_HEIGHT - 1) && x > 0 && x < (GRID_WIDTH - 1)) {
                 // If it isn't a sidewall, put walls in the field or put some boxes in the field.
