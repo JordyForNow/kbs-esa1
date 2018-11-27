@@ -56,7 +56,18 @@ void timer1_init() {
     TCCR1B |= (1 << CS12) | (0 << CS11) | (1 << CS10);
     // Interrupts: overflow
     TIMSK1 = (1 << TOIE1);
-    // Set the OCR1A register to 15625 so the timer overflows each second (16.000.000 / 1024 = 15625).
-    OCR1A = 15625;
+
+    // Timer1 will start counting when the init function is called. 
+    // This means the TCNT1 can already have a value that is greater than the 
+    // TOP, which is equal to the OCR1A register, which in turn will lead to freezes.
+    // which means the timer will have to overflow before reaching the value of TOP. 
+    // To prevent TCNT1 from having to overflow, we reset it to zero, therefore 
+    // ensuring that it does not have to overflow first.
+    TCNT1 = 0;
+
+    // Set the OCR1A register to 15625 divided by the desired update frequency
+    // so the timer will generate a signal that is equal to the desired frequency.
+    // (15625 is used because this will make the timer generate a signal with a frequency of 1 Hz.)
+    OCR1A = 15625 / GAME_UPDATE_FREQUENCY;
     sei();
 }

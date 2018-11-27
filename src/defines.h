@@ -29,6 +29,9 @@
 // The length to clear the corner from boxes.
 #define GAME_STARTING_AREA 4
 
+// The frequency with which the game updates.
+#define GAME_UPDATE_FREQUENCY 5
+
 // The ports which the screen is connected to.
 #define TFT_CS 10
 #define TFT_DC 9
