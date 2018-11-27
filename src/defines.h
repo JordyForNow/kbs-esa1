@@ -32,11 +32,14 @@
 // The frequency with which the game updates.
 #define GAME_UPDATE_FREQUENCY 5
 
-// These variables define when a bomb explodes and when it will die.
+// Defines after how many game updates the bomb should explode.
 #define EXPLODE_STATE 15
+// Defines after how many game updates the bomb should die.
 #define DEATH_STATE 20
+// Magic number of how many directions to loop through.
 #define DIRECTIONS 4
-#define INVISIBILITY_LENGTH 25
+// How long a player should be invinsible to bombs after being hit.
+#define INVINSIBILITY_LENGTH 25
 
 // The ports which the screen is connected to.
 #define TFT_CS 10

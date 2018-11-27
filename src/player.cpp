@@ -40,7 +40,7 @@ void player_update(player_t *player, uint8_t inputs) {
 
     // Check if player is walking inside an exploded bomb.
     if (grid_get_cell_type(player->x, player->y) == EXPLODING_BOMB && !player->is_hit) {
-        player->is_hit = INVISIBILITY_LENGTH;
+        player->is_hit = INVINSIBILITY_LENGTH;
         player->lives--;
         on_explosion = 1;
 
