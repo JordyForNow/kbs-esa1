@@ -1,16 +1,15 @@
+#include "defines.h"
 #include "game.h"
 #include "render.h"
-#include "defines.h"
 #include "segments.h"
 
-#include <Arduino.h>
-#include <Wire.h>
-
-#include <nunchuck_funcs.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_ILI9341.h>
 #include <Adafruit_STMPE610.h>
+#include <Arduino.h>
 #include <SPI.h>
+#include <Wire.h>
+#include <nunchuck_funcs.h>
 
 void timer1_init();
 
