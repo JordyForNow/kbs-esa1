@@ -40,7 +40,7 @@ void draw_circle(int x, int y, uint16_t color) {
 }
 
 void draw_player(player_t *player) {
-    if (player->is_hit) {
+    if (player->hit_duration) {
         draw_circle(WORLD_CELL_SIZE * player->x, WORLD_CELL_SIZE * player->y, ILI9341_ORANGE);
         return;
     }

@@ -5,8 +5,6 @@
 #include "render.h"
 #include "segments.h"
 
-uint8_t on_explosion = 0;
-
 // Create a new player struct.
 player_t *player_new(uint8_t x, uint8_t y) {
     player_t *player = (player_t *)malloc(sizeof(player_t));
@@ -17,17 +15,18 @@ player_t *player_new(uint8_t x, uint8_t y) {
     player->y = y;
     player->lives = 3;
     player->bomb = NULL;
-    player->is_hit = 0;
+    player->hit_duration = 0;
+    player->on_explosion = 0;
     return player;
 }
 
 // Delete a player struct.
 void player_free(player_t *player) {
-    if (player) {
-        if (player->bomb)
-            bomb_free(player->bomb);
-        free(player);
-    }
+    if (!player)
+        return;
+
+    bomb_free(player->bomb);
+    free(player);
 }
 
 // Process user input and optionally rerender the player.
@@ -38,26 +37,25 @@ void player_update(world_t *world, player_t *player, uint8_t inputs) {
     uint8_t prev_x;
     uint8_t prev_y;
 
-    // Check if player is walking inside an exploded bomb.
-    if (world_get_tile(world, player->x, player->y) == EXPLODING_BOMB && !player->is_hit) {
-        player->is_hit = INVINSIBILITY_LENGTH;
+    // Check if player is walking inside an exploding bomb.
+    if (world_get_tile(world, player->x, player->y) == EXPLODING_BOMB && !player->hit_duration) {
+        player->hit_duration = HIT_DURATION;
         player->lives--;
-        on_explosion = 1;
+        player->on_explosion = 1;
 
         player_show_lives(player);
         world_redraw_tile(world, player->x, player->y);
     }
 
-    // If player is currently hit.
-    if (player->is_hit) {
-        player->is_hit--;
+    if (player->hit_duration) {
+        player->hit_duration--;
 
-        if (on_explosion && world_get_tile(world, player->x, player->y) != EXPLODING_BOMB) {
-            on_explosion = 0;
+        if (player->on_explosion && world_get_tile(world, player->x, player->y) != EXPLODING_BOMB) {
+            player->on_explosion = 0;
             world_redraw_tile(world, player->x, player->y);
         }
 
-        if (!player->is_hit) {
+        if (!player->hit_duration) {
             world_redraw_tile(world, player->x, player->y);
         }
     }
@@ -91,26 +89,22 @@ void player_update(world_t *world, player_t *player, uint8_t inputs) {
         player->y = new_y;
 
         // Redraw the current cell.
-        world_redraw_tile(prev_x, prev_y, player);
+        world_redraw_tile(world, prev_x, prev_y);
 
         // Draw the player on the new position.
         draw_player(player);
     }
 
-    // TODO: Place bomb if: inputs & (1 << INPUT_BUTTON_Z).
+    // Place a bomb when the player doesn't have a bomb yet and when
+    // the correct button is pressed by the user.
     if (inputs & (1 << INPUT_BUTTON_Z) && !player->bomb) {
         player_place_bomb(world, player);
     }
 
+    // Update the bomb. It will return the bomb_t so long as it
+    // is alive, and NULL once the bomb has died and has been free()d.
     if (player->bomb) {
-        bomb_update(world, player->bomb);
-        if (player->bomb->life_state == DEATH_STATE) {
-            //delete bomb
-            bomb_explosion_toggle(world, player->bomb, EMPTY);
-            bomb_free(player->bomb);
-            player->bomb = NULL;
-            return;
-        }
+        player->bomb = bomb_update(world, player->bomb);
     }
 }
 
@@ -119,10 +113,10 @@ void player_show_lives(player_t *player) {
     segments_show(player->lives);
 }
 
-//place a bomb on the map
+// Place a bomb on the map if the player doesn't already have one.
 void player_place_bomb(world_t *world, player_t *player) {
-    if (!player->bomb) {                                           //if this player doesn't already have a bomb on the map
-        player->bomb = bomb_new(player->x, player->y);             //create a bomb
-        world_set_tile(world, player->bomb->x, player->bomb->y, BOMB);  //draw the bomb on the map
+    if (!player->bomb) {
+        player->bomb = bomb_new(player->x, player->y);
+        world_set_tile(world, player->bomb->x, player->bomb->y, BOMB);
     }
 }

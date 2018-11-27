@@ -14,7 +14,8 @@ typedef struct player_t {
     uint8_t y;
     uint8_t lives;
     bomb_t *bomb;
-    uint8_t is_hit;
+    uint8_t hit_duration;
+    uint8_t on_explosion;
 } player_t;
 
 player_t *player_new(uint8_t x, uint8_t y);
