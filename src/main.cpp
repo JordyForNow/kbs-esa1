@@ -9,7 +9,6 @@
 #include <Arduino.h>
 #include <SPI.h>
 #include <Wire.h>
-#include <nunchuck_funcs.h>
 
 void timer1_init();
 
