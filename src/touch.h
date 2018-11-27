@@ -5,4 +5,6 @@
 
 #include <Adafruit_STMPE610.h>
 
+void touch_init();
+
 #endif /* RENDER_H */

@@ -3,6 +3,7 @@
 
 #include "defines.h"
 #include "grid.h"
+#include "player.h"
 
 #include <Adafruit_GFX.h>
 #include <Adafruit_ILI9341.h>
@@ -10,7 +11,7 @@
 
 extern Adafruit_ILI9341 tft;
 
-void draw_player(int x, int y, int player);
+void draw_player(player_t *player);
 void draw_rect(int x, int y, uint16_t color);
 void draw_circle(int x, int y, uint16_t color);
 
