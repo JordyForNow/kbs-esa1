@@ -33,14 +33,17 @@ int main() {
 
     touch_init();
 
-    // Use the screen in landscape mode and paint the background black.
+    // Use the screen in landscape mode.
     tft.setRotation(1);
+
+    // The main funtion method for the touch screen.
+    touch_main();
+    
+    // Paint the screen black.
     draw_background(ILI9341_BLACK);
 
     timer1_init();
     game_init();
-
-    draw_menu();
 
     while (1) {
         game_update();
