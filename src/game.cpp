@@ -22,13 +22,12 @@ void game_init() {
 
 // Update the game, or do nothing if an update hasn't been triggered.
 bool game_update() {
-
     // Don't update unless our timer tells us it's time.
     if (!should_update)
         return false;
 
     // Make sure we don't keep updating.
-    LOGLN("updating()");
+    LOGLN("Updating");
     should_update = false;
 
     // Read the inputs and store them as a single byte.
@@ -42,9 +41,9 @@ bool game_update() {
         // it will flip the bit for said movement direction HIGH. The
         // '<' and '>' operators return a 1 for true, so we OR that
         // single high bit into the input mask.
-        inputs |= (x <  INPUT_JOY_THRESHOLD)                  << INPUT_JOY_LEFT;
+        inputs |= (x < INPUT_JOY_THRESHOLD)                   << INPUT_JOY_LEFT;
         inputs |= (x > (INPUT_JOY_MAX - INPUT_JOY_THRESHOLD)) << INPUT_JOY_RIGHT;
-        inputs |= (y <  INPUT_JOY_THRESHOLD)                  << INPUT_JOY_DOWN;
+        inputs |= (y < INPUT_JOY_THRESHOLD)                   << INPUT_JOY_DOWN;
         inputs |= (y > (INPUT_JOY_MAX - INPUT_JOY_THRESHOLD)) << INPUT_JOY_UP;
 
         inputs |= (nunchuck_zbutton()) << INPUT_BUTTON_Z;

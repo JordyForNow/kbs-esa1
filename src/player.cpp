@@ -8,6 +8,7 @@
 #include "segments.h"
 
 // Create a new player struct.
+<<<<<<< HEAD
 player_t *player_new(uint8_t x, uint8_t y) {
     player_t *player = (player_t*) malloc(sizeof(player_t));
     if (!player)
@@ -15,6 +16,15 @@ player_t *player_new(uint8_t x, uint8_t y) {
 
     player->x = x;
     player->y = y;
+=======
+player_t *player_new() {
+    player_t *player = (player_t *) malloc(sizeof(player_t));
+    if (!player)
+        return player;
+
+    player->x = 1;
+    player->y = 1;
+>>>>>>> 30932911c442dbbcc0aff689740ed4d5b3fca378
     player->lives = 3;
     return player;
 }
@@ -27,25 +37,38 @@ void player_free(player_t *player) {
     
 // Process user input and optionally rerender the player.
 void player_update(player_t *player, uint8_t inputs) {
-
-    // Store the previous position of the player.
-    uint8_t prev_x = player->x;
-    uint8_t prev_y = player->y;
+    // Make a variable in which the new location of the player will be stored
+    uint8_t new_x = player->x;
+    uint8_t new_y = player->y;
 
     // Process user input.
     if (inputs & (1 << INPUT_JOY_LEFT)) {
-        player->x--;
+        new_x--;
     } else if (inputs & (1 << INPUT_JOY_RIGHT)) {
-        player->x++;
+        new_x++;
     } else if (inputs & (1 << INPUT_JOY_UP)) {
-        player->y--;
+        new_y--;
     } else if (inputs & (1 << INPUT_JOY_DOWN)) {
-        player->y++;
+        new_y++;
     }
 
+    // Get the type of the new cell.
+    cell_type_t new_cell = grid_get_cell_type(new_x, new_y);
+    
+    // Check if the player is allowed to move to the new cell.
+    if (new_cell != EMPTY && new_cell != EXPLODING_BOMB)
+        return;
+
     // If we move, redraw the old cell and draw our player over the new cell.
-    if (player->x != prev_x || player->y != prev_y) {
-        grid_redraw_cell(prev_x, prev_y);
+    if (player->x != new_x || player->y != new_y) {
+        // Redraw the current cell.
+        grid_redraw_cell(player->x, player->y);
+
+        // Update the player location.
+        player->x = new_x;
+        player->y = new_y;
+
+        // Draw the player on the new position.
         draw_player(player);
     }
 
