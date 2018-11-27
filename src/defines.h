@@ -34,11 +34,11 @@
 
 // Defines how large a bombs explosion should be.
 #define BOMB_EXPLODE_SIZE 2
-// Defines after how many game updates the bomb should explode.
+// Defines after how many seconds the bomb should explode.
 #define BOMB_EXPLODE_AGE (3 * GAME_UPDATE_FREQUENCY)
-// Defines after how many game updates the bomb should die.
+// Defines after how many seconds the bomb should destroy.
 #define BOMB_DESTROY_AGE (4 * GAME_UPDATE_FREQUENCY)
-// Magic number of how many directions to loop through.
+// Number of how many directions there are.
 #define BOMB_DIRECTION_COUNT 4
 // How long a player should be invinsible to bombs after being hit.
 #define HIT_DURATION 25
