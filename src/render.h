@@ -14,6 +14,6 @@ void draw_player(player_t *player);
 void draw_rect(int x, int y, uint16_t color);
 void draw_circle(int x, int y, uint16_t color);
 
-void draw_cell(int x, int y, tile_t type);
+void draw_tile(int x, int y, tile_t type);
 
 #endif /* RENDER_H */

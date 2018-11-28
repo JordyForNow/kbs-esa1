@@ -61,7 +61,7 @@ void bomb_explosion_toggle(world_t *world, bomb_t *bomb, tile_t tile) {
 
         // Loop to max explosion size.
         for (int j = 0; j < BOMB_EXPLODE_SIZE; j++) {
-            // Convert location to a cell within the explosion radius.
+            // Convert location to a tile within the explosion radius.
             x_temp += bomb_explode_addition[i][0];
             y_temp += bomb_explode_addition[i][1];
             tile_t tile_temp = world_get_tile(world, x_temp, y_temp);

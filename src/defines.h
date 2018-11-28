@@ -21,8 +21,8 @@
 #define INPUT_JOY_THRESHOLD 50
 #define INPUT_JOY_MAX 255
 
-// The size of one cell, possible other size: 14, width: 23, height 17.
-#define WORLD_CELL_SIZE 19
+// The size of one tile, possible other size: 14, width: 23, height 17.
+#define WORLD_TILE_SIZE 19
 #define WORLD_WIDTH 17
 #define WORLD_HEIGHT 13
 

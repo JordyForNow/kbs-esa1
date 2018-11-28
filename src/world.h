@@ -5,7 +5,7 @@
 
 #include <Adafruit_ILI9341.h>
 
-// The possible items a cell can contain.
+// The possible items a tile can contain.
 typedef enum {
     EMPTY,
     BOMB,
