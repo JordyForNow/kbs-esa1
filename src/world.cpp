@@ -14,7 +14,6 @@ world_t *world_new(uint8_t player_count) {
         return NULL;
     }
 
-
     return world;
 }
 
@@ -56,6 +55,21 @@ void world_generate(world_t *world, unsigned long seed) {
         // Clear bottom-right corner.
         world_set_tile(world, (WORLD_WIDTH - 1 - i), (WORLD_HEIGHT - 2), EMPTY);
         world_set_tile(world, (WORLD_WIDTH - 2), (WORLD_HEIGHT - 1 - i), EMPTY);
+    }
+}
+
+void world_update(world_t *world, uint8_t inputs) {
+    // Update all bombs first.
+    for (int i = 0; i < world->player_count; i++) {
+        player_t *player = world->players[i];
+        if (player->bomb) {
+            player->bomb = bomb_update(world, player->bomb);
+        }
+    }
+
+    // Update all players once all bombs have been updated.
+    for (int i = 0; i < world->player_count; i++) {
+        player_update(world, world->players[i], inputs);
     }
 }
 

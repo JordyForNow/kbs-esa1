@@ -43,12 +43,6 @@ void player_update(world_t *world, player_t *player, uint8_t inputs) {
         }
     }
 
-    // Update the bomb. It will return the bomb_t so long as it
-    // is alive, and NULL once the bomb has died and has been free()d.
-    if (player->bomb) {
-        player->bomb = bomb_update(world, player->bomb);
-    }
-
     // Place a bomb if necessary.
     if (!player->bomb && inputs & (1 << INPUT_BUTTON_Z)) {
         player_place_bomb(world, player);
@@ -73,7 +67,7 @@ void player_update(world_t *world, player_t *player, uint8_t inputs) {
     // Check the tile where we are going.
     tile_t new_tile = world_get_tile(world, new_x, new_y);
 
-    // Check if we can move into the new tile.
+    // Check if we want to and can move into the new tile.
     if ((new_x != player->x || new_y != player->y)
     && (new_tile == EMPTY || new_tile == EXPLODING_BOMB)) {
         // Store where we were, so we can rerender the tile once we've moved.
@@ -86,20 +80,36 @@ void player_update(world_t *world, player_t *player, uint8_t inputs) {
 
         // Damage the player if they are walking into an exploding bomb,
         // but only if they are not already invincible.
-        if (new_tile == EXPLODING_BOMB && !player->hit_duration) {
-            player->hit_duration = HIT_DURATION;
-            player->lives--;
-            player_show_lives(player);
+        if (new_tile == EXPLODING_BOMB) {
+            if (player_on_damage(player))
+                LOGLN("Damage from walking into a bomb");
         }
 
         // Rerender the tile we came from, and render the player on top of the new tile.
         world_redraw_tile(world, old_x, old_y);
         redraw++;
+    } else if (world_get_tile(world, player->x, player->y) == EXPLODING_BOMB) {
+        // If we don't want to move or we are unable to, we should check if we
+        // are standing inside an explosion. If we are, we might have to take damage.
+        if (player_on_damage(player))
+            LOGLN("Damage from standing in explosion");
     }
 
     // Redraw our player only if we have to.
     if (redraw)
         draw_player(player);
+}
+
+// Whenever the player should take damage, we check if they are invincible and
+// deal the damage if they are not.
+uint8_t player_on_damage(player_t *player) {
+    if (player->hit_duration)
+        return 0;
+
+    player->hit_duration = HIT_DURATION;
+    player->lives--;
+    player_show_lives(player);
+    return 1;
 }
 
 // Show the lives of the given player on the seven segment display using TWI.

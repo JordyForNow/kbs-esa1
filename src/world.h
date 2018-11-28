@@ -26,8 +26,10 @@ typedef struct world_t {
 
 world_t *world_new(uint8_t player_count);
 void world_free(world_t *world);
-
 void world_generate(world_t *world, unsigned long seed);
+
+void world_update(world_t *world, uint8_t inputs);
+
 uint8_t world_set_tile(world_t *world, uint8_t x, uint8_t y, tile_t tile);
 tile_t world_get_tile(world_t *world, uint8_t x, uint8_t y);
 void world_redraw_tile(world_t *world, uint8_t x, uint8_t y);

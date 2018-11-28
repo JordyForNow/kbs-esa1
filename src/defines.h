@@ -57,9 +57,9 @@
 #define LOGLN(msg) Serial.println("[" __FILE__ "] " msg);
 #else
 // If DEBUG is disabled, don't log anything.
-#define LOG_INIT() ;
-#define LOG(msg) ;
-#define LOGLN(msg) ;
+#define LOG_INIT() {};
+#define LOG(msg) {};
+#define LOGLN(msg) {};
 #endif
 
 #endif

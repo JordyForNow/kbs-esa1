@@ -41,10 +41,9 @@ bomb_t *bomb_update(world_t *world, bomb_t *bomb) {
 void bomb_explosion_toggle_tile(world_t *world, uint8_t x, uint8_t y, tile_t tile) {
     if (tile == EXPLODING_BOMB) {
         player_t *player = world_get_player(world, x, y);
-        if (player && !player->hit_duration) {
-            player->hit_duration = HIT_DURATION;
-            player->lives--;
-            player_show_lives(player);
+        if (player) {
+            if (player_on_damage(player))
+                LOGLN("Damage from exploding bomb");
         }
     }
     world_set_tile(world, x, y, tile);

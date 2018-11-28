@@ -57,8 +57,8 @@ bool game_update() {
 
     // TODO: Handle networking.
 
-    // Update all entities.
-    player_update(world, player, inputs);
+    // Update the world.
+    world_update(world, inputs);
 
     return true;
 }
