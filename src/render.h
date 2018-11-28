@@ -1,7 +1,7 @@
 #ifndef RENDER_H
 #define RENDER_H
 
-#include "grid.h"
+#include "world.h"
 #include "player.h"
 
 #include <Adafruit_GFX.h>
@@ -14,6 +14,6 @@ void draw_player(player_t *player);
 void draw_rect(int x, int y, uint16_t color);
 void draw_circle(int x, int y, uint16_t color);
 
-void draw_cell(int x, int y, cell_type_t type);
+void draw_tile(int x, int y, tile_t type);
 
 #endif /* RENDER_H */

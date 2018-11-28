@@ -1,30 +1,54 @@
 #include "player.h"
+#include "bomb.h"
 #include "defines.h"
-#include "grid.h"
+#include "world.h"
 #include "render.h"
 #include "segments.h"
 
 // Create a new player struct.
-player_t *player_new() {
-    player_t *player = (player_t *) malloc(sizeof(player_t));
+player_t *player_new(uint8_t x, uint8_t y) {
+    player_t *player = (player_t *)malloc(sizeof(player_t));
     if (!player)
         return player;
 
-    player->x = 1;
-    player->y = 1;
+    player->x = x;
+    player->y = y;
     player->lives = 3;
+    player->bomb = NULL;
+    player->hit_duration = 0;
     return player;
 }
 
 // Delete a player struct.
 void player_free(player_t *player) {
-    if (player)
-        free(player);
+    if (!player)
+        return;
+
+    bomb_free(player->bomb);
+    free(player);
 }
 
 // Process user input and optionally rerender the player.
-void player_update(player_t *player, uint8_t inputs) {
-    // Make a variable in which the new location of the player will be stored
+void player_update(world_t *world, player_t *player, uint8_t inputs) {
+    uint8_t redraw = 0;
+
+    // Decrease our invincibility.
+    if (player->hit_duration) {
+        player->hit_duration--;
+
+        // If we are no longer invincible, redraw.
+        if (!player->hit_duration) {
+            redraw = 1;
+        }
+    }
+
+    // Place a bomb if necessary.
+    if (!player->bomb && inputs & (1 << INPUT_BUTTON_Z)) {
+        player_place_bomb(world, player);
+        redraw = 1;
+    }
+
+    // Check where we are going.
     uint8_t new_x = player->x;
     uint8_t new_y = player->y;
 
@@ -39,30 +63,61 @@ void player_update(player_t *player, uint8_t inputs) {
         new_y++;
     }
 
-    // Get the type of the new cell.
-    cell_type_t new_cell = grid_get_cell_type(new_x, new_y);
-    
-    // Check if the player is allowed to move to the new cell.
-    if (new_cell != EMPTY && new_cell != EXPLODING_BOMB)
-        return;
+    // Check the tile where we are going.
+    tile_t new_tile = world_get_tile(world, new_x, new_y);
 
-    // If we move, redraw the old cell and draw our player over the new cell.
-    if (player->x != new_x || player->y != new_y) {
-        // Redraw the current cell.
-        grid_redraw_cell(player->x, player->y);
+    // Check if we want to and can move into the new tile.
+    if ((new_x != player->x || new_y != player->y)
+    && (new_tile == EMPTY || new_tile == EXPLODING_BOMB)) {
+        // Store where we were, so we can rerender the tile once we've moved.
+        uint8_t old_x = player->x;
+        uint8_t old_y = player->y;
 
-        // Update the player location.
+        // Update the player position.
         player->x = new_x;
         player->y = new_y;
 
-        // Draw the player on the new position.
-        draw_player(player);
+        // Damage the player if they are walking into an exploding bomb,
+        // but only if they are not already invincible.
+        if (new_tile == EXPLODING_BOMB && player_on_hit(player)) {
+            LOGLN("Damage from walking into a bomb");
+        }
+
+        // Rerender the tile we came from, and render the player on top of the new tile.
+        world_redraw_tile(world, old_x, old_y);
+        redraw = 1;
+    } else if (world_get_tile(world, player->x, player->y) == EXPLODING_BOMB && player_on_hit(player)) {
+        // If we don't want to move or we are unable to, we should check if we
+        // are standing inside an explosion. If we are, we might have to take damage.
+        LOGLN("Damage from standing in explosion");
     }
 
-    // TODO: Place bomb if: inputs & (1 << INPUT_BUTTON_Z).
+    // Redraw our player only if we have to.
+    if (redraw)
+        draw_player(player);
+}
+
+// Whenever the player should take damage, we check if they are invincible and
+// deal the damage if they are not.
+uint8_t player_on_damage(player_t *player) {
+    if (player->hit_duration)
+        return 0;
+
+    player->hit_duration = HIT_DURATION;
+    player->lives--;
+    player_show_lives(player);
+    return 1;
 }
 
 // Show the lives of the given player on the seven segment display using TWI.
 void player_show_lives(player_t *player) {
     segments_show(player->lives);
+}
+
+// Place a bomb on the map if the player doesn't already have one.
+void player_place_bomb(world_t *world, player_t *player) {
+    if (!player->bomb) {
+        player->bomb = bomb_new(player->x, player->y);
+        world_set_tile(world, player->bomb->x, player->bomb->y, BOMB);
+    }
 }
