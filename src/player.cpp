@@ -99,7 +99,7 @@ void player_update(world_t *world, player_t *player, uint8_t inputs) {
 
 // Whenever the player should take damage, we check if they are invincible and
 // deal the damage if they are not.
-uint8_t player_on_damage(player_t *player) {
+uint8_t player_on_hit(player_t *player) {
     if (player->hit_duration)
         return 0;
 
