@@ -82,6 +82,14 @@ void touch_handler(touch_menu_page_t *current_page){
 
         if(touch_point.x > TOUCH_BUTTON_START_X && touch_point.x < (TOUCH_BUTTON_START_X + TOUCH_BUTTON_WIDTH)){
             Serial.println("right horizontal area");
+            int j;
+            for(int i = 1; i < 5; i++){
+                j = i;
+                Serial.print("min: ");
+                Serial.println(i * TOUCH_BUTTON_HEIGHT + TOUCH_BUTTON_PADDING);
+                Serial.print("max: ");
+                Serial.println(i);
+            }
         }
     }
 }
