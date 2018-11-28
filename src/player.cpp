@@ -16,7 +16,6 @@ player_t *player_new(uint8_t x, uint8_t y) {
     player->lives = 3;
     player->bomb = NULL;
     player->hit_duration = 0;
-    player->on_explosion = 0;
     return player;
 }
 
