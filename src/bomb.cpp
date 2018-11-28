@@ -1,6 +1,6 @@
 #include "bomb.h"
 #include "defines.h"
-#include "grid.h"
+#include "world.h"
 #include "player.h"
 
 // Addition for x and y axis in every direction
@@ -25,17 +25,33 @@ void bomb_free(bomb_t *bomb) {
 }
 
 // Update a bomb.
-void bomb_update(bomb_t *bomb) {
-    if (bomb->age == BOMB_EXPLODE_AGE) {
-        bomb_explosion_toggle(bomb, EXPLODING_BOMB);
+bomb_t *bomb_update(world_t *world, bomb_t *bomb) {
+    if (bomb->age == BOMB_DESTROY_AGE) {
+        // Delete the bomb when we should.
+        bomb_explosion_toggle(world, bomb, EMPTY);
+        bomb_free(bomb);
+        return NULL;
+    } else if (bomb->age == BOMB_EXPLODE_AGE) {
+        bomb_explosion_toggle(world, bomb, EXPLODING_BOMB);
     }
     bomb->age++;
+    return bomb;
+}
+
+void bomb_explosion_toggle_tile(world_t *world, uint8_t x, uint8_t y, tile_t tile) {
+    if (tile == EXPLODING_BOMB) {
+        player_t *player = world_get_player(world, x, y);
+        if (player && player_on_damage(player)) {
+            LOGLN("Damage from exploding bomb");
+        }
+    }
+    world_set_tile(world, x, y, tile);
 }
 
 // The action variable given with this function will determine whether to show or hide the explosion.
-void bomb_explosion_toggle(bomb_t *bomb, cell_type_t action) {
+void bomb_explosion_toggle(world_t *world, bomb_t *bomb, tile_t tile) {
     // Change bombs location to exploded.
-    grid_change_cell(bomb->x, bomb->y, action);
+    bomb_explosion_toggle_tile(world, bomb->x, bomb->y, tile);
 
     // Loop through directions.
     for (int i = 0; i < BOMB_DIRECTION_COUNT; i++) {
@@ -48,19 +64,19 @@ void bomb_explosion_toggle(bomb_t *bomb, cell_type_t action) {
             // Convert location to a cell within the explosion radius.
             x_temp += bomb_explode_addition[i][0];
             y_temp += bomb_explode_addition[i][1];
+            tile_t tile_temp = world_get_tile(world, x_temp, y_temp);
 
-            // A wall can't be broken.
-            if (grid_get_cell_type(x_temp, y_temp) == WALL) {
+            if (tile_temp == WALL) {
+                // A wall can't be broken.
+                break;
+            } else if (tile_temp == BOX) {
+                // After a box the explosion should stop.
+                if (tile == EXPLODING_BOMB)
+                    bomb_explosion_toggle_tile(world, x_temp, y_temp, tile);
                 break;
             }
-            // After a box the explosion should stop.
-            else if (grid_get_cell_type(x_temp, y_temp) == BOX) {
-                if (action == EXPLODING_BOMB)
-                    grid_change_cell(x_temp, y_temp, action);
-                break;
-            }
 
-            grid_change_cell(x_temp, y_temp, action);
+            bomb_explosion_toggle_tile(world, x_temp, y_temp, tile);
         }
     }
 }

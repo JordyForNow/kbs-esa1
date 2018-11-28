@@ -22,9 +22,9 @@
 #define INPUT_JOY_MAX 255
 
 // The size of one cell, possible other size: 14, width: 23, height 17.
-#define GRID_CELL_SIZE 19
-#define GRID_WIDTH 17
-#define GRID_HEIGHT 13
+#define WORLD_CELL_SIZE 19
+#define WORLD_WIDTH 17
+#define WORLD_HEIGHT 13
 
 // The length to clear the corner from boxes.
 #define GAME_STARTING_AREA 4
@@ -57,9 +57,9 @@
 #define LOGLN(msg) Serial.println("[" __FILE__ "] " msg);
 #else
 // If DEBUG is disabled, don't log anything.
-#define LOG_INIT() ;
-#define LOG(msg) ;
-#define LOGLN(msg) ;
+#define LOG_INIT() {};
+#define LOG(msg) {};
+#define LOGLN(msg) {};
 #endif
 
 #endif

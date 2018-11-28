@@ -1,10 +1,11 @@
 #include "game.h"
 #include "defines.h"
-#include "grid.h"
+#include "world.h"
 #include "player.h"
 #include "render.h"
 
 volatile bool should_update = false;
+static world_t *world;
 static player_t *player;
 
 // Initialize the game state.
@@ -12,13 +13,16 @@ void game_init() {
     // Initialize the nunchuck.
     nunchuck_send_request();
 
-    // Draw the grid with blocks and walls.
-    grid_init();
+    // Draw the world with blocks and walls.
+    world = world_new(1);
+    world_generate(world, TCNT0);
 
     // Create the player and show the lives on the 7-segment display.
     player = player_new(1, 1);
     player_show_lives(player); // Never updated, so this is fine.
     draw_player(player);
+
+    world->players[0] = player;
 }
 
 // Update the game, or do nothing if an update hasn't been triggered.
@@ -53,8 +57,8 @@ bool game_update() {
 
     // TODO: Handle networking.
 
-    // Update all entities.
-    player_update(player, inputs);
+    // Update the world.
+    world_update(world, inputs);
 
     return true;
 }
