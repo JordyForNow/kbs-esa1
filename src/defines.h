@@ -4,6 +4,15 @@
 #define DEBUG 1
 #define SEGMENTS_ENABLE 1
 
+// The length to clear the corner from boxes.
+#define GAME_STARTING_AREA 4
+
+// The frequency with which the game updates.
+#define GAME_UPDATE_FREQUENCY 8
+
+// This many input polls will be done between game updates.
+#define GAME_INPUT_FACTOR 25
+
 // The inputs are read from the nunchuck once during every game-update
 // and are stored in a single uint8_t when they are passed around to
 // other functions, such as player_update(..). The below defines are
@@ -18,19 +27,17 @@
 // The threshold for activation for the joystick on the nunchuck.
 // If the joystick is within INPUT_THRESHOLD from either the lower (0)
 // or higher (INPUT_MAX) bound, then the movement will be registered.
-#define INPUT_JOY_THRESHOLD 50
+#define INPUT_JOY_DEADZONE 10
 #define INPUT_JOY_MAX 255
+
+// The percentage of commitment required before moving in a certain direction.
+#define INPUT_JOY_THRESHOLD_PERCENTAGE 0.25
+#define INPUT_JOY_THRESHOLD (GAME_INPUT_FACTOR * (INPUT_JOY_MAX / 2) * INPUT_JOY_THRESHOLD_PERCENTAGE)
 
 // The size of one cell, possible other size: 14, width: 23, height 17.
 #define WORLD_CELL_SIZE 19
 #define WORLD_WIDTH 17
 #define WORLD_HEIGHT 13
-
-// The length to clear the corner from boxes.
-#define GAME_STARTING_AREA 4
-
-// The frequency with which the game updates.
-#define GAME_UPDATE_FREQUENCY 5
 
 // Defines how large a bombs explosion should be.
 #define BOMB_EXPLODE_SIZE 2
