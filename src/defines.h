@@ -34,8 +34,8 @@
 #define INPUT_JOY_THRESHOLD_PERCENTAGE 0.25
 #define INPUT_JOY_THRESHOLD (GAME_INPUT_FACTOR * (INPUT_JOY_MAX / 2) * INPUT_JOY_THRESHOLD_PERCENTAGE)
 
-// The size of one cell, possible other size: 14, width: 23, height 17.
-#define WORLD_CELL_SIZE 19
+// The size of one tile, possible other size: 14, width: 23, height 17.
+#define WORLD_TILE_SIZE 19
 #define WORLD_WIDTH 17
 #define WORLD_HEIGHT 13
 
@@ -47,8 +47,8 @@
 #define BOMB_DESTROY_AGE (4 * GAME_UPDATE_FREQUENCY)
 // Number of how many directions there are.
 #define BOMB_DIRECTION_COUNT 4
-// How long a player should be invinsible to bombs after being hit.
-#define HIT_DURATION 25
+// How many seconds a player should be invinsible to bombs after being hit.
+#define HIT_DURATION (5 * GAME_UPDATE_FREQUENCY)
 
 // The ports which the screen is connected to.
 #define TFT_CS 10

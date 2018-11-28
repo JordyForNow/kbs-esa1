@@ -38,10 +38,13 @@ bomb_t *bomb_update(world_t *world, bomb_t *bomb) {
     return bomb;
 }
 
+// Change the tile at the given coordinates to the given tile type, taking into account
+// that there could be a player on the given tile. This player may receive damage if the
+// tile we're changing to is an EXPLODING_BOMB.
 void bomb_explosion_toggle_tile(world_t *world, uint8_t x, uint8_t y, tile_t tile) {
     if (tile == EXPLODING_BOMB) {
         player_t *player = world_get_player(world, x, y);
-        if (player && player_on_damage(player)) {
+        if (player && player_on_hit(player)) {
             LOGLN("Damage from exploding bomb");
         }
     }
@@ -61,7 +64,7 @@ void bomb_explosion_toggle(world_t *world, bomb_t *bomb, tile_t tile) {
 
         // Loop to max explosion size.
         for (int j = 0; j < BOMB_EXPLODE_SIZE; j++) {
-            // Convert location to a cell within the explosion radius.
+            // Convert location to a tile within the explosion radius.
             x_temp += bomb_explode_addition[i][0];
             y_temp += bomb_explode_addition[i][1];
             tile_t tile_temp = world_get_tile(world, x_temp, y_temp);

@@ -88,7 +88,7 @@ tile_t world_get_tile(world_t *world, uint8_t x, uint8_t y) {
 }
 
 void world_redraw_tile(world_t *world, uint8_t x, uint8_t y) {
-    draw_cell(x, y, world->tiles[x][y]);
+    draw_tile(x, y, world->tiles[x][y]);
 
     player_t *player = world_get_player(world, x, y);
     if (player)

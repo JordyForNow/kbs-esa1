@@ -16,7 +16,6 @@ player_t *player_new(uint8_t x, uint8_t y) {
     player->lives = 3;
     player->bomb = NULL;
     player->hit_duration = 0;
-    player->on_explosion = 0;
     return player;
 }
 
@@ -39,14 +38,14 @@ void player_update(world_t *world, player_t *player, uint8_t inputs) {
 
         // If we are no longer invincible, redraw.
         if (!player->hit_duration) {
-            redraw++;
+            redraw = 1;
         }
     }
 
     // Place a bomb if necessary.
     if (!player->bomb && inputs & (1 << INPUT_BUTTON_C)) {
         player_place_bomb(world, player);
-        redraw++;
+        redraw = 1;
     }
 
     // Check where we are going.
@@ -80,14 +79,14 @@ void player_update(world_t *world, player_t *player, uint8_t inputs) {
 
         // Damage the player if they are walking into an exploding bomb,
         // but only if they are not already invincible.
-        if (new_tile == EXPLODING_BOMB && player_on_damage(player)) {
+        if (new_tile == EXPLODING_BOMB && player_on_hit(player)) {
             LOGLN("Damage from walking into a bomb");
         }
 
         // Rerender the tile we came from, and render the player on top of the new tile.
         world_redraw_tile(world, old_x, old_y);
-        redraw++;
-    } else if (world_get_tile(world, player->x, player->y) == EXPLODING_BOMB && player_on_damage(player)) {
+        redraw = 1;
+    } else if (world_get_tile(world, player->x, player->y) == EXPLODING_BOMB && player_on_hit(player)) {
         // If we don't want to move or we are unable to, we should check if we
         // are standing inside an explosion. If we are, we might have to take damage.
         LOGLN("Damage from standing in explosion");
