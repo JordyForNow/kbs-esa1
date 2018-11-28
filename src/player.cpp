@@ -104,10 +104,9 @@ uint8_t player_on_hit(player_t *player) {
         return 0;
 
     player->hit_duration = HIT_DURATION;
-    if (player->lives != 0)
-    {
+    if (player->lives)
         player->lives--;
-    }
+        
     player_show_lives(player);
     return 1;
 }
