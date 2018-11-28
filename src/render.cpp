@@ -3,10 +3,10 @@
 
 Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC);
 
-// Draw any cell.
-void draw_cell(int x, int y, cell_type_t type) {
-    x = GRID_CELL_SIZE * x;
-    y = GRID_CELL_SIZE * y;
+// Draw any tile.
+void draw_tile(int x, int y, tile_t type) {
+    x = WORLD_TILE_SIZE * x;
+    y = WORLD_TILE_SIZE * y;
 
     switch (type) {
         case BOMB:
@@ -29,7 +29,7 @@ void draw_cell(int x, int y, cell_type_t type) {
 }
 
 void draw_rect(int x, int y, uint16_t color) {
-    tft.fillRect(x, y, GRID_CELL_SIZE, GRID_CELL_SIZE, color);
+    tft.fillRect(x, y, WORLD_TILE_SIZE, WORLD_TILE_SIZE, color);
 }
 
 void draw_rect(int x, int y, int width, int height, uint16_t color){
@@ -37,10 +37,10 @@ void draw_rect(int x, int y, int width, int height, uint16_t color){
 }
 
 void draw_circle(int x, int y, uint16_t color) {
-    x += (GRID_CELL_SIZE / 2);
-    y += (GRID_CELL_SIZE / 2);
+    x += (WORLD_TILE_SIZE / 2);
+    y += (WORLD_TILE_SIZE / 2);
 
-    tft.fillCircle(x, y, (GRID_CELL_SIZE / 2), color);
+    tft.fillCircle(x, y, (WORLD_TILE_SIZE / 2), color);
 }
 
 void draw_background(int color){
@@ -48,7 +48,11 @@ void draw_background(int color){
 }
 
 void draw_player(player_t *player) {
-    draw_circle(GRID_CELL_SIZE * player->x, GRID_CELL_SIZE * player->y, ILI9341_BLUE);
+    if (player->hit_duration) {
+        draw_circle(WORLD_TILE_SIZE * player->x, WORLD_TILE_SIZE * player->y, ILI9341_ORANGE);
+        return;
+    }
+    draw_circle(WORLD_TILE_SIZE * player->x, WORLD_TILE_SIZE * player->y, ILI9341_BLUE);
 }
 
 int draw_button( int position, char *text){

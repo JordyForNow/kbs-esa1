@@ -21,16 +21,27 @@
 #define INPUT_JOY_THRESHOLD 50
 #define INPUT_JOY_MAX 255
 
-// The size of one cell, possible other size: 14, width: 23, height 17.
-#define GRID_CELL_SIZE 19
-#define GRID_WIDTH 17
-#define GRID_HEIGHT 13
+// The size of one tile, possible other size: 14, width: 23, height 17.
+#define WORLD_TILE_SIZE 19
+#define WORLD_WIDTH 17
+#define WORLD_HEIGHT 13
 
 // The length to clear the corner from boxes.
 #define GAME_STARTING_AREA 4
 
 // The frequency with which the game updates.
 #define GAME_UPDATE_FREQUENCY 5
+
+// Defines how large a bombs explosion should be.
+#define BOMB_EXPLODE_SIZE 2
+// Defines after how many seconds the bomb should explode.
+#define BOMB_EXPLODE_AGE (3 * GAME_UPDATE_FREQUENCY)
+// Defines after how many seconds the bomb should destroy.
+#define BOMB_DESTROY_AGE (4 * GAME_UPDATE_FREQUENCY)
+// Number of how many directions there are.
+#define BOMB_DIRECTION_COUNT 4
+// How many seconds a player should be invinsible to bombs after being hit.
+#define HIT_DURATION (5 * GAME_UPDATE_FREQUENCY)
 
 // The ports which the screen is connected to.
 #define TFT_CS 10
@@ -61,9 +72,9 @@
 #define LOGLN(msg) Serial.println("[" __FILE__ "] " msg);
 #else
 // If DEBUG is disabled, don't log anything.
-#define LOG_INIT() ;
-#define LOG(msg) ;
-#define LOGLN(msg) ;
+#define LOG_INIT() {};
+#define LOG(msg) {};
+#define LOGLN(msg) {};
 #endif
 
 #endif

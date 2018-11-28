@@ -69,11 +69,11 @@ void timer1_init() {
     // Interrupts: overflow
     TIMSK1 = (1 << TOIE1);
 
-    // Timer1 will start counting when the init function is called. 
-    // This means the TCNT1 can already have a value that is greater than the 
+    // Timer1 will start counting when the init function is called.
+    // This means the TCNT1 can already have a value that is greater than the
     // TOP, which is equal to the OCR1A register, which in turn will lead to freezes.
-    // which means the timer will have to overflow before reaching the value of TOP. 
-    // To prevent TCNT1 from having to overflow, we reset it to zero, therefore 
+    // which means the timer will have to overflow before reaching the value of TOP.
+    // To prevent TCNT1 from having to overflow, we reset it to zero, therefore
     // ensuring that it does not have to overflow first.
     TCNT1 = 0;
 
