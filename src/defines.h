@@ -40,8 +40,8 @@
 #define BOMB_DESTROY_AGE (4 * GAME_UPDATE_FREQUENCY)
 // Number of how many directions there are.
 #define BOMB_DIRECTION_COUNT 4
-// How long a player should be invinsible to bombs after being hit.
-#define HIT_DURATION 25
+// How many seconds a player should be invinsible to bombs after being hit.
+#define HIT_DURATION (5 * GAME_UPDATE_FREQUENCY)
 
 // The ports which the screen is connected to.
 #define TFT_CS 10
