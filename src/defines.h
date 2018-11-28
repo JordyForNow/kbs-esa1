@@ -45,9 +45,11 @@
 #define TS_MAXX 3900
 #define TS_MAXY 4000
 
-// The width and heigt for the buttons in the menu.
+// The width and height for the buttons in the menu.
 #define TOUCH_BUTTON_HEIGHT 40
 #define TOUCH_BUTTON_WIDTH 200
+#define TOUCH_BUTTON_PADDING 10
+#define TOUCH_BUTTON_START_X 60
 
 // Logging macros that only do something when DEBUG is enabled.
 // They print messages in the following style: [src/game.cpp] updating()

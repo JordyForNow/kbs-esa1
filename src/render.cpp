@@ -52,9 +52,9 @@ void draw_player(player_t *player) {
 }
 
 int draw_button( int position, char *text){
-    position *= 50;
-    draw_rect(60,position,TOUCH_BUTTON_WIDTH, TOUCH_BUTTON_HEIGHT,ILI9341_BLUE);
-    tft.setCursor(70, position+10);
+    position *= (TOUCH_BUTTON_HEIGHT + TOUCH_BUTTON_PADDING);
+    draw_rect(TOUCH_BUTTON_START_X,position,TOUCH_BUTTON_WIDTH, TOUCH_BUTTON_HEIGHT,ILI9341_BLUE);
+    tft.setCursor((TOUCH_BUTTON_START_X + TOUCH_BUTTON_PADDING), position + TOUCH_BUTTON_PADDING);
     tft.setTextColor(ILI9341_WHITE);  
     tft.setTextSize(2);
     tft.println(text);
