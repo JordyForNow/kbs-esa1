@@ -4,9 +4,14 @@
 #include "player.h"
 #include "render.h"
 
-volatile bool should_update = false;
+volatile bool should_poll = false;
+static int should_update = 0;
 static world_t *world;
 static player_t *player;
+
+static uint8_t input_buttons = 0;
+static int16_t input_joy_x = 0;
+static int16_t input_joy_y = 0;
 
 // Initialize the game state.
 void game_init() {
@@ -27,33 +32,65 @@ void game_init() {
 
 // Update the game, or do nothing if an update hasn't been triggered.
 bool game_update() {
-    // Don't update unless our timer tells us it's time.
-    if (!should_update)
+
+    // Don't poll or update unless the timer tells us to.
+    if (!should_poll)
         return false;
+    
+    should_poll = false;
+    should_update++;
 
-    // Make sure we don't keep updating.
-    LOGLN("Updating");
-    should_update = false;
-
-    // Read the inputs and store them as a single byte.
-    uint8_t inputs = 0;
+    // Collect inputs.
     if (nunchuck_get_data()) {
+
         uint8_t x = nunchuck_joyx();
         uint8_t y = nunchuck_joyy();
 
-        // If the joystick is within INPUT_THRESHOLD distance of either
-        // the lower or higher boundary on either the X or Y axis, then
-        // it will flip the bit for said movement direction HIGH. The
-        // '<' and '>' operators return a 1 for true, so we OR that
-        // single high bit into the input mask.
-        inputs |= (x < INPUT_JOY_THRESHOLD)                   << INPUT_JOY_LEFT;
-        inputs |= (x > (INPUT_JOY_MAX - INPUT_JOY_THRESHOLD)) << INPUT_JOY_RIGHT;
-        inputs |= (y < INPUT_JOY_THRESHOLD)                   << INPUT_JOY_DOWN;
-        inputs |= (y > (INPUT_JOY_MAX - INPUT_JOY_THRESHOLD)) << INPUT_JOY_UP;
+        int16_t delta_x = x - (INPUT_JOY_MAX / 2);
+        int16_t delta_y = (INPUT_JOY_MAX / 2) - y;
 
-        inputs |= (nunchuck_zbutton()) << INPUT_BUTTON_Z;
-        inputs |= (nunchuck_cbutton()) << INPUT_BUTTON_C;
+        // Make sure minute movements are not registered (deadzone).
+        // We track how much we deviate from the (theoretical) center.
+        if (delta_x >= INPUT_JOY_DEADZONE || delta_x <= -INPUT_JOY_DEADZONE)
+            input_joy_x += delta_x;
+        if (delta_y >= INPUT_JOY_DEADZONE || delta_y <= -INPUT_JOY_DEADZONE)
+            input_joy_y += delta_y;
+
+        // Make sure we register button presses.
+        input_buttons |= nunchuck_cbutton() << INPUT_BUTTON_C;
+        input_buttons |= nunchuck_zbutton() << INPUT_BUTTON_Z;
     }
+
+    // Don't update unless it's time.
+    if (should_update < GAME_INPUT_FACTOR)
+        return false;
+
+    LOGLN("Updating");
+    should_update = 0;
+
+    // Collect the definitive inputs. These are the button inputs
+    // and the most significant joystick input in one byte.
+    uint8_t inputs = input_buttons;
+
+    // Sign bit mask used to get the absolute value of the X and Y movement.
+    uint16_t x_mask = input_joy_x >> 15;
+    uint16_t y_mask = input_joy_y >> 15;
+
+    // Determine what axis is more prevalent.
+    if (((input_joy_x ^ x_mask) + x_mask) >= ((input_joy_y ^ y_mask) + y_mask)) {
+        // The X-axis is more or equally prevalent.
+        inputs |= (input_joy_x < -INPUT_JOY_THRESHOLD) << INPUT_JOY_LEFT;
+        inputs |= (input_joy_x >  INPUT_JOY_THRESHOLD) << INPUT_JOY_RIGHT;
+    } else {
+        // The Y-axis is more prevalent.
+        inputs |= (input_joy_y < -INPUT_JOY_THRESHOLD) << INPUT_JOY_UP;
+        inputs |= (input_joy_y >  INPUT_JOY_THRESHOLD) << INPUT_JOY_DOWN;
+    }
+
+    // Reset the input trackers.
+    input_buttons = 0;
+    input_joy_x = 0;
+    input_joy_y = 0;
 
     // TODO: Handle networking.
 
@@ -65,5 +102,5 @@ bool game_update() {
 
 // Trigger a game-update the next time game_update() is called.
 void game_trigger_update() {
-    should_update = true;
+    should_poll = true;
 }
