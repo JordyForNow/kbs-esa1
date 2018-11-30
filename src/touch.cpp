@@ -28,7 +28,7 @@ void create_touch_pages(){
     page_main_menu.buttons[0] = &button_main_menu_play;
     page_main_menu.buttons[1] = &button_main_menu_highscores;
 
-    page_select_players.title = strdup("play game\0");
+    page_select_players.title = strdup("PLAY GAME\0");
     page_select_players.buttons[0] = &button_play_singleplayer;
     page_select_players.buttons[1] = &button_play_multiplayer;
     page_select_players.buttons[3] = &button_back;
@@ -36,7 +36,7 @@ void create_touch_pages(){
     pages_highscores.title = strdup("Highscores\0");
     pages_highscores.buttons[3] = &button_back;
 
-    button_main_menu_play.text = strdup("play\0");
+    button_main_menu_play.text = strdup("Play\0");
     button_main_menu_play.position = 1;
     button_main_menu_play.target_page = &page_select_players;
 
@@ -44,7 +44,7 @@ void create_touch_pages(){
     button_main_menu_highscores.position = 2;
     button_main_menu_highscores.target_page = &pages_highscores;
 
-    button_back.text = strdup("back");
+    button_back.text = strdup("Back");
     button_back.position = 4;
     button_back.target_page = &page_main_menu;
 
