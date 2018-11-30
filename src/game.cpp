@@ -36,8 +36,7 @@ bool game_update() {
     // Don't poll or update unless the timer tells us to.
     if (!should_poll)
         return false;
-
-    // LOGLN("Polling");
+    
     should_poll = false;
     should_update++;
 
