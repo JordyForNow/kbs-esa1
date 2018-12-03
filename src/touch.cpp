@@ -33,7 +33,7 @@ void component_free(component_t *component) {
 }
 
 void component_draw(component_t *component, int index) {
-    if (component->target) {
+    if (component->target || component->mode) {
         draw_button(index + 1, component->text);
     } else {
         draw_label(index + 1, component->text);
@@ -104,6 +104,8 @@ int menu_await_input() {
     touch_point.x = map(touch_point.y, TS_MINX, TS_MAXX, 0, tft.width());
     touch_point.y = map(prev_x, TS_MAXY, TS_MINY, 0, tft.height());
 
+
+
     // Check if the touch X falls within the column of (potential) buttons.
     if (touch_point.x > TOUCH_BUTTON_START_X && touch_point.x < (TOUCH_BUTTON_START_X + TOUCH_BUTTON_WIDTH)) {
         // Check if the touch Y also falls within a button.
@@ -111,6 +113,7 @@ int menu_await_input() {
             if (touch_point.y > (i * (TOUCH_BUTTON_HEIGHT + TOUCH_BUTTON_PADDING))
             && touch_point.y < ((i+1) * TOUCH_BUTTON_HEIGHT + i * TOUCH_BUTTON_PADDING)) {
                 // If it does, return the index of the button.
+
                 return i - 1;
             }
         }
