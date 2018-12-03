@@ -37,8 +37,9 @@ int main() {
     tft.setRotation(1);
 
     // The main funtion method for the touch screen.
-    create_touch_pages();
-    
+    menus_init();
+    menu_loop(menu_main);
+
     // Paint the screen black.
     draw_background(ILI9341_BLACK);
 

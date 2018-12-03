@@ -4,115 +4,144 @@
 
 Adafruit_STMPE610 ts = Adafruit_STMPE610(STMPE_CS);
 
-void touch_init(){
-    if (!ts.begin()) {
-        LOGLN("Couldn't start touchscreen");
-        while (1);
+menu_t *menu_main = NULL;
+menu_t *menu_play = NULL;
+menu_t *menu_highscores = NULL;
+
+component_t *button_new(const char *text, menu_t *target, button_mode mode) {
+    component_t *button = (component_t*) malloc(sizeof(component_t));
+    button->text = strdup(text);
+    button->target = target;
+    button->mode = mode;
+    return button;
+}
+
+component_t *label_new(const char *text) {
+    component_t *label = (component_t*) malloc(sizeof(component_t));
+    label->text = strdup(text);
+    label->target = NULL;
+    label->mode = BUTTON_MODE_DEFAULT;
+    return label;
+}
+
+void component_free(component_t *component) {
+    if (!component)
+        return;
+
+    free(component->text);
+    free(component);
+}
+
+void component_draw(component_t *component, int index) {
+    if (component->target) {
+        draw_button(index + 1, component->text);
+    } else {
+        draw_label(index + 1, component->text);
     }
-    LOGLN("Touchscreen started");
 }
 
-void create_touch_pages(){
-
-    touch_menu_page_t page_main_menu = {};
-    touch_menu_page_t page_select_players = {};
-    touch_menu_page_t pages_highscores {};
-
-    touch_button_t button_main_menu_play = {};
-    touch_button_t button_main_menu_highscores = {};
-    touch_button_t button_back = {};
-    touch_button_t button_play_singleplayer = {};
-    touch_button_t button_play_multiplayer = {};
-
-    page_main_menu.title = strdup("BOMBERMAN\0");
-    page_main_menu.buttons[0] = &button_main_menu_play;
-    page_main_menu.buttons[1] = &button_main_menu_highscores;
-
-    page_select_players.title = strdup("PLAY GAME\0");
-    page_select_players.buttons[0] = &button_play_singleplayer;
-    page_select_players.buttons[1] = &button_play_multiplayer;
-    page_select_players.buttons[3] = &button_back;
-
-    pages_highscores.title = strdup("Highscores\0");
-    pages_highscores.buttons[3] = &button_back;
-
-    button_main_menu_play.text = strdup("Play\0");
-    button_main_menu_play.position = 1;
-    button_main_menu_play.target_page = &page_select_players;
-
-    button_main_menu_highscores.text = strdup("Highscores\0");
-    button_main_menu_highscores.position = 2;
-    button_main_menu_highscores.target_page = &pages_highscores;
-
-    button_back.text = strdup("Back");
-    button_back.position = 4;
-    button_back.target_page = &page_main_menu;
-
-    button_play_singleplayer.text = strdup("Singleplayer\0");
-    button_play_singleplayer.position = 1;
-
-    button_play_multiplayer.text = strdup("Multiplayer\0");
-    button_play_multiplayer.position = 2;
-
-    touch_draw_page(&page_main_menu);
+menu_t *menu_new(const char *title) {
+    menu_t *menu = (menu_t*) calloc(sizeof(menu_t), 1);
+    menu->title = title;
+    return menu;
 }
 
-void touch_draw_page(touch_menu_page_t *page){
+void menu_free(menu_t *menu) {
+    if (!menu)
+        return;
+
+    free(menu);
+}
+
+void menu_draw(menu_t *menu) {
     draw_background(ILI9341_NAVY);
     tft.setCursor(80, 10);
-    tft.setTextColor(ILI9341_WHITE);  
+    tft.setTextColor(ILI9341_WHITE);
     tft.setTextSize(3);
-    tft.println(page->title);
+    tft.println(menu->title);
 
-    if(page->buttons[0] >0) {
-        draw_button(page->buttons[0]->position, page->buttons[0]->text);
+    for (int i = 0; i < 4; i++) {
+        if (menu->components[i]) {
+            component_draw(menu->components[i], i);
+        }
     }
-    if(page->buttons[1] > 0) {
-        draw_button(page->buttons[1]->position, page->buttons[1]->text);
-    }
-    if(page->buttons[2] > 0) {
-        draw_button(page->buttons[2]->position, page->buttons[2]->text);
-    }
-    if(page->buttons[3] > 0) {
-        draw_button(page->buttons[3]->position, page->buttons[3]->text);
-    }
-
-    touch_handler(page);
 }
 
-void touch_handler(touch_menu_page_t *current_page){
-    int start_game = 0;
-    Serial.print("current page: ");
-    Serial.println(current_page->title);
+button_mode menu_loop(menu_t *menu) {
+    // Draw the firt menu upon entering the menu loop.
+    menu_draw(menu);
 
-    while(!start_game){
-        while(!(ts.touched())){}
-        
-        TS_Point touch_point = ts.getPoint();
+    // Loop on the current menu.
+    while (true) {
+        int index = menu_await_input();
+        component_t *component = menu->components[index];
 
-        int prev_x = touch_point.x;
-        touch_point.x = map(touch_point.y, TS_MINX, TS_MAXX,0, tft.width());
-        touch_point.y = map(prev_x, TS_MAXY, TS_MINY, 0, tft.height());
+        // If there is no component at all, or the component is not a button, continue waiting.
+        if (!component || !component->target)
+            continue;
 
-        if(touch_point.x > TOUCH_BUTTON_START_X && touch_point.x < (TOUCH_BUTTON_START_X + TOUCH_BUTTON_WIDTH)){
-            for(int i = 1; i < 5; i++){
-                if(current_page->buttons[i-1]){
-                    if(touch_point.y > (i * (TOUCH_BUTTON_HEIGHT + TOUCH_BUTTON_PADDING)) && touch_point.y < ((i+1) * TOUCH_BUTTON_HEIGHT + i * TOUCH_BUTTON_PADDING)){
-                        Serial.print("Button pressed: ");
-                        Serial.println(i-1);
+        // If there is another menu we should go to, do that now.
+        if (component->mode == BUTTON_MODE_DEFAULT) {
+            menu = component->target;
+            menu_draw(menu);
+            continue;
+        }
 
-                            Serial.print("direction page title: ");
-                            Serial.println(current_page->buttons[i-1]->target_page->title);
-                        if(current_page->buttons[i-1]->target_page){
-                            touch_draw_page(current_page->buttons[i-1]->target_page);
-                        } else{
-                            Serial.println("no target page available");
-                        }
-                    }
-                }
+        // If we are entering a game, return the game mode.
+        return component->mode;
+    }
+}
+
+int menu_await_input() {
+    // Await a screen touch.
+    while (!ts.touched())
+        continue;
+
+    TS_Point touch_point = ts.getPoint();
+
+    // Rotate the coordinates to match the screen orientation.
+    int prev_x = touch_point.x;
+    touch_point.x = map(touch_point.y, TS_MINX, TS_MAXX, 0, tft.width());
+    touch_point.y = map(prev_x, TS_MAXY, TS_MINY, 0, tft.height());
+
+    // Check if the touch X falls within the column of (potential) buttons.
+    if (touch_point.x > TOUCH_BUTTON_START_X && touch_point.x < (TOUCH_BUTTON_START_X + TOUCH_BUTTON_WIDTH)) {
+        // Check if the touch Y also falls within a button.
+        for (int i = 1; i < 5; i++) {
+            if (touch_point.y > (i * (TOUCH_BUTTON_HEIGHT + TOUCH_BUTTON_PADDING))
+            && touch_point.y < ((i+1) * TOUCH_BUTTON_HEIGHT + i * TOUCH_BUTTON_PADDING)) {
+                // If it does, return the index of the button.
+                return i - 1;
             }
         }
     }
 }
 
-//TODO: add function methods to free (strdup)
+void touch_init() {
+    if (!ts.begin()) {
+        LOGLN("Couldn't start touchscreen");
+        while (1);
+    }
+    LOGLN("Touchscreen started");
+
+    // Use the screen in landscape mode.
+    tft.setRotation(1);
+}
+
+void menus_init() {
+    menu_main = menu_new("BOMBERMAN");
+    menu_play = menu_new("PLAY GAME");
+    menu_highscores = menu_new("HIGHSCORES");
+
+    menu_main->components[0] = button_new("Play", menu_play, BUTTON_MODE_DEFAULT);
+    menu_main->components[1] = button_new("Highscores", menu_highscores, BUTTON_MODE_DEFAULT);
+
+    menu_play->components[0] = button_new("Singleplayer", NULL, BUTTON_MODE_SINGLEPLAYER);
+    menu_play->components[1] = button_new("Multiplayer", NULL, BUTTON_MODE_MULTIPLAYER);
+    menu_play->components[3] = button_new("Back", menu_main, BUTTON_MODE_DEFAULT);
+
+    menu_highscores->components[0] = label_new("");
+    menu_highscores->components[1] = label_new("");
+    menu_highscores->components[2] = label_new("");
+    menu_highscores->components[3] = button_new("Back", menu_main, BUTTON_MODE_DEFAULT);
+}

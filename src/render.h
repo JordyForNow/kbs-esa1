@@ -18,6 +18,7 @@ void draw_background(int color);
 
 void draw_tile(int x, int y, tile_t type);
 
-int draw_button(int position, char *text);
+void draw_button(int index, char *text);
+void draw_label(int index, char *text);
 
 #endif /* RENDER_H */

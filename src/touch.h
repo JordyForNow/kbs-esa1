@@ -4,28 +4,42 @@
 #include <Adafruit_STMPE610.h>
 #include <SoftwareSerial.h>
 
-typedef struct touch_menu_page touch_menu_page_t;
+struct menu_t;
+
+typedef enum {
+    BUTTON_MODE_DEFAULT,
+    BUTTON_MODE_SINGLEPLAYER,
+    BUTTON_MODE_MULTIPLAYER,
+} button_mode;
 
 typedef struct {
     char *text;
-    int position;
-    touch_menu_page_t *target_page;
-} touch_button_t;
+    menu_t *target;
+    button_mode mode;
+} component_t;
 
-typedef struct touch_menu_page {
-    char *title;
-    touch_button_t *buttons[4];
-} touch_menu_page_t;
+typedef struct menu_t {
+    const char *title;
+    component_t *components[4];
+} menu_t;
+
+extern menu_t *menu_main;
+extern menu_t *menu_play;
+extern menu_t *menu_highscores;
+
+component_t *button_new(char *text, menu_t *target, uint8_t start);
+component_t *label_new(char *text);
+void component_free(component_t *component);
+void component_draw(component_t *component, int index);
+
+menu_t *menu_new(const char *title);
+void menu_free(menu_t *menu);
+
+void menu_draw(menu_t *menu);
+button_mode menu_loop(menu_t *menu);
+int menu_await_input();
 
 void touch_init();
-
-void touch_main();
-void touch_handler(touch_menu_page_t *current_page);
-void draw_main_menu();
-void draw_play_menu();
-void draw_highscore_menu();
-
-void create_touch_pages();
-void touch_draw_page(touch_menu_page_t *page);
+void menus_init();
 
 #endif /* TOUCH_H */
