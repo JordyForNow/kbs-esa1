@@ -80,6 +80,8 @@ void timer1_init() {
     // Set the OCR1A register to 15625 divided by the desired update frequency
     // so the timer will generate a signal that is equal to the desired frequency.
     // (15625 is used because this will make the timer generate a signal with a frequency of 1 Hz.)
-    OCR1A = 15625 / GAME_UPDATE_FREQUENCY;
+    // This number is lastly divided by the GAME_INPUT_FACTOR. We check the input
+    // that many times before actually performing a game update.
+    OCR1A = 15625 / GAME_UPDATE_FREQUENCY / GAME_INPUT_FACTOR;
     sei();
 }

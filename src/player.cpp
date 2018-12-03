@@ -43,7 +43,7 @@ void player_update(world_t *world, player_t *player, uint8_t inputs) {
     }
 
     // Place a bomb if necessary.
-    if (!player->bomb && inputs & (1 << INPUT_BUTTON_Z)) {
+    if (!player->bomb && inputs & (1 << INPUT_BUTTON_C)) {
         player_place_bomb(world, player);
         redraw = 1;
     }
