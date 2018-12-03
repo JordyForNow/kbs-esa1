@@ -2,13 +2,15 @@
 #include "defines.h"
 #include "render.h"
 
+int world_boxes = 0;
+
 world_t *world_new(uint8_t player_count) {
-    world_t *world = (world_t*) calloc(sizeof(world_t), 1);
+    world_t *world = (world_t *)calloc(sizeof(world_t), 1);
     if (!world)
         return NULL;
 
     world->player_count = player_count;
-    world->players = (player_t**) calloc(sizeof(player_t*), player_count);
+    world->players = (player_t **)calloc(sizeof(player_t *), player_count);
     if (!world->players) {
         free(world);
         return NULL;
@@ -56,6 +58,18 @@ void world_generate(world_t *world, unsigned long seed) {
         world_set_tile(world, (WORLD_WIDTH - 1 - i), (WORLD_HEIGHT - 2), EMPTY);
         world_set_tile(world, (WORLD_WIDTH - 2), (WORLD_HEIGHT - 1 - i), EMPTY);
     }
+
+    world_scan_boxes(world);
+}
+
+void world_scan_boxes(world_t *world) {
+    for (int y = 0; y < WORLD_HEIGHT; y++) {
+        for (int x = 0; x < WORLD_WIDTH; x++) {
+            if(world->tiles[x][y] == BOX){
+                world_boxes++;
+            }
+        }
+    }
 }
 
 void world_update(world_t *world, uint8_t inputs) {
@@ -81,6 +95,14 @@ uint8_t world_set_tile(world_t *world, uint8_t x, uint8_t y, tile_t tile) {
     world->tiles[x][y] = tile;
     world_redraw_tile(world, x, y);
     return 1;
+}
+
+void world_subtract_boxes(world_t *world, int subtraction_factor){
+    world_boxes-=subtraction_factor;
+}
+
+int world_get_boxes(world_t *world){
+    return world_boxes;
 }
 
 tile_t world_get_tile(world_t *world, uint8_t x, uint8_t y) {

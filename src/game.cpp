@@ -1,8 +1,8 @@
 #include "game.h"
 #include "defines.h"
-#include "world.h"
 #include "player.h"
 #include "render.h"
+#include "world.h"
 
 volatile bool should_poll = false;
 static int should_update = 0;
@@ -12,6 +12,9 @@ static player_t *player;
 static uint8_t input_buttons = 0;
 static int16_t input_joy_x = 0;
 static int16_t input_joy_y = 0;
+
+uint8_t game_finished = 0;
+uint8_t game_won = 0;
 
 // Initialize the game state.
 void game_init() {
@@ -24,7 +27,7 @@ void game_init() {
 
     // Create the player and show the lives on the 7-segment display.
     player = player_new(1, 1);
-    player_show_lives(player); // Never updated, so this is fine.
+    player_show_lives(player);  // Never updated, so this is fine.
     draw_player(player);
 
     world->players[0] = player;
@@ -32,17 +35,31 @@ void game_init() {
 
 // Update the game, or do nothing if an update hasn't been triggered.
 bool game_update() {
+    //Check if player has died.
+    if (player->lives == 0) {
+        game_finished = 1;
+        game_won = 0;
+    }
+
+    // Check if there are no boxes left to destroy.
+    if(world_get_boxes(world) == 0){
+        game_finished = 1;
+        game_won = 1;
+    }
+
+    // Check if game has finished.
+    if (game_finished)
+        return false;
 
     // Don't poll or update unless the timer tells us to.
     if (!should_poll)
         return false;
-    
+
     should_poll = false;
     should_update++;
 
     // Collect inputs.
     if (nunchuck_get_data()) {
-
         uint8_t x = nunchuck_joyx();
         uint8_t y = nunchuck_joyy();
 
@@ -80,11 +97,11 @@ bool game_update() {
     if (((input_joy_x ^ x_mask) + x_mask) >= ((input_joy_y ^ y_mask) + y_mask)) {
         // The X-axis is more or equally prevalent.
         inputs |= (input_joy_x < -INPUT_JOY_THRESHOLD) << INPUT_JOY_LEFT;
-        inputs |= (input_joy_x >  INPUT_JOY_THRESHOLD) << INPUT_JOY_RIGHT;
+        inputs |= (input_joy_x > INPUT_JOY_THRESHOLD) << INPUT_JOY_RIGHT;
     } else {
         // The Y-axis is more prevalent.
         inputs |= (input_joy_y < -INPUT_JOY_THRESHOLD) << INPUT_JOY_UP;
-        inputs |= (input_joy_y >  INPUT_JOY_THRESHOLD) << INPUT_JOY_DOWN;
+        inputs |= (input_joy_y > INPUT_JOY_THRESHOLD) << INPUT_JOY_DOWN;
     }
 
     // Reset the input trackers.
@@ -98,6 +115,16 @@ bool game_update() {
     world_update(world, inputs);
 
     return true;
+}
+
+// Return if game is finished.
+bool game_is_finished() {
+    return game_finished;
+}
+
+// Return if game is won.
+bool game_is_won() {
+    return game_won;
 }
 
 // Trigger a game-update the next time game_update() is called.

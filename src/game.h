@@ -7,5 +7,7 @@
 void game_init();
 bool game_update();
 void game_trigger_update();
+bool game_is_finished();
+bool game_is_won();
 
 #endif

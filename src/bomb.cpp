@@ -73,6 +73,8 @@ void bomb_explosion_toggle(world_t *world, bomb_t *bomb, tile_t tile) {
                 // A wall can't be broken.
                 break;
             } else if (tile_temp == BOX) {
+                if(tile != EMPTY)
+                    world_subtract_boxes(world, 1);
                 // After a box the explosion should stop.
                 if (tile == EXPLODING_BOMB)
                     bomb_explosion_toggle_tile(world, x_temp, y_temp, tile);

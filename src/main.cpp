@@ -35,8 +35,18 @@ int main() {
     game_init();
 
     while (1) {
-        game_update();
+        if(!game_is_finished()){
+            game_update();
+        }else{
+            if(game_is_won()){
+                LOGLN("Won!!");
+            }else{
+                LOGLN("Lost :(");
+            }
+            while(1){}
+        }
     }
+    
     return 0;
 }
 
