@@ -76,45 +76,59 @@ button_mode menu_loop(menu_t *menu) {
         int index = menu_await_input();
         component_t *component = menu->components[index];
 
-        // If there is no component at all, or the component is not a button, continue waiting.
-        if (!component || !component->target)
+        // If nothing was clicked, continue waiting.
+        if (!component)
             continue;
 
-        // If there is another menu we should go to, do that now.
-        if (component->mode == BUTTON_MODE_DEFAULT) {
+        // If this starts the game, do that now.
+        if (component->mode != BUTTON_MODE_DEFAULT)
+            return component->mode;
+
+        // If it is a menu button, it should go to the next menu.
+        if (component->target) {
             menu = component->target;
             menu_draw(menu);
-            continue;
         }
 
-        // If we are entering a game, return the game mode.
-        return component->mode;
+        // The only remaining scenario is that it is a label, in which
+        // case we do nothing here.
     }
 }
 
 int menu_await_input() {
-    // Await a screen touch.
-    while (!ts.touched())
-        continue;
+    while (true) {
+        // Await a screen touch.
+        if (!ts.touched())
+            continue;
 
-    TS_Point touch_point = ts.getPoint();
+        TS_Point touch_point = ts.getPoint();
 
-    // Rotate the coordinates to match the screen orientation.
-    int prev_x = touch_point.x;
-    touch_point.x = map(touch_point.y, TS_MINX, TS_MAXX, 0, tft.width());
-    touch_point.y = map(prev_x, TS_MAXY, TS_MINY, 0, tft.height());
+        // Rotate the coordinates to match the screen orientation.
+        int prev_x = touch_point.x;
+        touch_point.x = map(touch_point.y, TS_MINX, TS_MAXX, 0, tft.width());
+        touch_point.y = map(prev_x, TS_MAXY, TS_MINY, 0, tft.height());
 
+        Serial.print("x: ");
+        Serial.print(touch_point.x);
+        Serial.print("\tw: ");
+        Serial.print(tft.width());
+        Serial.print("\ty: ");
+        Serial.print(touch_point.y);
+        Serial.print("\th: ");
+        Serial.println(tft.height());
 
-
-    // Check if the touch X falls within the column of (potential) buttons.
-    if (touch_point.x > TOUCH_BUTTON_START_X && touch_point.x < (TOUCH_BUTTON_START_X + TOUCH_BUTTON_WIDTH)) {
-        // Check if the touch Y also falls within a button.
-        for (int i = 1; i < 5; i++) {
-            if (touch_point.y > (i * (TOUCH_BUTTON_HEIGHT + TOUCH_BUTTON_PADDING))
-            && touch_point.y < ((i+1) * TOUCH_BUTTON_HEIGHT + i * TOUCH_BUTTON_PADDING)) {
-                // If it does, return the index of the button.
-
-                return i - 1;
+        // Check if the touch X falls within the column of (potential) buttons.
+        if (touch_point.x > TOUCH_BUTTON_START_X
+        && touch_point.x < (TOUCH_BUTTON_START_X + TOUCH_BUTTON_WIDTH)) {
+            // Check if the touch Y also falls within a button.
+            for (int i = 1; i < 5; i++) {
+                if (touch_point.y > (i * (TOUCH_BUTTON_HEIGHT + TOUCH_BUTTON_PADDING))
+                && touch_point.y < ((i+1) * TOUCH_BUTTON_HEIGHT + i * TOUCH_BUTTON_PADDING)) {
+                    // If it does, return the index of the button.
+                    Serial.print("button: ");
+                    Serial.println(i - 1);
+                    return i - 1;
+                }
             }
         }
     }
