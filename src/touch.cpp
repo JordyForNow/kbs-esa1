@@ -101,6 +101,7 @@ int menu_await_input() {
         if (!ts.touched())
             continue;
 
+        // Grab the touch point when the touch is released.
         TS_Point touch_point;
         while (ts.touched())
             touch_point = ts.getPoint();
