@@ -3,8 +3,7 @@
 #include "world.h"
 #include "player.h"
 #include "render.h"
-#include "usart.h"
-#include "utils.h"
+#include "network.h"
 
 volatile bool should_poll = false;
 volatile bool data_recieved = false;
@@ -31,11 +30,7 @@ void game_init() {
     draw_player(player);
 
     world->players[0] = player;
-    usart_init();
-}
-
-int validate_incoming_data(uint16_t data){
-    return has_even_parity(data);
+    network_init();
 }
 
 // Update the game, or do nothing if an update hasn't been triggered.
@@ -45,17 +40,13 @@ bool game_update() {
     {
         data_recieved = false;
 
-        uint16_t data = usart_get_recieved_bytes();
+        uint16_t data = network_receive();
 
-        if (validate_incoming_data(data))
+        if (data)
         {
-            usart_send_acknowledgement();
+            network_acknowledge();
 
-            // usart_send_debug_message("Data received and acknowledged\n");
-        }
-        else
-        {
-            // usart_send_debug_message("Data does not have even parity\n");
+            network_send(data);
         }
     }
 

@@ -21,24 +21,42 @@ void usart_init()
 }
 
 
-void usart_send_bytes(uint16_t bytes)
+bool usart_send(uint16_t bytes)
 {
     uint8_t first = bytes >> 8;
     uint8_t second = bytes;
 
+    UDR0 = first;
+    while( !(UCSR0A & (1<<UDRE0)) ) { }
+    UDR0 = second;
+
+    // TODO: implement waiting for acknowledge form receiver
+
+    return true;
 }
 
-uint16_t usart_get_recieved_bytes()
+int validate_incoming_data(uint16_t data){
+    int count = 1;
+
+    for (int i = 0; i < 16; i++) {
+        if (data & (1 << i)) 
+            count++;
+    }
+
+    return count % 2;
+}
+
+uint16_t usart_read()
 {
     uint16_t combined_data = (data[0] << 8) | (data[1]); 
 
-    return  combined_data;
+    return  validate_incoming_data(combined_data) ? combined_data :  NULL;
 }
 
-void usart_send_acknowledgement() {
+void usart_acknowledge() {
     while( !(UCSR0A & (1<<UDRE0)) ) { }
 
-    UDR0 = '1';
+    UDR0 = 0b110;
 }
 
 void usart_send_debug_message(char message[]) {
@@ -53,7 +71,6 @@ void usart_send_debug_message(char message[]) {
         i++;
     }
 }
-
 
 ISR(USART_RX_vect) {
     uint8_t temp = UDR0;

@@ -5,10 +5,9 @@
 #include <stdbool.h>
 
 void usart_init();
-void usart_send_bytes(uint16_t);
-bool usart_has_data();
-uint16_t usart_get_recieved_bytes();
-void usart_send_acknowledgement();
+bool usart_send(uint16_t);
+uint16_t usart_receive();
+void usart_acknowledge();
 void usart_send_debug_message(char []);
 
 #endif
