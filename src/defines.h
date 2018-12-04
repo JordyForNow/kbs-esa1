@@ -54,6 +54,9 @@
 #define TFT_CS 10
 #define TFT_DC 9
 
+// Extra colors to use in the screen.
+#define ILI9341_BROWN 0x6100
+
 // Logging macros that only do something when DEBUG is enabled.
 // They print messages in the following style: [src/game.cpp] updating()
 // It includes the source file where the logging call originated from.

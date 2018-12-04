@@ -6,7 +6,7 @@
 #include "segments.h"
 
 // Create a new player struct.
-player_t *player_new(uint8_t x, uint8_t y) {
+player_t *player_new(uint8_t x, uint8_t y, uint8_t is_main) {
     player_t *player = (player_t *)malloc(sizeof(player_t));
     if (!player)
         return player;
@@ -16,6 +16,7 @@ player_t *player_new(uint8_t x, uint8_t y) {
     player->lives = 3;
     player->bomb = NULL;
     player->hit_duration = 0;
+    player->is_main = is_main;
     return player;
 }
 
