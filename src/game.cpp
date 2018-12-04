@@ -3,8 +3,11 @@
 #include "world.h"
 #include "player.h"
 #include "render.h"
+#include "usart.h"
+#include "utils.h"
 
 volatile bool should_poll = false;
+volatile bool data_recieved = false;
 static int should_update = 0;
 static world_t *world;
 static player_t *player;
@@ -24,14 +27,37 @@ void game_init() {
 
     // Create the player and show the lives on the 7-segment display.
     player = player_new(1, 1);
-    player_show_lives(player); // Never updated, so this is fine.
+    player_show_lives(player);
     draw_player(player);
 
     world->players[0] = player;
+    usart_init();
+}
+
+int validate_incoming_data(uint16_t data){
+    return has_even_parity(data);
 }
 
 // Update the game, or do nothing if an update hasn't been triggered.
 bool game_update() {
+    // Handle networking
+    if (data_recieved)
+    {
+        data_recieved = false;
+
+        uint16_t data = usart_get_recieved_bytes();
+
+        if (validate_incoming_data(data))
+        {
+            usart_send_acknowledgement();
+
+            // usart_send_debug_message("Data received and acknowledged\n");
+        }
+        else
+        {
+            // usart_send_debug_message("Data does not have even parity\n");
+        }
+    }
 
     // Don't poll or update unless the timer tells us to.
     if (!should_poll)
@@ -92,8 +118,6 @@ bool game_update() {
     input_joy_x = 0;
     input_joy_y = 0;
 
-    // TODO: Handle networking.
-
     // Update the world.
     world_update(world, inputs);
 
@@ -103,4 +127,8 @@ bool game_update() {
 // Trigger a game-update the next time game_update() is called.
 void game_trigger_update() {
     should_poll = true;
+}
+
+void game_trigger_network_update() {
+    data_recieved = true;
 }

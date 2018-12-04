@@ -7,5 +7,6 @@
 void game_init();
 bool game_update();
 void game_trigger_update();
+void game_trigger_network_update();
 
 #endif

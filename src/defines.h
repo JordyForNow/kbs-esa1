@@ -1,7 +1,7 @@
 #ifndef DEFINES_H
 #define DEFINES_H
 
-#define DEBUG 1
+#define DEBUG 0
 #define SEGMENTS_ENABLE 1
 
 // The length to clear the corner from boxes.
@@ -53,6 +53,13 @@
 // The ports which the screen is connected to.
 #define TFT_CS 10
 #define TFT_DC 9
+
+//////////////
+//Networking//
+//////////////
+
+//Usart settings
+#define USART_BAUD_RATE 9600
 
 // Logging macros that only do something when DEBUG is enabled.
 // They print messages in the following style: [src/game.cpp] updating()
