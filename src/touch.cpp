@@ -101,21 +101,14 @@ int menu_await_input() {
         if (!ts.touched())
             continue;
 
-        TS_Point touch_point = ts.getPoint();
+        TS_Point touch_point;
+        while (ts.touched())
+            touch_point = ts.getPoint();
 
         // Rotate the coordinates to match the screen orientation.
         int prev_x = touch_point.x;
         touch_point.x = map(touch_point.y, TS_MINX, TS_MAXX, 0, tft.width());
         touch_point.y = map(prev_x, TS_MAXY, TS_MINY, 0, tft.height());
-
-        Serial.print("x: ");
-        Serial.print(touch_point.x);
-        Serial.print("\tw: ");
-        Serial.print(tft.width());
-        Serial.print("\ty: ");
-        Serial.print(touch_point.y);
-        Serial.print("\th: ");
-        Serial.println(tft.height());
 
         // Check if the touch X falls within the column of (potential) buttons.
         if (touch_point.x > TOUCH_BUTTON_START_X

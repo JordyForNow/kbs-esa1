@@ -38,7 +38,7 @@ int main() {
 
     // The main funtion method for the touch screen.
     menus_init();
-    menu_loop(menu_play);
+    menu_loop(menu_main);
 
     // Paint the screen black.
     draw_background(ILI9341_BLACK);
