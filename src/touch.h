@@ -10,12 +10,12 @@ typedef enum {
     BUTTON_MODE_DEFAULT,
     BUTTON_MODE_SINGLEPLAYER,
     BUTTON_MODE_MULTIPLAYER,
-} button_mode;
+} button_mode_t;
 
 typedef struct {
     char *text;
     menu_t *target;
-    button_mode mode;
+    button_mode_t mode;
 } component_t;
 
 typedef struct menu_t {
@@ -36,7 +36,7 @@ menu_t *menu_new(const char *title);
 void menu_free(menu_t *menu);
 
 void menu_draw(menu_t *menu);
-button_mode menu_loop(menu_t *menu);
+button_mode_t menu_loop(menu_t *menu);
 int menu_await_input();
 
 void touch_init();

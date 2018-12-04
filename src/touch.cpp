@@ -8,7 +8,7 @@ menu_t *menu_main = NULL;
 menu_t *menu_play = NULL;
 menu_t *menu_highscores = NULL;
 
-component_t *button_new(const char *text, menu_t *target, button_mode mode) {
+component_t *button_new(const char *text, menu_t *target, button_mode_t mode) {
     component_t *button = (component_t*) malloc(sizeof(component_t));
     button->text = strdup(text);
     button->target = target;
@@ -67,7 +67,7 @@ void menu_draw(menu_t *menu) {
     }
 }
 
-button_mode menu_loop(menu_t *menu) {
+button_mode_t menu_loop(menu_t *menu) {
     // Draw the firt menu upon entering the menu loop.
     menu_draw(menu);
 
