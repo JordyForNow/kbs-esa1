@@ -17,7 +17,7 @@ void draw_tile(int x, int y, tile_t type) {
             draw_rect(x, y, ILI9341_DARKGREY);
             break;
         case BOX:
-            draw_rect(x, y, ILI9341_NAVY);
+            draw_rect(x, y, ILI9341_BROWN);
             break;
         case EMPTY:
             draw_rect(x, y, ILI9341_BLACK);
@@ -49,10 +49,19 @@ void draw_background(int color){
 
 void draw_player(player_t *player) {
     if (player->hit_duration) {
-        draw_circle(WORLD_TILE_SIZE * player->x, WORLD_TILE_SIZE * player->y, ILI9341_ORANGE);
+        if(player->is_main){
+            draw_circle(WORLD_TILE_SIZE * player->x, WORLD_TILE_SIZE * player->y, ILI9341_ORANGE);
+        }else{
+            draw_circle(WORLD_TILE_SIZE * player->x, WORLD_TILE_SIZE * player->y, ILI9341_CYAN);
+        }
         return;
     }
-    draw_circle(WORLD_TILE_SIZE * player->x, WORLD_TILE_SIZE * player->y, ILI9341_BLUE);
+
+    if(player->is_main){
+        draw_circle(WORLD_TILE_SIZE * player->x, WORLD_TILE_SIZE * player->y, ILI9341_RED);
+    }else{
+        draw_circle(WORLD_TILE_SIZE * player->x, WORLD_TILE_SIZE * player->y, ILI9341_BLUE);
+    }
 }
 
 void draw_button(int index, char *text) {
