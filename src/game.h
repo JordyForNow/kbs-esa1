@@ -4,7 +4,7 @@
 #include <nunchuck_funcs.h>
 #include <stdbool.h>
 
-typedef enum{
+typedef enum {
     GAME_STATE_RUNNING,
     GAME_STATE_WON,
     GAME_STATE_LOST,
