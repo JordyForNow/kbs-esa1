@@ -1,6 +1,8 @@
 #ifndef TOUCH_H
 #define TOUCH_H
 
+#include "defines.h"
+
 #include <Adafruit_STMPE610.h>
 #include <SoftwareSerial.h>
 
@@ -20,7 +22,7 @@ typedef struct {
 
 typedef struct menu_t {
     const char *title;
-    component_t *components[4];
+    component_t *components[TOUCH_BUTTON_COUNT];
 } menu_t;
 
 extern menu_t *menu_main;
