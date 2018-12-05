@@ -2,6 +2,7 @@
 #include "defines.h"
 #include "game.h"
 #include "player.h"
+#include "touch.h"
 
 uint8_t total_boxes = 0;
 unsigned long total_time = 0;
@@ -26,7 +27,6 @@ void score_calculate() {
     Serial.println(score_part_two);
 
     score_calculate_position(score_part_one, score_part_two);
-    eeprom_show();
 }
 
 void score_set_boxes(uint8_t boxes) {

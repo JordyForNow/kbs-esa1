@@ -62,4 +62,7 @@ int menu_await_input();
 void touch_init();
 void menus_init();
 
+void menu_reset_score(menu_t *menu);
+void menu_set_score();
+
 #endif /* TOUCH_H */

@@ -22,7 +22,7 @@ component_t *button_new(const char *text, menu_t *target, button_mode_t mode) {
     return button;
 }
 
-component_t *label_new(const char *text) {
+component_t *label_new(char *text) {
     component_t *label = (component_t *)malloc(sizeof(component_t));
     if (!label)
         return NULL;
@@ -171,18 +171,17 @@ void menus_init() {
     menu_set_component(menu_play, 3, button_new("Back", menu_main, BUTTON_MODE_DEFAULT));
 
     // menu_score
-    for (uint8_t i=0; i<3; i++) {
+    int index = 1;
+    for (uint8_t i=0; i<6; i+=2) {
         uint8_t first = eeprom_read_byte(i);
-        uint8_t second = eeprom_read_byte(i*2);
+        uint8_t second = eeprom_read_byte(i+1);
         
-        char label = sprintf("%u. %u,%u", (char*)i+1, first, second);
-        if (first) {
-            menu_set_component(menu_score, 0, label_new(label));
-        }
+        char label[1];
+        sprintf(label, "%u. %u,%u", index, first, second);
+        menu_set_component(menu_score, (i+1)/2, label_new(label));
+        index++;
     }
-    /*menu_set_component(menu_score, 0, label_new("1. "));
-    menu_set_component(menu_score, 1, label_new("2. "));
-    menu_set_component(menu_score, 2, label_new("3. "));*/
+    menu_set_component(menu_score, 3, button_new("Back", menu_main, BUTTON_MODE_DEFAULT));
 
     // menu_lose
     menu_set_component(menu_lose, 1, label_new("You lose!"));
