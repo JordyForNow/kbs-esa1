@@ -49,7 +49,6 @@ uint8_t buffer_read(buffer_t *buffer) {
     if (buffer_empty(buffer))
         return NULL;
 
-    usart_send_debug_message("Read a value\n");
     uint8_t element = buffer->buffer[buffer->tail];
     buffer->count = buffer->count - 1;
     buffer->tail = (buffer->tail + 1) % buffer->capacity;
@@ -57,7 +56,10 @@ uint8_t buffer_read(buffer_t *buffer) {
 }
 
 bool buffer_write(buffer_t *buffer, uint8_t value) {
+    buffer->head = (buffer->head + 1) % buffer->capacity;
+    buffer->count = buffer->count + 1;
 
+    buffer->buffer[buffer->head] = value;
     
     return true;
 }

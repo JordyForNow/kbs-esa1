@@ -38,10 +38,10 @@ bool game_update() {
     // Handle networking
     if (network_available())
     {
-        usart_send_debug_message("in main loop network update\n");
+        usart_send_debug_message("In main loop network update\n");
         uint16_t data = network_receive();
 
-        usart_send_debug_message("received data\n");
+        usart_send_debug_message("\nReceived data\n");
         if (data)
         {
             network_acknowledge();
