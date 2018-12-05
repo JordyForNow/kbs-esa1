@@ -67,6 +67,7 @@ void menu_set_component(menu_t *menu, int index, component_t *component) {
 void menu_draw(menu_t *menu) {
     draw_background(ILI9341_NAVY);
     tft.setTextSize(3);
+
     int16_t x, y;
     uint16_t w, h;
     tft.getTextBounds(menu->title, 0, 0, &x, &y, &w, &h);
@@ -127,11 +128,11 @@ int menu_await_input() {
         touch_point.y = map(prev_x, TOUCH_MAX_Y, TOUCH_MIN_Y, 0, tft.height());
 
         // Check if the touch X falls within the column of (potential) buttons.
-        if (touch_point.x > TOUCH_BUTTON_START_X && 
-        touch_point.x < (TOUCH_BUTTON_START_X + TOUCH_COMPONENT_WIDTH)) {
+        if (touch_point.x > TOUCH_BUTTON_START_X
+        && touch_point.x < (TOUCH_BUTTON_START_X + TOUCH_COMPONENT_WIDTH)) {
             // Check if the touch Y also falls within a button.
             for (int i = 1; i < TOUCH_COMPONENT_COUNT + 1; i++) {
-                if (touch_point.y > (i * (TOUCH_COMPONENT_HEIGHT + TOUCH_COMPONENT_PADDING)) && 
+                if (touch_point.y > (i * (TOUCH_COMPONENT_HEIGHT + TOUCH_COMPONENT_PADDING)) &&
                 touch_point.y < ((i + 1) * TOUCH_COMPONENT_HEIGHT + i * TOUCH_COMPONENT_PADDING)) {
                     // If it does, return the index of the button.
                     return i - 1;

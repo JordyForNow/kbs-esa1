@@ -41,7 +41,7 @@ void game_free() {
 
 // Update the game, or do nothing if an update hasn't been triggered.
 bool game_update() {
-    // Check if player has died.
+    // Check if the player has died.
     if (player->lives)
         game_state = GAME_STATE_LOST;
 
@@ -49,7 +49,7 @@ bool game_update() {
     if (!world_get_boxes(world))
         game_state = GAME_STATE_WON;
 
-    // Check if game has finished.
+    // Check if the game has finished.
     if (game_state)
         return false;
 
