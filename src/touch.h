@@ -39,6 +39,7 @@ typedef struct menu_t {
 // The menu screens that exist in the game.
 extern menu_t *menu_main;
 extern menu_t *menu_play;
+extern menu_t *menu_score;
 extern menu_t *menu_win;
 extern menu_t *menu_lose;
 

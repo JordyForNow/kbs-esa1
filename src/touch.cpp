@@ -1,11 +1,13 @@
 #include "touch.h"
 #include "defines.h"
 #include "render.h"
+#include "score.h"
 
 Adafruit_STMPE610 ts = Adafruit_STMPE610(STMPE_CS);
 
 menu_t *menu_main = NULL;
 menu_t *menu_play = NULL;
+menu_t *menu_score = NULL;
 menu_t *menu_win = NULL;
 menu_t *menu_lose = NULL;
 
@@ -156,15 +158,31 @@ void touch_init() {
 void menus_init() {
     menu_main = menu_new("BOMBERMAN");
     menu_play = menu_new("PLAY GAME");
+    menu_score = menu_new("HIGH SCORES");
     menu_lose = menu_new("GAME ENDED");
     menu_win = menu_new("GAME ENDED");
 
     // menu_main
     menu_set_component(menu_main, 0, button_new("Play", menu_play, BUTTON_MODE_DEFAULT));
+    menu_set_component(menu_main, 1, button_new("High scores", menu_score, BUTTON_MODE_DEFAULT));
 
     // menu_play
     menu_set_component(menu_play, 0, button_new("Singleplayer", NULL, BUTTON_MODE_SINGLEPLAYER));
     menu_set_component(menu_play, 3, button_new("Back", menu_main, BUTTON_MODE_DEFAULT));
+
+    // menu_score
+    for (uint8_t i=0; i<3; i++) {
+        uint8_t first = eeprom_read_byte(i);
+        uint8_t second = eeprom_read_byte(i*2);
+        
+        char label = sprintf("%u. %u,%u", (char*)i+1, first, second);
+        if (first) {
+            menu_set_component(menu_score, 0, label_new(label));
+        }
+    }
+    /*menu_set_component(menu_score, 0, label_new("1. "));
+    menu_set_component(menu_score, 1, label_new("2. "));
+    menu_set_component(menu_score, 2, label_new("3. "));*/
 
     // menu_lose
     menu_set_component(menu_lose, 1, label_new("You lose!"));
