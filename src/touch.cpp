@@ -6,7 +6,6 @@ Adafruit_STMPE610 ts = Adafruit_STMPE610(STMPE_CS);
 
 menu_t *menu_main = NULL;
 menu_t *menu_play = NULL;
-menu_t *menu_highscores = NULL;
 
 component_t *button_new(const char *text, menu_t *target, button_mode_t mode) {
     component_t *button = (component_t*) malloc(sizeof(component_t));
@@ -149,17 +148,10 @@ void touch_init() {
 void menus_init() {
     menu_main = menu_new("BOMBERMAN");
     menu_play = menu_new("PLAY GAME");
-    menu_highscores = menu_new("HIGHSCORES");
 
     menu_main->components[0] = button_new("Play", menu_play, BUTTON_MODE_DEFAULT);
-    menu_main->components[1] = button_new("Highscores", menu_highscores, BUTTON_MODE_DEFAULT);
 
     menu_play->components[0] = button_new("Singleplayer", NULL, BUTTON_MODE_SINGLEPLAYER);
     menu_play->components[1] = button_new("Multiplayer", NULL, BUTTON_MODE_MULTIPLAYER);
     menu_play->components[3] = button_new("Back", menu_main, BUTTON_MODE_DEFAULT);
-
-    menu_highscores->components[0] = label_new("");
-    menu_highscores->components[1] = label_new("");
-    menu_highscores->components[2] = label_new("");
-    menu_highscores->components[3] = button_new("Back", menu_main, BUTTON_MODE_DEFAULT);
 }
