@@ -152,6 +152,5 @@ void menus_init() {
     menu_main->components[0] = button_new("Play", menu_play, BUTTON_MODE_DEFAULT);
 
     menu_play->components[0] = button_new("Singleplayer", NULL, BUTTON_MODE_SINGLEPLAYER);
-    menu_play->components[1] = button_new("Multiplayer", NULL, BUTTON_MODE_MULTIPLAYER);
     menu_play->components[3] = button_new("Back", menu_main, BUTTON_MODE_DEFAULT);
 }
