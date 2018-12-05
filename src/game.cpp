@@ -1,8 +1,8 @@
 #include "game.h"
 #include "defines.h"
-#include "world.h"
 #include "player.h"
 #include "render.h"
+#include "world.h"
 
 volatile bool should_poll = false;
 static int should_update = 0;
@@ -13,8 +13,13 @@ static uint8_t input_buttons = 0;
 static int16_t input_joy_x = 0;
 static int16_t input_joy_y = 0;
 
+game_state_t game_state = GAME_STATE_RUNNING;
+
 // Initialize the game state.
 void game_init() {
+    // Reset variables when a game is restarting.
+    game_state = GAME_STATE_RUNNING;
+
     // Initialize the nunchuck.
     nunchuck_send_request();
 
@@ -24,14 +29,29 @@ void game_init() {
 
     // Create the player and show the lives on the 7-segment display.
     player = player_new(1, 1);
-    player_show_lives(player); // Never updated, so this is fine.
+    player_show_lives(player);
     draw_player(player);
 
     world->players[0] = player;
 }
 
+void game_free() {
+    world_free(world);
+}
+
 // Update the game, or do nothing if an update hasn't been triggered.
 bool game_update() {
+    // Check if the player has died.
+    if (player->lives)
+        game_state = GAME_STATE_LOST;
+
+    // End the game if there are no boxes remaining.
+    if (!world_get_boxes(world))
+        game_state = GAME_STATE_WON;
+
+    // Check if the game has finished.
+    if (game_state)
+        return false;
 
     // Don't poll or update unless the timer tells us to.
     if (!should_poll)
@@ -97,6 +117,10 @@ bool game_update() {
     world_update(world, inputs);
 
     return true;
+}
+
+game_state_t game_get_state() {
+    return game_state;
 }
 
 // Trigger a game-update the next time game_update() is called.

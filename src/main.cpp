@@ -28,17 +28,32 @@ int main() {
 
     // The main funtion method for the touch screen.
     menus_init();
-    menu_loop(menu_main);
-
-    // Paint the screen black.
-    draw_background(ILI9341_BLACK);
 
     timer1_init();
-    game_init();
 
+    menu_t *menu = menu_main;
     while (1) {
-        game_update();
+        // Show the menu.
+        button_mode_t mode = menu_loop(menu);
+        // Singleplayer/ Multiplayer
+        
+        // Paint background black.
+        draw_background(ILI9341_BLACK);
+
+        // Set up the game.
+        game_init();
+        
+        // Update the game until it ends.
+        while (!game_get_state())
+            game_update();
+        
+        // Clean up the game.
+        game_free();
+        
+        // Show the correct menu depending on the game result.
+        menu = game_get_state() == GAME_STATE_WON ? menu_win : menu_lose;
     }
+
     return 0;
 }
 

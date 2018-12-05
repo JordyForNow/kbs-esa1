@@ -1,9 +1,9 @@
 #include "player.h"
 #include "bomb.h"
 #include "defines.h"
-#include "world.h"
 #include "render.h"
 #include "segments.h"
+#include "world.h"
 
 // Create a new player struct.
 player_t *player_new(uint8_t x, uint8_t y) {
@@ -106,7 +106,7 @@ uint8_t player_on_hit(player_t *player) {
     player->hit_duration = HIT_DURATION;
     if (player->lives)
         player->lives--;
-        
+
     player_show_lives(player);
     return 1;
 }

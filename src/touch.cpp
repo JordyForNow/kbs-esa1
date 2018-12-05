@@ -6,9 +6,11 @@ Adafruit_STMPE610 ts = Adafruit_STMPE610(STMPE_CS);
 
 menu_t *menu_main = NULL;
 menu_t *menu_play = NULL;
+menu_t *menu_win = NULL;
+menu_t *menu_lose = NULL;
 
 component_t *button_new(const char *text, menu_t *target, button_mode_t mode) {
-    component_t *button = (component_t*) malloc(sizeof(component_t));
+    component_t *button = (component_t *)malloc(sizeof(component_t));
     if (!button)
         return NULL;
 
@@ -19,7 +21,7 @@ component_t *button_new(const char *text, menu_t *target, button_mode_t mode) {
 }
 
 component_t *label_new(const char *text) {
-    component_t *label = (component_t*) malloc(sizeof(component_t));
+    component_t *label = (component_t *)malloc(sizeof(component_t));
     if (!label)
         return NULL;
 
@@ -46,7 +48,7 @@ void component_draw(component_t *component, int index) {
 }
 
 menu_t *menu_new(const char *title) {
-    menu_t *menu = (menu_t*) calloc(sizeof(menu_t), 1);
+    menu_t *menu = (menu_t *)calloc(sizeof(menu_t), 1);
     menu->title = title;
     return menu;
 }
@@ -65,6 +67,7 @@ void menu_set_component(menu_t *menu, int index, component_t *component) {
 void menu_draw(menu_t *menu) {
     draw_background(ILI9341_NAVY);
     tft.setTextSize(3);
+
     int16_t x, y;
     uint16_t w, h;
     tft.getTextBounds(menu->title, 0, 0, &x, &y, &w, &h);
@@ -129,8 +132,8 @@ int menu_await_input() {
         && touch_point.x < (TOUCH_BUTTON_START_X + TOUCH_COMPONENT_WIDTH)) {
             // Check if the touch Y also falls within a button.
             for (int i = 1; i < TOUCH_COMPONENT_COUNT + 1; i++) {
-                if (touch_point.y > (i * (TOUCH_COMPONENT_HEIGHT + TOUCH_COMPONENT_PADDING))
-                && touch_point.y < ((i+1) * TOUCH_COMPONENT_HEIGHT + i * TOUCH_COMPONENT_PADDING)) {
+                if (touch_point.y > (i * (TOUCH_COMPONENT_HEIGHT + TOUCH_COMPONENT_PADDING)) &&
+                touch_point.y < ((i + 1) * TOUCH_COMPONENT_HEIGHT + i * TOUCH_COMPONENT_PADDING)) {
                     // If it does, return the index of the button.
                     return i - 1;
                 }
@@ -153,6 +156,8 @@ void touch_init() {
 void menus_init() {
     menu_main = menu_new("BOMBERMAN");
     menu_play = menu_new("PLAY GAME");
+    menu_lose = menu_new("GAME ENDED");
+    menu_win = menu_new("GAME ENDED");
 
     // menu_main
     menu_set_component(menu_main, 0, button_new("Play", menu_play, BUTTON_MODE_DEFAULT));
@@ -160,4 +165,12 @@ void menus_init() {
     // menu_play
     menu_set_component(menu_play, 0, button_new("Singleplayer", NULL, BUTTON_MODE_SINGLEPLAYER));
     menu_set_component(menu_play, 3, button_new("Back", menu_main, BUTTON_MODE_DEFAULT));
+
+    // menu_lose
+    menu_set_component(menu_lose, 1, label_new("You lose!"));
+    menu_set_component(menu_lose, 3, button_new("Back", menu_main, BUTTON_MODE_DEFAULT));
+
+    // menu_win
+    menu_set_component(menu_win, 1, label_new("You win!"));
+    menu_set_component(menu_win, 3, button_new("Back", menu_main, BUTTON_MODE_DEFAULT));
 }
