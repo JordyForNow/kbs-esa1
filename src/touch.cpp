@@ -125,8 +125,6 @@ int menu_await_input() {
                 if (touch_point.y > (i * (TOUCH_BUTTON_HEIGHT + TOUCH_BUTTON_PADDING))
                 && touch_point.y < ((i+1) * TOUCH_BUTTON_HEIGHT + i * TOUCH_BUTTON_PADDING)) {
                     // If it does, return the index of the button.
-                    Serial.print("button: ");
-                    Serial.println(i - 1);
                     return i - 1;
                 }
             }
