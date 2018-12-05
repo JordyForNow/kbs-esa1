@@ -105,7 +105,7 @@ int menu_await_input() {
         TS_Point touch_point;
         while (ts.touched())
             touch_point = ts.getPoint();
-
+            
         // Rotate the coordinates to match the screen orientation.
         int prev_x = touch_point.x;
         touch_point.x = map(touch_point.y, TS_MINX, TS_MAXX, 0, tft.width());
