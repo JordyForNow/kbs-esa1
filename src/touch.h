@@ -1,6 +1,8 @@
 #ifndef TOUCH_H
 #define TOUCH_H
 
+#include "defines.h"
+
 #include <Adafruit_STMPE610.h>
 #include <SoftwareSerial.h>
 
@@ -20,12 +22,11 @@ typedef struct {
 
 typedef struct menu_t {
     const char *title;
-    component_t *components[4];
+    component_t *components[TOUCH_BUTTON_COUNT];
 } menu_t;
 
 extern menu_t *menu_main;
 extern menu_t *menu_play;
-extern menu_t *menu_highscores;
 
 component_t *button_new(char *text, menu_t *target, uint8_t start);
 component_t *label_new(char *text);
@@ -35,6 +36,7 @@ void component_draw(component_t *component, int index);
 menu_t *menu_new(const char *title);
 void menu_free(menu_t *menu);
 
+void menu_set_component(menu_t *menu, int index, component_t *component);
 void menu_draw(menu_t *menu);
 button_mode_t menu_loop(menu_t *menu);
 int menu_await_input();

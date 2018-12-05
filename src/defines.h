@@ -64,6 +64,7 @@
 #define TS_MAXY 4000
 
 // The width and height for the buttons in the menu.
+#define TOUCH_BUTTON_COUNT 4
 #define TOUCH_BUTTON_HEIGHT 40
 #define TOUCH_BUTTON_WIDTH 200
 #define TOUCH_BUTTON_PADDING 10

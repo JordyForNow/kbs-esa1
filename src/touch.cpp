@@ -6,10 +6,12 @@ Adafruit_STMPE610 ts = Adafruit_STMPE610(STMPE_CS);
 
 menu_t *menu_main = NULL;
 menu_t *menu_play = NULL;
-menu_t *menu_highscores = NULL;
 
 component_t *button_new(const char *text, menu_t *target, button_mode_t mode) {
     component_t *button = (component_t*) malloc(sizeof(component_t));
+    if (!button)
+        return NULL;
+
     button->text = strdup(text);
     button->target = target;
     button->mode = mode;
@@ -18,6 +20,9 @@ component_t *button_new(const char *text, menu_t *target, button_mode_t mode) {
 
 component_t *label_new(const char *text) {
     component_t *label = (component_t*) malloc(sizeof(component_t));
+    if (!label)
+        return NULL;
+
     label->text = strdup(text);
     label->target = NULL;
     label->mode = BUTTON_MODE_DEFAULT;
@@ -53,6 +58,10 @@ void menu_free(menu_t *menu) {
     free(menu);
 }
 
+void menu_set_component(menu_t *menu, int index, component_t *component) {
+    menu->components[index] = component;
+}
+
 void menu_draw(menu_t *menu) {
     draw_background(ILI9341_NAVY);
     tft.setCursor(80, 10);
@@ -60,7 +69,7 @@ void menu_draw(menu_t *menu) {
     tft.setTextSize(3);
     tft.println(menu->title);
 
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < TOUCH_BUTTON_COUNT; i++) {
         if (menu->components[i]) {
             component_draw(menu->components[i], i);
         }
@@ -88,6 +97,7 @@ button_mode_t menu_loop(menu_t *menu) {
         if (component->target) {
             menu = component->target;
             menu_draw(menu);
+            continue;
         }
 
         // The only remaining scenario is that it is a label, in which
@@ -103,7 +113,7 @@ int menu_await_input() {
 
         // Grab the touch point when the touch is released.
         TS_Point touch_point;
-        while (ts.touched())
+        while (ts.touched() || ts.bufferSize())
             touch_point = ts.getPoint();
             
         // Rotate the coordinates to match the screen orientation.
@@ -115,12 +125,10 @@ int menu_await_input() {
         if (touch_point.x > TOUCH_BUTTON_START_X
         && touch_point.x < (TOUCH_BUTTON_START_X + TOUCH_BUTTON_WIDTH)) {
             // Check if the touch Y also falls within a button.
-            for (int i = 1; i < 5; i++) {
+            for (int i = 1; i < TOUCH_BUTTON_COUNT + 1; i++) {
                 if (touch_point.y > (i * (TOUCH_BUTTON_HEIGHT + TOUCH_BUTTON_PADDING))
                 && touch_point.y < ((i+1) * TOUCH_BUTTON_HEIGHT + i * TOUCH_BUTTON_PADDING)) {
                     // If it does, return the index of the button.
-                    Serial.print("button: ");
-                    Serial.println(i - 1);
                     return i - 1;
                 }
             }
@@ -142,17 +150,11 @@ void touch_init() {
 void menus_init() {
     menu_main = menu_new("BOMBERMAN");
     menu_play = menu_new("PLAY GAME");
-    menu_highscores = menu_new("HIGHSCORES");
 
-    menu_main->components[0] = button_new("Play", menu_play, BUTTON_MODE_DEFAULT);
-    menu_main->components[1] = button_new("Highscores", menu_highscores, BUTTON_MODE_DEFAULT);
+    // menu_main
+    menu_set_component(menu_main, 0, button_new("Play", menu_play, BUTTON_MODE_DEFAULT));
 
-    menu_play->components[0] = button_new("Singleplayer", NULL, BUTTON_MODE_SINGLEPLAYER);
-    menu_play->components[1] = button_new("Multiplayer", NULL, BUTTON_MODE_MULTIPLAYER);
-    menu_play->components[3] = button_new("Back", menu_main, BUTTON_MODE_DEFAULT);
-
-    menu_highscores->components[0] = label_new("");
-    menu_highscores->components[1] = label_new("");
-    menu_highscores->components[2] = label_new("");
-    menu_highscores->components[3] = button_new("Back", menu_main, BUTTON_MODE_DEFAULT);
+    // menu_play
+    menu_set_component(menu_play, 0, button_new("Singleplayer", NULL, BUTTON_MODE_SINGLEPLAYER));
+    menu_set_component(menu_play, 0, button_new("Back", menu_main, BUTTON_MODE_DEFAULT));
 }
