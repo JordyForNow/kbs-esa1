@@ -44,7 +44,7 @@ void packet_send(method_t method, player_t *player){
     #endif
 
     // Send packet to network.
-    network_send(packet);
+    packet_receive(packet);
 }
 
 // Send communication packet with map seed.
@@ -67,6 +67,44 @@ void packet_setup(uint16_t map_seed){
 
     // Send packet to network.
     network_send(packet);
+}
+
+void packet_receive(uint16_t packet){
+    method_t method = packet_decode(packet);
+    switch (method){
+        case MOVE:
+            break;
+        case LOSE_LIVE:
+            break;
+        case PLACE_BOMB:
+            break;
+    }
+}
+
+method_t packet_decode(uint16_t packet){
+    uint8_t x = 0;
+    uint8_t y = 0;
+    uint8_t opcode = 0;
+    method_t method;
+
+    // Shift parity bit out
+    packet >>= 1;
+    for(int i = 0; i<5; i++){
+        // Copy y coördinate.
+        if(packet & (1<<i))
+            y |= (1<<i);
+
+        // Copy x coördinate.
+        if(packet & (1<<(i+5)))
+            x |= (1<<i);
+
+        // Copy opcode.
+        if(packet & (1<<(i+10)))
+            opcode |= (1<<i);
+    }
+
+    method = (method_t)opcode;
+    return method;
 }
 
 // Check if packet needs a parity bit.

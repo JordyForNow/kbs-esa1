@@ -44,12 +44,21 @@ void player_update(world_t *world, player_t *player, uint8_t inputs) {
         }
     }
 
+    if(player_move(player, inputs, world))
+        redraw = 1;
+
     // Place a bomb if necessary.
     if (!player->bomb && inputs & (1 << INPUT_BUTTON_C)) {
         player_place_bomb(world, player);
         redraw = 1;
     }
 
+    // Redraw our player only if we have to.
+    if (redraw)
+        draw_player(player);
+}
+
+uint8_t player_move(player_t *player, uint8_t inputs, world_t *world){
     // Check where we are going.
     uint8_t new_x = player->x;
     uint8_t new_y = player->y;
@@ -80,7 +89,8 @@ void player_update(world_t *world, player_t *player, uint8_t inputs) {
         player->y = new_y;
 
         // Send move player packet.
-        packet_send(MOVE, player);
+        if(player->is_main)
+            packet_send(MOVE, player);
 
         // Damage the player if they are walking into an exploding bomb,
         // but only if they are not already invincible.
@@ -90,16 +100,12 @@ void player_update(world_t *world, player_t *player, uint8_t inputs) {
 
         // Rerender the tile we came from, and render the player on top of the new tile.
         world_redraw_tile(world, old_x, old_y);
-        redraw = 1;
+        return 1;
     } else if (world_get_tile(world, player->x, player->y) == EXPLODING_BOMB && player_on_hit(player)) {
         // If we don't want to move or we are unable to, we should check if we
         // are standing inside an explosion. If we are, we might have to take damage.
         LOGLN("Damage from standing in explosion");
     }
-
-    // Redraw our player only if we have to.
-    if (redraw)
-        draw_player(player);
 }
 
 // Whenever the player should take damage, we check if they are invincible and
@@ -113,7 +119,8 @@ uint8_t player_on_hit(player_t *player) {
         player->lives--;
 
         // Send lose live packet.
-        packet_send(LOSE_LIVE, player);
+        if(player->is_main)
+            packet_send(LOSE_LIVE, player);
     }
         
     player_show_lives(player);
@@ -132,6 +139,7 @@ void player_place_bomb(world_t *world, player_t *player) {
         world_set_tile(world, player->bomb->x, player->bomb->y, BOMB);
 
         // Send place bomb packet.
-        packet_send(PLACE_BOMB, player);
+        if(player->is_main)
+            packet_send(PLACE_BOMB, player);
     }
 }

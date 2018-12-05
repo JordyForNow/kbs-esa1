@@ -116,3 +116,32 @@ bool game_update() {
 void game_trigger_update() {
     should_poll = true;
 }
+<<<<<<< Updated upstream
+=======
+
+void game_trigger_network_update() {
+    data_recieved = true;
+}
+
+void opponent_move(uint8_t x, uint8_t y){
+    player_t *player = get_opponent();
+    player->x = x;
+    player->y = y;
+}
+
+void opponent_place_bomb(uint8_t x, uint8_t y){
+    player_t *player = get_opponent();
+    if(!player->bomb)
+        player_place_bomb(world, player);
+}
+void opponent_lose_live(uint8_t x, uint8_t y){
+    player_t *player = get_opponent();
+}
+
+player_t *get_opponent(){
+    for(int i =0; i<world->player_count; i++){
+        if(!world->players[i]->is_main)
+            return world->players[i];
+    }
+}
+>>>>>>> Stashed changes
