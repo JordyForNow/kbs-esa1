@@ -54,7 +54,7 @@
 #define TFT_CS 10
 #define TFT_DC 9
 
-// The STMPE610 uses hardware SPI on the shield, and #8
+// The STMPE610 uses hardware SPI on the shield, and #8.
 #define STMPE_CS 8
 
 // This is calibration data for the raw touch data to the screen coordinates.
@@ -63,7 +63,7 @@
 #define TS_MAXX 3900
 #define TS_MAXY 4000
 
-// The width and height for the buttons in the menu.
+// The number of buttons on the screen, width, height, padding and vertical start position.
 #define TOUCH_BUTTON_COUNT 4
 #define TOUCH_BUTTON_HEIGHT 40
 #define TOUCH_BUTTON_WIDTH 200
@@ -71,7 +71,7 @@
 #define TOUCH_BUTTON_START_X 60
 
 // Logging macros that only do something when DEBUG is enabled.
-// They print messages in the following style: [src/game.cpp] updating()
+// They print messages in the following style: [src/game.cpp] updating().
 // It includes the source file where the logging call originated from.
 #if DEBUG
 // If DEBUG is enabled, enable logging.
