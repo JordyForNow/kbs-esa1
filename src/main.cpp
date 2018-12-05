@@ -35,7 +35,7 @@ int main() {
     while (1) {
         // Show the menu.
         button_mode_t mode = menu_loop(menu);
-        // ... doe iets afhankelijk van singleplayer of multiplayer ...
+        // Singleplayer/ Multiplayer
         
         // Paint background black.
         draw_background(ILI9341_BLACK);

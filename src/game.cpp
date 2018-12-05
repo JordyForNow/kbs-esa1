@@ -14,8 +14,6 @@ static int16_t input_joy_x = 0;
 static int16_t input_joy_y = 0;
 
 game_state_t game_state = GAME_STATE_RUNNING;
-//uint8_t game_finished = 0;
-//uint8_t game_won = 0;
 
 // Initialize the game state.
 void game_init() {
