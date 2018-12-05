@@ -156,5 +156,5 @@ void menus_init() {
 
     // menu_play
     menu_set_component(menu_play, 0, button_new("Singleplayer", NULL, BUTTON_MODE_SINGLEPLAYER));
-    menu_set_component(menu_play, 0, button_new("Back", menu_main, BUTTON_MODE_DEFAULT));
+    menu_set_component(menu_play, 3, button_new("Back", menu_main, BUTTON_MODE_DEFAULT));
 }
