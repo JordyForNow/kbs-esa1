@@ -40,17 +40,22 @@ int main() {
         if (!game_is_finished()) {
             game_update();
         } else {
-            cli();
+            // If the game is finished.
+            // Make sure everything is freed properly.
             game_free();
             if (game_is_won()) {
                 LOGLN("Won!!");
+                // Show menu won.
                 menu_loop(menu_win);
             } else {
                 LOGLN("Lost :(");
+                // Show menu lost.
                 menu_loop(menu_lose);
             }
+            // When the game should start again:
+            // - Paint background.
+            // - Initialize the game.
             draw_background(ILI9341_BLACK);
-            sei();
             game_init();
         }
     }
