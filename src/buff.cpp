@@ -41,7 +41,7 @@ bool buffer_empty(buffer_t *buffer) {
 }
 
 bool buffer_avail(buffer_t *buffer) {
-    return buffer->count > 1;
+    return buffer->count >= 2;
 }
 
 uint8_t buffer_read(buffer_t *buffer) {
@@ -56,10 +56,8 @@ uint8_t buffer_read(buffer_t *buffer) {
 }
 
 bool buffer_write(buffer_t *buffer, uint8_t value) {
+    buffer->buffer[buffer->head] = value;
     buffer->head = (buffer->head + 1) % buffer->capacity;
     buffer->count = buffer->count + 1;
-
-    buffer->buffer[buffer->head] = value;
-    
     return true;
 }

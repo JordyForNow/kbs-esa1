@@ -9,7 +9,6 @@ bool usart_update();
 void usart_send(uint16_t);
 uint16_t usart_receive();
 void usart_acknowledge();
-void usart_send_debug_message(char []);
 bool usart_available();
 
 #endif

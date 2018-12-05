@@ -6,9 +6,9 @@
 
 typedef struct buffer_t {
     uint8_t * buffer;
-    volatile uint8_t head;
-    volatile uint8_t tail;
-    volatile uint8_t count;
+    uint8_t head;
+    uint8_t tail;
+    uint8_t count;
     uint8_t capacity;
 } buffer_t;
 
