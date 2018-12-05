@@ -3,6 +3,7 @@
 #include "player.h"
 #include "render.h"
 #include "world.h"
+#include "score.h"
 
 volatile bool should_poll = false;
 static int should_update = 0;
@@ -13,12 +14,16 @@ static uint8_t input_buttons = 0;
 static int16_t input_joy_x = 0;
 static int16_t input_joy_y = 0;
 
+// Keep track of how many game ticks the game is running.
+unsigned long game_time = 0;
+
 game_state_t game_state = GAME_STATE_RUNNING;
 
 // Initialize the game state.
 void game_init() {
     // Reset variables when a game is restarting.
     game_state = GAME_STATE_RUNNING;
+    game_time = 0;
 
     // Initialize the nunchuck.
     nunchuck_send_request();
@@ -26,6 +31,7 @@ void game_init() {
     // Draw the world with blocks and walls.
     world = world_new(1);
     world_generate(world, TCNT0);
+    score_set_boxes(world_get_boxes(world));
 
     // Create the player and show the lives on the 7-segment display.
     player = player_new(1, 1);
@@ -42,7 +48,7 @@ void game_free() {
 // Update the game, or do nothing if an update hasn't been triggered.
 bool game_update() {
     // Check if the player has died.
-    if (player->lives)
+    if (!player->lives)
         game_state = GAME_STATE_LOST;
 
     // End the game if there are no boxes remaining.
@@ -83,6 +89,9 @@ bool game_update() {
     // Don't update unless it's time.
     if (should_update < GAME_INPUT_FACTOR)
         return false;
+    
+    // Increment game time each game update.
+    game_time++;
 
     LOGLN("Updating");
     should_update = 0;
@@ -126,4 +135,19 @@ game_state_t game_get_state() {
 // Trigger a game-update the next time game_update() is called.
 void game_trigger_update() {
     should_poll = true;
+}
+
+unsigned long *game_get_time(){
+    return &game_time;
+}
+
+player_t *game_get_main_player(){
+    // Commented because implementation in multiplayer.
+    /*for(int i = 0; i<world->player_count; i++){
+        if(world->players[i]->is_main){
+            //do someting
+        }
+    }*/
+    
+    return player;
 }

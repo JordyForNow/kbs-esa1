@@ -1,6 +1,8 @@
 #ifndef GAME_H
 #define GAME_H
 
+#include "player.h"
+
 #include <nunchuck_funcs.h>
 #include <stdbool.h>
 
@@ -15,5 +17,7 @@ void game_free();
 bool game_update();
 void game_trigger_update();
 game_state_t game_get_state();
+unsigned long *game_get_time();
+player_t *game_get_main_player();
 
 #endif
