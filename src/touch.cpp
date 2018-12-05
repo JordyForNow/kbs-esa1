@@ -166,10 +166,10 @@ void menus_init() {
     menu_set_component(menu_play, 3, button_new("Back", menu_main, BUTTON_MODE_DEFAULT));
 
     // menu_lose
-    menu_set_component(menu_lose, 3, button_new("Back", menu_main, BUTTON_MODE_DEFAULT));
     menu_set_component(menu_lose, 1, label_new("You lose!"));
+    menu_set_component(menu_lose, 3, button_new("Back", menu_main, BUTTON_MODE_DEFAULT));
 
     // menu_win
-    menu_set_component(menu_win, 3, button_new("Back", menu_main, BUTTON_MODE_DEFAULT));
     menu_set_component(menu_win, 1, label_new("You win!"));
+    menu_set_component(menu_win, 3, button_new("Back", menu_main, BUTTON_MODE_DEFAULT));
 }
