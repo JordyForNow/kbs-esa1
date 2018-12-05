@@ -70,7 +70,7 @@ void draw_label(int index, char *text) {
     int16_t x, y;
     uint16_t w, h;
     tft.getTextBounds(text, 0, 0, &x, &y, &w, &h);
-    tft.setCursor((tft.width() + w / 2), index + TOUCH_BUTTON_PADDING);
+    tft.setCursor((tft.width() - w) / 2, index + TOUCH_BUTTON_PADDING);
     tft.setTextColor(ILI9341_WHITE);
     tft.setTextSize(2);
     tft.println(text);
