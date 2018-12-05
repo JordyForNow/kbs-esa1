@@ -1,7 +1,7 @@
 #ifndef DEFINES_H
 #define DEFINES_H
 
-#define DEBUG 0
+#define DEBUG 1
 #define SEGMENTS_ENABLE 1
 
 // The length to clear the corner from boxes.

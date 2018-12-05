@@ -1,6 +1,11 @@
 #include "network.h"
 #include "usart.h"
 
+void network_init() 
+{
+    usart_init();
+}
+
 bool network_send(uint16_t data)
 {
     return usart_send(data);

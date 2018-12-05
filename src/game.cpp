@@ -4,6 +4,7 @@
 #include "player.h"
 #include "render.h"
 #include "network.h"
+#include "packet.h"
 
 volatile bool should_poll = false;
 volatile bool data_recieved = false;
@@ -26,11 +27,12 @@ void game_init() {
 
     // Create the player and show the lives on the 7-segment display.
     player = player_new(1, 1);
+    
     player_show_lives(player);
     draw_player(player);
 
     world->players[0] = player;
-    network_init();
+    //network_init();
 }
 
 // Update the game, or do nothing if an update hasn't been triggered.

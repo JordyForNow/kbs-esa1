@@ -46,7 +46,7 @@ int validate_incoming_data(uint16_t data){
     return count % 2;
 }
 
-uint16_t usart_read()
+uint16_t usart_receive()
 {
     uint16_t combined_data = (data[0] << 8) | (data[1]); 
 
@@ -72,7 +72,7 @@ void usart_send_debug_message(char message[]) {
     }
 }
 
-ISR(USART_RX_vect) {
+/*ISR(USART_RX_vect) {
     uint8_t temp = UDR0;
     data[counter] = temp;
     counter++;
@@ -80,4 +80,4 @@ ISR(USART_RX_vect) {
         game_trigger_network_update();
         counter = 0;
     }
-}
+}*/
