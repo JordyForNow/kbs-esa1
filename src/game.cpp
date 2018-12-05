@@ -125,7 +125,6 @@ bool game_update() {
     return true;
 }
 
-// Return if game is finished.
 bool game_is_finished() {
     return game_finished;
 }
