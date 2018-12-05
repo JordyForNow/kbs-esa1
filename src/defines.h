@@ -63,8 +63,10 @@
 #define TOUCH_MAX_X 3900
 #define TOUCH_MAX_Y 4000
 
+// The amount of buttons or labels a menu screen can have.
+#define TOUCH_COMPONENT_COUNT 4
+
 // The width and height for the buttons in the menu.
-#define TOUCH_BUTTON_COUNT 4
 #define TOUCH_BUTTON_HEIGHT 40
 #define TOUCH_BUTTON_WIDTH 200
 #define TOUCH_BUTTON_PADDING 10

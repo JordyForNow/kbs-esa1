@@ -69,7 +69,7 @@ void menu_draw(menu_t *menu) {
     tft.setTextSize(3);
     tft.println(menu->title);
 
-    for (int i = 0; i < TOUCH_BUTTON_COUNT; i++) {
+    for (int i = 0; i < TOUCH_COMPONENT_COUNT; i++) {
         if (menu->components[i]) {
             component_draw(menu->components[i], i);
         }
@@ -125,7 +125,7 @@ int menu_await_input() {
         if (touch_point.x > TOUCH_BUTTON_START_X
         && touch_point.x < (TOUCH_BUTTON_START_X + TOUCH_BUTTON_WIDTH)) {
             // Check if the touch Y also falls within a button.
-            for (int i = 1; i < TOUCH_BUTTON_COUNT + 1; i++) {
+            for (int i = 1; i < TOUCH_COMPONENT_COUNT + 1; i++) {
                 if (touch_point.y > (i * (TOUCH_BUTTON_HEIGHT + TOUCH_BUTTON_PADDING))
                 && touch_point.y < ((i+1) * TOUCH_BUTTON_HEIGHT + i * TOUCH_BUTTON_PADDING)) {
                     // If it does, return the index of the button.
