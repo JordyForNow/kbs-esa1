@@ -37,7 +37,7 @@ void game_init() {
     world->players[0] = player;
 }
 
-void game_delete(){
+void game_delete() {
     world_free(world);
 }
 
@@ -50,7 +50,7 @@ bool game_update() {
     }
 
     // Check if there are no boxes left to destroy.
-    if(world_get_boxes(world) == 0){
+    if (world_get_boxes(world) == 0) {
         game_finished = 1;
         game_won = 1;
     }

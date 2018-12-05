@@ -64,7 +64,7 @@ void world_generate(world_t *world, unsigned long seed) {
 void world_scan_boxes(world_t *world) {
     for (int y = 0; y < WORLD_HEIGHT; y++) {
         for (int x = 0; x < WORLD_WIDTH; x++) {
-            if(world->tiles[x][y] == BOX){
+            if (world->tiles[x][y] == BOX) {
                 world->boxes++;
             }
         }
@@ -96,11 +96,11 @@ uint8_t world_set_tile(world_t *world, uint8_t x, uint8_t y, tile_t tile) {
     return 1;
 }
 
-void world_subtract_boxes(world_t *world, int subtraction_factor){
-    world->boxes-=subtraction_factor;
+void world_subtract_boxes(world_t *world, int subtraction_factor) {
+    world->boxes -= subtraction_factor;
 }
 
-int world_get_boxes(world_t *world){
+int world_get_boxes(world_t *world) {
     return world->boxes;
 }
 

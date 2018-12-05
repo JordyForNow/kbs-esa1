@@ -1,9 +1,9 @@
 #include "player.h"
 #include "bomb.h"
 #include "defines.h"
-#include "world.h"
 #include "render.h"
 #include "segments.h"
+#include "world.h"
 
 // Create a new player struct.
 player_t *player_new(uint8_t x, uint8_t y) {
@@ -67,8 +67,7 @@ void player_update(world_t *world, player_t *player, uint8_t inputs) {
     tile_t new_tile = world_get_tile(world, new_x, new_y);
 
     // Check if we want to and can move into the new tile.
-    if ((new_x != player->x || new_y != player->y)
-    && (new_tile == EMPTY || new_tile == EXPLODING_BOMB)) {
+    if ((new_x != player->x || new_y != player->y) && (new_tile == EMPTY || new_tile == EXPLODING_BOMB)) {
         // Store where we were, so we can rerender the tile once we've moved.
         uint8_t old_x = player->x;
         uint8_t old_y = player->y;
@@ -106,7 +105,7 @@ uint8_t player_on_hit(player_t *player) {
     player->hit_duration = HIT_DURATION;
     if (player->lives)
         player->lives--;
-        
+
     player_show_lives(player);
     return 1;
 }

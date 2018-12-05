@@ -37,15 +37,15 @@ int main() {
     game_init();
 
     while (1) {
-        if(!game_is_finished()){
+        if (!game_is_finished()) {
             game_update();
-        }else{
+        } else {
             cli();
             game_delete();
-            if(game_is_won()){
+            if (game_is_won()) {
                 LOGLN("Won!!");
                 menu_loop(menu_win);
-            }else{
+            } else {
                 LOGLN("Lost :(");
                 menu_loop(menu_lose);
             }
@@ -54,7 +54,7 @@ int main() {
             game_init();
         }
     }
-    
+
     return 0;
 }
 
