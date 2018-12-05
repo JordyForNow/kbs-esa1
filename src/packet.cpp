@@ -5,8 +5,6 @@
 
 // Send a packet with a method and the location of the player.
 void packet_send(method_t method, player_t *player){
-    LOGLN("Sending Packet");
-
     // Declare packet variable.
     uint16_t packet = 0;
 
@@ -39,18 +37,12 @@ void packet_send(method_t method, player_t *player){
         packet |= 1;
     }
 
-    #if DEBUG
-        Serial.println(packet);
-    #endif
-
     // Send packet to network.
-    packet_receive(packet);
+    network_send(packet);
 }
 
 // Send communication packet with map seed.
 void packet_setup(uint16_t map_seed){
-    LOGLN("Setting up multiplayer");
-
     // Declare packet variable equal to given map seed.
     uint16_t packet = map_seed;
     
