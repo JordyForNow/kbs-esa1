@@ -58,10 +58,10 @@
 #define STMPE_CS 8
 
 // This is calibration data for the raw touch data to the screen coordinates.
-#define TS_MINX 140
-#define TS_MINY 150
-#define TS_MAXX 3900
-#define TS_MAXY 4000
+#define TOUCH_MIN_X 140
+#define TOUCH_MIN_Y 150
+#define TOUCH_MAX_X 3900
+#define TOUCH_MAX_Y 4000
 
 // The width and height for the buttons in the menu.
 #define TOUCH_BUTTON_COUNT 4
