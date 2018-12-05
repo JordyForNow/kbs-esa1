@@ -36,13 +36,12 @@ bool game_update() {
     // Don't poll or update unless the timer tells us to.
     if (!should_poll)
         return false;
-    
+
     should_poll = false;
     should_update++;
 
     // Collect inputs.
     if (nunchuck_get_data()) {
-
         uint8_t x = nunchuck_joyx();
         uint8_t y = nunchuck_joyy();
 
