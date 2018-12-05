@@ -36,6 +36,7 @@ void component_draw(component_t *component, int index);
 menu_t *menu_new(const char *title);
 void menu_free(menu_t *menu);
 
+void menu_set_component(menu_t *menu, int index, component_t *component);
 void menu_draw(menu_t *menu);
 button_mode_t menu_loop(menu_t *menu);
 int menu_await_input();

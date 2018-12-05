@@ -58,6 +58,10 @@ void menu_free(menu_t *menu) {
     free(menu);
 }
 
+void menu_set(menu_t *menu, int index, component_t *component) {
+    menu->components[index] = component;
+}
+
 void menu_draw(menu_t *menu) {
     draw_background(ILI9341_NAVY);
     tft.setCursor(80, 10);
@@ -147,8 +151,10 @@ void menus_init() {
     menu_main = menu_new("BOMBERMAN");
     menu_play = menu_new("PLAY GAME");
 
-    menu_main->components[0] = button_new("Play", menu_play, BUTTON_MODE_DEFAULT);
+    // menu_main
+    menu_set_component(menu_main, 0, button_new("Play", menu_play, BUTTON_MODE_DEFAULT));
 
-    menu_play->components[0] = button_new("Singleplayer", NULL, BUTTON_MODE_SINGLEPLAYER);
-    menu_play->components[3] = button_new("Back", menu_main, BUTTON_MODE_DEFAULT);
+    // menu_play
+    menu_set_component(menu_play, 0, button_new("Singleplayer", NULL, BUTTON_MODE_SINGLEPLAYER));
+    menu_set_component(menu_play, 0, button_new("Back", menu_main, BUTTON_MODE_DEFAULT));
 }
