@@ -43,7 +43,7 @@ void game_delete() {
 
 // Update the game, or do nothing if an update hasn't been triggered.
 bool game_update() {
-    //Check if player has died.
+    // Check if player has died.
     if (player->lives == 0) {
         game_finished = 1;
         game_won = 0;
