@@ -18,6 +18,10 @@ uint8_t game_won = 0;
 
 // Initialize the game state.
 void game_init() {
+    // Reset variables when a game is restarting.
+    game_finished = 0;
+    game_won = 0;
+    
     // Initialize the nunchuck.
     nunchuck_send_request();
 
@@ -34,9 +38,6 @@ void game_init() {
 }
 
 void game_delete(){
-    for(int i=0; i < sizeof(world->players)/sizeof(world->players[0]); i++){
-        player_free(world->players[i]);
-    }
     world_free(world);
 }
 

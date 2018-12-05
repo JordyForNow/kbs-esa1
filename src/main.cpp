@@ -41,16 +41,17 @@ int main() {
             game_update();
         }else{
             cli();
+            game_delete();
             if(game_is_won()){
                 LOGLN("Won!!");
                 menu_loop(menu_win);
             }else{
                 LOGLN("Lost :(");
-                game_delete();
                 menu_loop(menu_lose);
-                game_init();
             }
+            draw_background(ILI9341_BLACK);
             sei();
+            game_init();
         }
     }
     
