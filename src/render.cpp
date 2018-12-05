@@ -56,21 +56,21 @@ void draw_player(player_t *player) {
 }
 
 void draw_button(int index, char *text) {
-    index *= (TOUCH_BUTTON_HEIGHT + TOUCH_BUTTON_PADDING);
-    draw_rect(TOUCH_BUTTON_START_X, index, TOUCH_BUTTON_WIDTH, TOUCH_BUTTON_HEIGHT, ILI9341_BLUE);
-    tft.setCursor((TOUCH_BUTTON_START_X + TOUCH_BUTTON_PADDING), index + TOUCH_BUTTON_PADDING);
+    index *= (TOUCH_COMPONENT_HEIGHT + TOUCH_COMPONENT_PADDING);
+    draw_rect(TOUCH_BUTTON_START_X, index, TOUCH_COMPONENT_WIDTH, TOUCH_COMPONENT_HEIGHT, ILI9341_BLUE);
+    tft.setCursor((TOUCH_BUTTON_START_X + TOUCH_COMPONENT_PADDING), index + TOUCH_COMPONENT_PADDING);
     tft.setTextColor(ILI9341_WHITE);
     tft.setTextSize(2);
     tft.println(text);
 }
 
 void draw_label(int index, char *text) {
-    index *= (TOUCH_BUTTON_HEIGHT + TOUCH_BUTTON_PADDING);
+    index *= (TOUCH_COMPONENT_HEIGHT + TOUCH_COMPONENT_PADDING);
 
     int16_t x, y;
     uint16_t w, h;
     tft.getTextBounds(text, 0, 0, &x, &y, &w, &h);
-    tft.setCursor((tft.width() + w / 2), index + TOUCH_BUTTON_PADDING);
+    tft.setCursor((tft.width() - w) / 2, index + TOUCH_COMPONENT_PADDING);
     tft.setTextColor(ILI9341_WHITE);
     tft.setTextSize(2);
     tft.println(text);

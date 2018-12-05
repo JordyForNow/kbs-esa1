@@ -4,7 +4,6 @@
 #include "defines.h"
 
 #include <Adafruit_STMPE610.h>
-#include <SoftwareSerial.h>
 
 // Predeclare menu_t since it has a circular dependency with component_t.
 struct menu_t;
