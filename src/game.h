@@ -5,7 +5,7 @@
 #include <stdbool.h>
 
 void game_init();
-void game_delete();
+void game_free();
 bool game_update();
 void game_trigger_update();
 bool game_is_finished();

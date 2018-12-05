@@ -28,7 +28,7 @@ typedef struct world_t {
 world_t *world_new(uint8_t player_count);
 void world_free(world_t *world);
 void world_generate(world_t *world, unsigned long seed);
-void world_scan_boxes(world_t *world);
+uint8_t world_scan_boxes(world_t *world);
 
 void world_update(world_t *world, uint8_t inputs);
 

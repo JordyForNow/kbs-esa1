@@ -41,7 +41,7 @@ int main() {
             game_update();
         } else {
             cli();
-            game_delete();
+            game_free();
             if (game_is_won()) {
                 LOGLN("Won!!");
                 menu_loop(menu_win);

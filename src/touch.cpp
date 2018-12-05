@@ -10,7 +10,7 @@ menu_t *menu_win = NULL;
 menu_t *menu_lose = NULL;
 
 component_t *button_new(const char *text, menu_t *target, button_mode_t mode) {
-    component_t *button = (component_t*) malloc(sizeof(component_t));
+    component_t *button = (component_t *)malloc(sizeof(component_t));
     if (!button)
         return NULL;
 
@@ -21,7 +21,7 @@ component_t *button_new(const char *text, menu_t *target, button_mode_t mode) {
 }
 
 component_t *label_new(const char *text) {
-    component_t *label = (component_t*) malloc(sizeof(component_t));
+    component_t *label = (component_t *)malloc(sizeof(component_t));
     if (!label)
         return NULL;
 
@@ -48,7 +48,7 @@ void component_draw(component_t *component, int index) {
 }
 
 menu_t *menu_new(const char *title) {
-    menu_t *menu = (menu_t*) calloc(sizeof(menu_t), 1);
+    menu_t *menu = (menu_t *)calloc(sizeof(menu_t), 1);
     menu->title = title;
     return menu;
 }
@@ -127,12 +127,10 @@ int menu_await_input() {
         touch_point.y = map(prev_x, TOUCH_MAX_Y, TOUCH_MIN_Y, 0, tft.height());
 
         // Check if the touch X falls within the column of (potential) buttons.
-        if (touch_point.x > TOUCH_BUTTON_START_X
-        && touch_point.x < (TOUCH_BUTTON_START_X + TOUCH_COMPONENT_WIDTH)) {
+        if (touch_point.x > TOUCH_BUTTON_START_X && touch_point.x < (TOUCH_BUTTON_START_X + TOUCH_COMPONENT_WIDTH)) {
             // Check if the touch Y also falls within a button.
             for (int i = 1; i < TOUCH_COMPONENT_COUNT + 1; i++) {
-                if (touch_point.y > (i * (TOUCH_COMPONENT_HEIGHT + TOUCH_COMPONENT_PADDING))
-                && touch_point.y < ((i+1) * TOUCH_COMPONENT_HEIGHT + i * TOUCH_COMPONENT_PADDING)) {
+                if (touch_point.y > (i * (TOUCH_COMPONENT_HEIGHT + TOUCH_COMPONENT_PADDING)) && touch_point.y < ((i + 1) * TOUCH_COMPONENT_HEIGHT + i * TOUCH_COMPONENT_PADDING)) {
                     // If it does, return the index of the button.
                     return i - 1;
                 }
@@ -144,7 +142,8 @@ int menu_await_input() {
 void touch_init() {
     if (!ts.begin()) {
         LOGLN("Couldn't start touchscreen");
-        while (1);
+        while (1)
+            ;
     }
     LOGLN("Touchscreen started");
 
@@ -168,7 +167,7 @@ void menus_init() {
     // menu_lose
     menu_set_component(menu_lose, 3, button_new("Back", menu_main, BUTTON_MODE_DEFAULT));
     menu_set_component(menu_lose, 1, label_new("You lose!"));
-    
+
     // menu_win
     menu_set_component(menu_win, 3, button_new("Back", menu_main, BUTTON_MODE_DEFAULT));
     menu_set_component(menu_win, 1, label_new("You win!"));
