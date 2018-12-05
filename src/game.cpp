@@ -42,7 +42,7 @@ void game_free() {
 // Update the game, or do nothing if an update hasn't been triggered.
 bool game_update() {
     // Check if the player has died.
-    if (player->lives)
+    if (!player->lives)
         game_state = GAME_STATE_LOST;
 
     // End the game if there are no boxes remaining.
