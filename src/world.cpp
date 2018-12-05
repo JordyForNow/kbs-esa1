@@ -58,17 +58,14 @@ void world_generate(world_t *world, unsigned long seed) {
         world_set_tile(world, (WORLD_WIDTH - 2), (WORLD_HEIGHT - 1 - i), EMPTY);
     }
 
-    // All boxes are generated -> count how many boxes there are so the game can keep track of how many boxes should be destroyed.
-    world->boxes = world_scan_boxes(world);
+    world->boxes = world_count_boxes(world);
 }
 
-uint8_t world_scan_boxes(world_t *world) {
+uint8_t world_count_boxes(world_t *world) {
     uint8_t total = 0;
-    // Loop through grid.
     for (int y = 0; y < WORLD_HEIGHT; y++) {
         for (int x = 0; x < WORLD_WIDTH; x++) {
             if (world->tiles[x][y] == BOX) {
-                // If tile is a box add it to total.
                 total++;
             }
         }

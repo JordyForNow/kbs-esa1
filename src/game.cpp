@@ -13,14 +13,16 @@ static uint8_t input_buttons = 0;
 static int16_t input_joy_x = 0;
 static int16_t input_joy_y = 0;
 
-uint8_t game_finished = 0;
-uint8_t game_won = 0;
+game_state_t game_state = GAME_STATE_RUNNING;
+//uint8_t game_finished = 0;
+//uint8_t game_won = 0;
 
 // Initialize the game state.
 void game_init() {
     // Reset variables when a game is restarting.
-    game_finished = 0;
-    game_won = 0;
+    game_state = GAME_STATE_RUNNING;
+    //game_finished = 0;
+    //game_won = 0;
 
     // Initialize the nunchuck.
     nunchuck_send_request();
@@ -44,19 +46,15 @@ void game_free() {
 // Update the game, or do nothing if an update hasn't been triggered.
 bool game_update() {
     // Check if player has died.
-    if (player->lives == 0) {
-        game_finished = 1;
-        game_won = 0;
-    }
+    if (player->lives)
+        game_state = GAME_STATE_LOST;
 
-    // Check if there are no boxes left to destroy.
-    if (!world_get_boxes(world)) {
-        game_finished = 1;
-        game_won = 1;
-    }
+    // End the game if there are no boxes remaining.
+    if (!world_get_boxes(world))
+        game_state = GAME_STATE_WON;
 
     // Check if game has finished.
-    if (game_finished)
+    if (game_state)
         return false;
 
     // Don't poll or update unless the timer tells us to.
@@ -105,11 +103,11 @@ bool game_update() {
     if (((input_joy_x ^ x_mask) + x_mask) >= ((input_joy_y ^ y_mask) + y_mask)) {
         // The X-axis is more or equally prevalent.
         inputs |= (input_joy_x < -INPUT_JOY_THRESHOLD) << INPUT_JOY_LEFT;
-        inputs |= (input_joy_x > INPUT_JOY_THRESHOLD) << INPUT_JOY_RIGHT;
+        inputs |= (input_joy_x >  INPUT_JOY_THRESHOLD) << INPUT_JOY_RIGHT;
     } else {
         // The Y-axis is more prevalent.
         inputs |= (input_joy_y < -INPUT_JOY_THRESHOLD) << INPUT_JOY_UP;
-        inputs |= (input_joy_y > INPUT_JOY_THRESHOLD) << INPUT_JOY_DOWN;
+        inputs |= (input_joy_y >  INPUT_JOY_THRESHOLD) << INPUT_JOY_DOWN;
     }
 
     // Reset the input trackers.
@@ -125,13 +123,8 @@ bool game_update() {
     return true;
 }
 
-bool game_is_finished() {
-    return game_finished;
-}
-
-// Return if game is won.
-bool game_is_won() {
-    return game_won;
+game_state_t game_get_state() {
+    return game_state;
 }
 
 // Trigger a game-update the next time game_update() is called.
