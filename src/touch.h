@@ -4,7 +4,6 @@
 #include "defines.h"
 
 #include <Adafruit_STMPE610.h>
-#include <SoftwareSerial.h>
 
 struct menu_t;
 
