@@ -27,7 +27,6 @@ typedef struct menu_t {
 
 extern menu_t *menu_main;
 extern menu_t *menu_play;
-extern menu_t *menu_highscores;
 
 component_t *button_new(char *text, menu_t *target, uint8_t start);
 component_t *label_new(char *text);
