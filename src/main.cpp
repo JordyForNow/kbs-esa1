@@ -2,6 +2,7 @@
 #include "game.h"
 #include "render.h"
 #include "segments.h"
+#include "network.h"
 
 #include <Adafruit_GFX.h>
 #include <Adafruit_ILI9341.h>
@@ -32,10 +33,12 @@ int main() {
     tft.fillScreen(ILI9341_BLACK);
 
     timer1_init();
+    network_init();
     game_init();
 
     while (1) {
-        game_update();
+        if (network_update())
+            game_update();
     }
     return 0;
 }

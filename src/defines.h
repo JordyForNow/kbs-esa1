@@ -59,7 +59,7 @@
 //////////////
 
 //Usart settings
-#define USART_BAUD_RATE 9600
+#define USART_BAUD_RATE 57600
 
 // Logging macros that only do something when DEBUG is enabled.
 // They print messages in the following style: [src/game.cpp] updating()

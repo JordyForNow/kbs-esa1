@@ -4,9 +4,9 @@
 #include "player.h"
 #include "render.h"
 #include "network.h"
+#include "usart.h"
 
 volatile bool should_poll = false;
-volatile bool data_recieved = false;
 static int should_update = 0;
 static world_t *world;
 static player_t *player;
@@ -30,18 +30,17 @@ void game_init() {
     draw_player(player);
 
     world->players[0] = player;
-    network_init();
 }
 
 // Update the game, or do nothing if an update hasn't been triggered.
 bool game_update() {
     // Handle networking
-    if (data_recieved)
+    if (network_available())
     {
-        data_recieved = false;
-
+        usart_send_debug_message("in main loop network update\n");
         uint16_t data = network_receive();
 
+        usart_send_debug_message("received data\n");
         if (data)
         {
             network_acknowledge();
@@ -118,8 +117,4 @@ bool game_update() {
 // Trigger a game-update the next time game_update() is called.
 void game_trigger_update() {
     should_poll = true;
-}
-
-void game_trigger_network_update() {
-    data_recieved = true;
 }

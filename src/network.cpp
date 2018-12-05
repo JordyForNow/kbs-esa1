@@ -1,20 +1,27 @@
 #include "network.h"
 #include "usart.h"
 
-bool network_send(uint16_t data)
-{
-    return usart_send(data);
+void network_init(){
+    usart_init();
 }
 
-uint16_t network_receive()
-{
+bool network_update() {
+    return usart_update();
+}
+
+
+void network_send(uint16_t data) {
+    usart_send(data);
+}
+
+uint16_t network_receive() {
     return usart_receive();
 }
 
-// TODO implement check if network has received data 
-bool network_available();
+bool network_available() {
+    return usart_available();
+}
 
-void network_acknowledge()
-{
+void network_acknowledge() {
     usart_acknowledge();
 }
