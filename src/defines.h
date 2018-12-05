@@ -61,6 +61,9 @@
 //Usart settings
 #define USART_BAUD_RATE 9600
 
+// Extra colors to use in the screen.
+#define ILI9341_BROWN 0x6100
+
 // Logging macros that only do something when DEBUG is enabled.
 // They print messages in the following style: [src/game.cpp] updating()
 // It includes the source file where the logging call originated from.
