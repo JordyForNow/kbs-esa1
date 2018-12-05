@@ -66,12 +66,12 @@ void draw_button(int index, char *text) {
 
 void draw_label(int index, char *text) {
     index *= (TOUCH_COMPONENT_HEIGHT + TOUCH_COMPONENT_PADDING);
+    tft.setTextSize(2);
 
     int16_t x, y;
     uint16_t w, h;
     tft.getTextBounds(text, 0, 0, &x, &y, &w, &h);
     tft.setCursor((tft.width() - w) / 2, index + TOUCH_COMPONENT_PADDING);
     tft.setTextColor(ILI9341_WHITE);
-    tft.setTextSize(2);
     tft.println(text);
 }

@@ -66,9 +66,12 @@ void menu_set_component(menu_t *menu, int index, component_t *component) {
 
 void menu_draw(menu_t *menu) {
     draw_background(ILI9341_NAVY);
-    tft.setCursor(80, 10);
-    tft.setTextColor(ILI9341_WHITE);
     tft.setTextSize(3);
+    int16_t x, y;
+    uint16_t w, h;
+    tft.getTextBounds(menu->title, 0, 0, &x, &y, &w, &h);
+    tft.setCursor(((tft.width() - w) / 2), 10);
+    tft.setTextColor(ILI9341_WHITE);
     tft.println(menu->title);
 
     for (int i = 0; i < TOUCH_COMPONENT_COUNT; i++) {
