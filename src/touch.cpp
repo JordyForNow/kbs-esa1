@@ -10,6 +10,9 @@ menu_t *menu_highscores = NULL;
 
 component_t *button_new(const char *text, menu_t *target, button_mode_t mode) {
     component_t *button = (component_t*) malloc(sizeof(component_t));
+    if (!button)
+        return NULL;
+
     button->text = strdup(text);
     button->target = target;
     button->mode = mode;
@@ -18,6 +21,9 @@ component_t *button_new(const char *text, menu_t *target, button_mode_t mode) {
 
 component_t *label_new(const char *text) {
     component_t *label = (component_t*) malloc(sizeof(component_t));
+    if (!label)
+        return NULL;
+
     label->text = strdup(text);
     label->target = NULL;
     label->mode = BUTTON_MODE_DEFAULT;
@@ -88,6 +94,7 @@ button_mode_t menu_loop(menu_t *menu) {
         if (component->target) {
             menu = component->target;
             menu_draw(menu);
+            continue;
         }
 
         // The only remaining scenario is that it is a label, in which
