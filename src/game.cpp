@@ -21,8 +21,6 @@ game_state_t game_state = GAME_STATE_RUNNING;
 void game_init() {
     // Reset variables when a game is restarting.
     game_state = GAME_STATE_RUNNING;
-    //game_finished = 0;
-    //game_won = 0;
 
     // Initialize the nunchuck.
     nunchuck_send_request();
