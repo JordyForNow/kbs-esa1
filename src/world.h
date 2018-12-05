@@ -22,6 +22,7 @@ typedef struct world_t {
     tile_t tiles[WORLD_WIDTH][WORLD_HEIGHT];
     player_t **players;
     uint8_t player_count;
+    uint8_t boxes;
 } world_t;
 
 world_t *world_new(uint8_t player_count);

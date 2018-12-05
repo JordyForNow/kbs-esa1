@@ -40,12 +40,17 @@ int main() {
         if(!game_is_finished()){
             game_update();
         }else{
+            cli();
             if(game_is_won()){
                 LOGLN("Won!!");
+                menu_loop(menu_win);
             }else{
                 LOGLN("Lost :(");
+                game_delete();
+                menu_loop(menu_lose);
+                game_init();
             }
-            while(1){}
+            sei();
         }
     }
     

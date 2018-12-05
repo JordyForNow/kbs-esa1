@@ -33,6 +33,13 @@ void game_init() {
     world->players[0] = player;
 }
 
+void game_delete(){
+    for(int i=0; i < sizeof(world->players)/sizeof(world->players[0]); i++){
+        player_free(world->players[i]);
+    }
+    world_free(world);
+}
+
 // Update the game, or do nothing if an update hasn't been triggered.
 bool game_update() {
     //Check if player has died.

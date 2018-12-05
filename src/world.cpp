@@ -2,8 +2,6 @@
 #include "defines.h"
 #include "render.h"
 
-int world_boxes = 0;
-
 world_t *world_new(uint8_t player_count) {
     world_t *world = (world_t *)calloc(sizeof(world_t), 1);
     if (!world)
@@ -11,6 +9,7 @@ world_t *world_new(uint8_t player_count) {
 
     world->player_count = player_count;
     world->players = (player_t **)calloc(sizeof(player_t *), player_count);
+    world->boxes = 0;
     if (!world->players) {
         free(world);
         return NULL;
@@ -66,7 +65,7 @@ void world_scan_boxes(world_t *world) {
     for (int y = 0; y < WORLD_HEIGHT; y++) {
         for (int x = 0; x < WORLD_WIDTH; x++) {
             if(world->tiles[x][y] == BOX){
-                world_boxes++;
+                world->boxes++;
             }
         }
     }
@@ -98,11 +97,11 @@ uint8_t world_set_tile(world_t *world, uint8_t x, uint8_t y, tile_t tile) {
 }
 
 void world_subtract_boxes(world_t *world, int subtraction_factor){
-    world_boxes-=subtraction_factor;
+    world->boxes-=subtraction_factor;
 }
 
 int world_get_boxes(world_t *world){
-    return world_boxes;
+    return world->boxes;
 }
 
 tile_t world_get_tile(world_t *world, uint8_t x, uint8_t y) {
