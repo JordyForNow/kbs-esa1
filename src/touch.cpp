@@ -118,8 +118,8 @@ int menu_await_input() {
 
         // Rotate the coordinates to match the screen orientation.
         int prev_x = touch_point.x;
-        touch_point.x = map(touch_point.y, TS_MINX, TS_MAXX, 0, tft.width());
-        touch_point.y = map(prev_x, TS_MAXY, TS_MINY, 0, tft.height());
+        touch_point.x = map(touch_point.y, TOUCH_MIN_X, TOUCH_MAX_X, 0, tft.width());
+        touch_point.y = map(prev_x, TOUCH_MAX_Y, TOUCH_MIN_Y, 0, tft.height());
 
         // Check if the touch X falls within the column of (potential) buttons.
         if (touch_point.x > TOUCH_BUTTON_START_X
