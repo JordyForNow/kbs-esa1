@@ -5,6 +5,7 @@
 #include "render.h"
 #include "network.h"
 #include "usart.h"
+#include "packet.h"
 
 volatile bool should_poll = false;
 static int should_update = 0;
@@ -25,7 +26,7 @@ void game_init() {
     world_generate(world, TCNT0);
 
     // Create the player and show the lives on the 7-segment display.
-    player = player_new(1, 1);
+    player = player_new(1, 1, 1);
     player_show_lives(player);
     draw_player(player);
 

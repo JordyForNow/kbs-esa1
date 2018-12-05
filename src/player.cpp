@@ -4,9 +4,10 @@
 #include "world.h"
 #include "render.h"
 #include "segments.h"
+#include "packet.h"
 
 // Create a new player struct.
-player_t *player_new(uint8_t x, uint8_t y) {
+player_t *player_new(uint8_t x, uint8_t y, uint8_t is_main) {
     player_t *player = (player_t *)malloc(sizeof(player_t));
     if (!player)
         return player;
@@ -16,6 +17,7 @@ player_t *player_new(uint8_t x, uint8_t y) {
     player->lives = 3;
     player->bomb = NULL;
     player->hit_duration = 0;
+    player->is_main = is_main;
     return player;
 }
 
@@ -77,6 +79,9 @@ void player_update(world_t *world, player_t *player, uint8_t inputs) {
         player->x = new_x;
         player->y = new_y;
 
+        // Send move player packet.
+        packet_send(MOVE, player);
+
         // Damage the player if they are walking into an exploding bomb,
         // but only if they are not already invincible.
         if (new_tile == EXPLODING_BOMB && player_on_hit(player)) {
@@ -104,8 +109,12 @@ uint8_t player_on_hit(player_t *player) {
         return 0;
 
     player->hit_duration = HIT_DURATION;
-    if (player->lives)
+    if (player->lives){
         player->lives--;
+
+        // Send lose live packet.
+        packet_send(LOSE_LIVE, player);
+    }
         
     player_show_lives(player);
     return 1;
@@ -121,5 +130,8 @@ void player_place_bomb(world_t *world, player_t *player) {
     if (!player->bomb) {
         player->bomb = bomb_new(player->x, player->y);
         world_set_tile(world, player->bomb->x, player->bomb->y, BOMB);
+
+        // Send place bomb packet.
+        packet_send(PLACE_BOMB, player);
     }
 }

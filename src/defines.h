@@ -1,7 +1,7 @@
 #ifndef DEFINES_H
 #define DEFINES_H
 
-#define DEBUG 0
+#define DEBUG 1
 #define SEGMENTS_ENABLE 1
 
 // The length to clear the corner from boxes.
@@ -60,6 +60,9 @@
 
 //Usart settings
 #define USART_BAUD_RATE 57600
+
+// Extra colors to use in the screen.
+#define ILI9341_BROWN 0x6100
 
 // Logging macros that only do something when DEBUG is enabled.
 // They print messages in the following style: [src/game.cpp] updating()

@@ -11,4 +11,4 @@ uint16_t network_receive();
 bool network_available();
 void network_acknowledge();
 
-#endif
+#endif /* NETWORK_H */
