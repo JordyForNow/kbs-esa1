@@ -127,10 +127,12 @@ int menu_await_input() {
         touch_point.y = map(prev_x, TOUCH_MAX_Y, TOUCH_MIN_Y, 0, tft.height());
 
         // Check if the touch X falls within the column of (potential) buttons.
-        if (touch_point.x > TOUCH_BUTTON_START_X && touch_point.x < (TOUCH_BUTTON_START_X + TOUCH_COMPONENT_WIDTH)) {
+        if (touch_point.x > TOUCH_BUTTON_START_X && 
+        touch_point.x < (TOUCH_BUTTON_START_X + TOUCH_COMPONENT_WIDTH)) {
             // Check if the touch Y also falls within a button.
             for (int i = 1; i < TOUCH_COMPONENT_COUNT + 1; i++) {
-                if (touch_point.y > (i * (TOUCH_COMPONENT_HEIGHT + TOUCH_COMPONENT_PADDING)) && touch_point.y < ((i + 1) * TOUCH_COMPONENT_HEIGHT + i * TOUCH_COMPONENT_PADDING)) {
+                if (touch_point.y > (i * (TOUCH_COMPONENT_HEIGHT + TOUCH_COMPONENT_PADDING)) && 
+                touch_point.y < ((i + 1) * TOUCH_COMPONENT_HEIGHT + i * TOUCH_COMPONENT_PADDING)) {
                     // If it does, return the index of the button.
                     return i - 1;
                 }

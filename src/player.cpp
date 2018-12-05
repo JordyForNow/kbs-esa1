@@ -67,7 +67,8 @@ void player_update(world_t *world, player_t *player, uint8_t inputs) {
     tile_t new_tile = world_get_tile(world, new_x, new_y);
 
     // Check if we want to and can move into the new tile.
-    if ((new_x != player->x || new_y != player->y) && (new_tile == EMPTY || new_tile == EXPLODING_BOMB)) {
+    if ((new_x != player->x || new_y != player->y) && 
+    (new_tile == EMPTY || new_tile == EXPLODING_BOMB)) {
         // Store where we were, so we can rerender the tile once we've moved.
         uint8_t old_x = player->x;
         uint8_t old_y = player->y;
@@ -85,7 +86,8 @@ void player_update(world_t *world, player_t *player, uint8_t inputs) {
         // Rerender the tile we came from, and render the player on top of the new tile.
         world_redraw_tile(world, old_x, old_y);
         redraw = 1;
-    } else if (world_get_tile(world, player->x, player->y) == EXPLODING_BOMB && player_on_hit(player)) {
+    } else if (world_get_tile(world, player->x, player->y) == EXPLODING_BOMB && 
+    player_on_hit(player)) {
         // If we don't want to move or we are unable to, we should check if we
         // are standing inside an explosion. If we are, we might have to take damage.
         LOGLN("Damage from standing in explosion");
