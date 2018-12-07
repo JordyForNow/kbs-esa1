@@ -3,6 +3,7 @@
 #include "render.h"
 #include "segments.h"
 #include "network.h"
+#include "touch.h"
 
 #include <Adafruit_GFX.h>
 #include <Adafruit_ILI9341.h>
@@ -28,18 +29,49 @@ int main() {
 
     LOGLN("TFT started!");
 
-    // Use the screen in landscape mode and paint the background black.
+    touch_init();
+
+    // Use the screen in landscape mode.
     tft.setRotation(1);
-    tft.fillScreen(ILI9341_BLACK);
+
+    // The main funtion method for the touch screen.
+    menus_init();
 
     timer1_init();
+<<<<<<< HEAD
     network_init();
     game_init();
+=======
+>>>>>>> 9ff7433eb6847fef747a49e3fa97615e3b7e3dd2
 
+    menu_t *menu = menu_main;
     while (1) {
+<<<<<<< HEAD
         if (network_update())
             game_update();
+=======
+        // Show the menu.
+        button_mode_t mode = menu_loop(menu);
+        // Singleplayer/ Multiplayer
+        
+        // Paint background black.
+        draw_background(ILI9341_BLACK);
+
+        // Set up the game.
+        game_init();
+        
+        // Update the game until it ends.
+        while (!game_get_state())
+            game_update();
+        
+        // Clean up the game.
+        game_free();
+        
+        // Show the correct menu depending on the game result.
+        menu = game_get_state() == GAME_STATE_WON ? menu_win : menu_lose;
+>>>>>>> 9ff7433eb6847fef747a49e3fa97615e3b7e3dd2
     }
+
     return 0;
 }
 

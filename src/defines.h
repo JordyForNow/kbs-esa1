@@ -64,8 +64,28 @@
 // Extra colors to use in the screen.
 #define ILI9341_BROWN 0x6100
 
+// The STMPE610 uses hardware SPI on the shield, and #8.
+#define STMPE_CS 8
+
+// This is calibration data for the raw touch data to the screen coordinates.
+#define TOUCH_MIN_X 140
+#define TOUCH_MIN_Y 150
+#define TOUCH_MAX_X 3900
+#define TOUCH_MAX_Y 4000
+
+// The amount of buttons or labels a menu screen can have.
+#define TOUCH_COMPONENT_COUNT 4
+
+// The width, height, and padding of components.
+#define TOUCH_COMPONENT_HEIGHT 40
+#define TOUCH_COMPONENT_WIDTH 200
+#define TOUCH_COMPONENT_PADDING 10
+
+// The horizontal start position of buttons.
+#define TOUCH_BUTTON_START_X 60
+
 // Logging macros that only do something when DEBUG is enabled.
-// They print messages in the following style: [src/game.cpp] updating()
+// They print messages in the following style: [src/game.cpp] updating().
 // It includes the source file where the logging call originated from.
 #if DEBUG
 // If DEBUG is enabled, enable logging.
