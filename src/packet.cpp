@@ -61,42 +61,36 @@ void packet_setup(uint16_t map_seed){
     network_send(packet);
 }
 
-void packet_receive(uint16_t packet){
-    method_t method = packet_decode(packet);
-    switch (method){
-        case MOVE:
-            break;
-        case LOSE_LIVE:
-            break;
-        case PLACE_BOMB:
-            break;
-    }
+packet_t *packet_receive(uint16_t packet){
+    packet_t *packet = packet_decode(packet);
+    return packet;
 }
 
-method_t packet_decode(uint16_t packet){
+packet_t *packet_decode(uint16_t incoming_packet){
     uint8_t x = 0;
     uint8_t y = 0;
     uint8_t opcode = 0;
     method_t method;
 
     // Shift parity bit out
-    packet >>= 1;
+    incoming_packet >>= 1;
     for(int i = 0; i<5; i++){
         // Copy y coördinate.
-        if(packet & (1<<i))
+        if(incoming_packet & (1<<i))
             y |= (1<<i);
 
         // Copy x coördinate.
-        if(packet & (1<<(i+5)))
+        if(incoming_packet & (1<<(i+5)))
             x |= (1<<i);
 
         // Copy opcode.
-        if(packet & (1<<(i+10)))
+        if(incoming_packet & (1<<(i+10)))
             opcode |= (1<<i);
     }
 
     method = (method_t)opcode;
-    return method;
+    packet_t *packet = new_packet(x, y, method);
+    return packet;
 }
 
 // Check if packet needs a parity bit.
@@ -115,4 +109,16 @@ uint8_t has_even_parity(uint16_t packet){
         return 0;
 
     return 1;
+}
+
+packet_t *packet_new(uint8_t x, uint8_t y, method_t method) {
+    packet_t *packet = (packet_t *)malloc(sizeof(packet_t));
+    if (!packet)
+        return packet;
+
+    packet->x = x;
+    packet->y = y;
+    packet->method = method;
+
+    return packet;
 }
