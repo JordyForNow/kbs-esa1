@@ -38,18 +38,13 @@ int main() {
     menus_init();
 
     timer1_init();
-<<<<<<< HEAD
     network_init();
     game_init();
-=======
->>>>>>> 9ff7433eb6847fef747a49e3fa97615e3b7e3dd2
 
     menu_t *menu = menu_main;
     while (1) {
-<<<<<<< HEAD
         if (network_update())
             game_update();
-=======
         // Show the menu.
         button_mode_t mode = menu_loop(menu);
         // Singleplayer/ Multiplayer
@@ -69,7 +64,6 @@ int main() {
         
         // Show the correct menu depending on the game result.
         menu = game_get_state() == GAME_STATE_WON ? menu_win : menu_lose;
->>>>>>> 9ff7433eb6847fef747a49e3fa97615e3b7e3dd2
     }
 
     return 0;
