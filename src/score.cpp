@@ -34,13 +34,33 @@ void score_set_boxes(uint8_t boxes) {
 }
 
 void score_calculate_position(uint8_t part_one, uint8_t part_two){
+    bool written = false;
+    uint8_t temp_one;
+    uint8_t temp_two;
+    uint8_t temp;
     for(uint16_t i=0; i<6; i+=2){
         if(eeprom_read_byte(i) < part_one || (eeprom_read_byte(i) == part_one && eeprom_read_byte(i+1) < part_two)){
+            if(written){
+                temp = temp_one;
+                temp_one = eeprom_read_byte(i);
+                eeprom_write_byte(i, temp);
+                temp = temp_two;
+                temp_two = eeprom_read_byte(i+1);
+                eeprom_write_byte(i+1, temp);
+                continue;
+            }
+
+            written = true;
+            temp_one = eeprom_read_byte(i);
+            temp_two = eeprom_read_byte(i+1);
+
             eeprom_write_byte(i, part_one);
             eeprom_write_byte(i+1, part_two);
-            LOG("Highscore set to place: ");
-            Serial.println(i);
-            return;
+
+            /*char label[1];
+            sprintf(label, "%u. %u,%u", i, part_one, part_two);
+            
+            component_change_text(menu_score->components[(i+1)/2], (i+1)/2, label);*/
         }
     }
 }

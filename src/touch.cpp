@@ -59,6 +59,10 @@ void menu_free(menu_t *menu) {
     if (!menu)
         return;
 
+    for (uint8_t i=0; i < sizeof(menu->components)/sizeof(menu->components[0]); i++) {
+        component_free(menu->components[i]);
+    }
+
     free(menu);
 }
 
@@ -66,7 +70,7 @@ void menu_set_component(menu_t *menu, int index, component_t *component) {
     menu->components[index] = component;
 }
 
-void menu_draw(menu_t *menu) {
+void menu_draw (menu_t *menu) {
     draw_background(ILI9341_NAVY);
     tft.setTextSize(3);
 
@@ -84,7 +88,7 @@ void menu_draw(menu_t *menu) {
     }
 }
 
-button_mode_t menu_loop(menu_t *menu) {
+button_mode_t menu_loop (menu_t *menu) {
     // Draw the firt menu upon entering the menu loop.
     menu_draw(menu);
 
@@ -191,3 +195,20 @@ void menus_init() {
     menu_set_component(menu_win, 1, label_new("You win!"));
     menu_set_component(menu_win, 3, button_new("Back", menu_main, BUTTON_MODE_DEFAULT));
 }
+
+/*void component_change_text(component_t *component, int index, char *text){
+    //free(component->text);
+    //component->text = strdup(text);
+    menu_free(menu_score);
+    index = 1;
+    for (uint8_t i=0; i<6; i+=2) {
+        uint8_t first = eeprom_read_byte(i);
+        uint8_t second = eeprom_read_byte(i+1);
+        
+        char label[1];
+        sprintf(label, "%u. %u,%u", index, first, second);
+        menu_set_component(menu_score, (i+1)/2, label_new(label));
+        index++;
+    }
+    menu_set_component(menu_score, 3, button_new("Back", menu_main, BUTTON_MODE_DEFAULT));
+}*/
