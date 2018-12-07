@@ -12,16 +12,17 @@ typedef enum {
     PLACE_BOMB = 0b001,
 } method_t;
 
-typedef struct packet_t {
+typedef struct {
     method_t method;
     uint8_t x;
     uint8_t y;
 } packet_t;
 
+packet_t* packet_new(method_t method, uint8_t x, uint8_t y);
+void packet_free(packet_t packet);
 void packet_setup(uint16_t map_seed);
 void packet_send(method_t method, player_t *player);
-packet_t *packet_receive(uint16_t packet);
-packet_t *packet_decode(uint16_t packet);
+packet_t* packet_decode(uint16_t packet);
 uint8_t has_even_parity(uint16_t packet);
 packet_t *new_packet(uint8_t x, uint8_t y, method_t method);
 

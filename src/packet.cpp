@@ -3,6 +3,18 @@
 #include "defines.h"
 #include <Arduino.h>
 
+packet_t* packet_new(method_t method, uint8_t x, uint8_t y) {
+    packet_t *packet = (packet_t *) malloc(sizeof(packet_t));
+    packet->method = method;
+    packet->x = x;
+    packet->y = y;
+}
+
+void packet_free(packet_t* packet) {
+    if(packet)
+        free(packet);
+}
+
 // Send a packet with a method and the location of the player.
 void packet_send(method_t method, player_t *player){
     // Declare packet variable.
@@ -61,36 +73,28 @@ void packet_setup(uint16_t map_seed){
     network_send(packet);
 }
 
-packet_t *packet_receive(uint16_t packet){
-    packet_t *packet = packet_decode(packet);
-    return packet;
-}
-
-packet_t *packet_decode(uint16_t incoming_packet){
+packet_t* packet_decode(uint16_t to_decode){
     uint8_t x = 0;
     uint8_t y = 0;
     uint8_t opcode = 0;
-    method_t method;
 
     // Shift parity bit out
-    incoming_packet >>= 1;
+    to_decode >>= 1;
     for(int i = 0; i<5; i++){
         // Copy y coördinate.
-        if(incoming_packet & (1<<i))
+        if(to_decode & (1<<i))
             y |= (1<<i);
 
         // Copy x coördinate.
-        if(incoming_packet & (1<<(i+5)))
+        if(to_decode & (1<<(i+5)))
             x |= (1<<i);
 
         // Copy opcode.
-        if(incoming_packet & (1<<(i+10)))
+        if(to_decode & (1<<(i+10)))
             opcode |= (1<<i);
     }
 
-    method = (method_t)opcode;
-    packet_t *packet = new_packet(x, y, method);
-    return packet;
+    return packet_new((method_t)opcode, x, y);
 }
 
 // Check if packet needs a parity bit.

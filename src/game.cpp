@@ -49,13 +49,7 @@ bool game_update() {
     // Handle networking
     if (network_available())
     {
-        uint16_t data = network_receive();
-        if (data)
-        {
-            network_acknowledge();
-
-            network_send(data);
-        }
+        network_receive();
     }
     
     // Check if the player has died.
@@ -143,6 +137,13 @@ void game_trigger_update() {
     should_poll = true;
 }
 
+player_t *get_opponent(){
+    for(int i =0; i<world->player_count; i++){
+        if(!world->players[i]->is_main)
+            return world->players[i];
+    }
+}
+
 void opponent_move(uint8_t x, uint8_t y){
     player_t *player = get_opponent();
     player->x = x;
@@ -159,9 +160,4 @@ void opponent_lose_live(uint8_t x, uint8_t y){
     player_t *player = get_opponent();
 }
 
-player_t *get_opponent(){
-    for(int i =0; i<world->player_count; i++){
-        if(!world->players[i]->is_main)
-            return world->players[i];
-    }
-}
+
