@@ -81,7 +81,7 @@ int validate_incoming_data(uint16_t data) {
     return true;
 }
 
-uint16_t usart_receive() {
+packet_t* usart_receive() {
     if (!buffer_avail(incoming_data))
         return NULL;
 
@@ -89,7 +89,7 @@ uint16_t usart_receive() {
     combined_data = combined_data << 8;
     combined_data |= buffer_read(incoming_data); 
     
-    return validate_incoming_data(combined_data) ? combined_data :  NULL;
+    return validate_incoming_data(combined_data) ? packet_decode(combined_data) : NULL;
 }
 
 void usart_acknowledge() {

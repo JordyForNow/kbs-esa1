@@ -43,8 +43,6 @@ int main() {
 
     menu_t *menu = menu_main;
     while (1) {
-        if (network_update())
-            game_update();
         // Show the menu.
         button_mode_t mode = menu_loop(menu);
         // Singleplayer/ Multiplayer
@@ -57,7 +55,8 @@ int main() {
         
         // Update the game until it ends.
         while (!game_get_state())
-            game_update();
+            if (!network_update())
+                game_update();
         
         // Clean up the game.
         game_free();
