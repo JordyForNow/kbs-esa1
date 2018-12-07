@@ -74,7 +74,7 @@
 // The horizontal start position of buttons.
 #define TOUCH_BUTTON_START_X 60
 
-// Extra colors to use in the screen.
+// Extra color(s) to use in the screen.
 #define ILI9341_BROWN 0x6100
 
 // Logging macros that only do something when DEBUG is enabled.
