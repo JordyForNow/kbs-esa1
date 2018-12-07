@@ -3,6 +3,7 @@
 #include "player.h"
 #include "render.h"
 #include "world.h"
+#include "segments.h"
 
 volatile bool should_poll = false;
 static int should_update = 0;
@@ -37,6 +38,7 @@ void game_init() {
 
 void game_free() {
     world_free(world);
+    segments_hide();
 }
 
 // Update the game, or do nothing if an update hasn't been triggered.
