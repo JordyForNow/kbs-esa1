@@ -29,7 +29,7 @@ void game_init() {
 
     // Create the player and show the lives on the 7-segment display.
     player = player_new(1, 1, 1);
-    player_show_lives(player); // Never updated, so this is fine.
+    player_show_lives(player);
     draw_player(player);
 
     world->players[0] = player;
