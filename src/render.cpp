@@ -48,20 +48,10 @@ void draw_background(int color){
 }
 
 void draw_player(player_t *player) {
-    if (player->hit_duration) {
-        if(player->is_main){
-            draw_circle(WORLD_TILE_SIZE * player->x, WORLD_TILE_SIZE * player->y, ILI9341_ORANGE);
-        }else{
-            draw_circle(WORLD_TILE_SIZE * player->x, WORLD_TILE_SIZE * player->y, ILI9341_CYAN);
-        }
-        return;
-    }
-
-    if(player->is_main){
-        draw_circle(WORLD_TILE_SIZE * player->x, WORLD_TILE_SIZE * player->y, ILI9341_RED);
-    }else{
-        draw_circle(WORLD_TILE_SIZE * player->x, WORLD_TILE_SIZE * player->y, ILI9341_BLUE);
-    }
+    uint16_t color = player->is_main
+        ? (player->hit_duration ? ILI9341_ORANGE : ILI9341_RED)
+        : (player->hit_duration ? ILI9341_CYAN : ILI9341_BLUE);
+    draw_circle(WORLD_TILE_SIZE * player->x, WORLD_TILE_SIZE * player->y, color);
 }
 
 void draw_button(int index, char *text) {
