@@ -1,7 +1,7 @@
 #include "usart.h"
 #include "defines.h"
 #include "game.h"
-#include "buff.h"
+#include "buffer.h"
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
@@ -46,13 +46,13 @@ void send_bytes() {
 bool usart_update() {
     // The game should be halted because the networking trafic has not been acknowledged yet.
     if (waiting && !acknowledged)
-    {   
+    {
         return false;
     }
-    
+
     waiting = false;
-    
-    if (!buffer_avail(outgoing_data))
+
+    if (buffer_available(outgoing_data) < 2)
         return true;
 
     // Read the ints that need to be send into the currently sending array which can be reused during retries.
@@ -73,7 +73,7 @@ int validate_incoming_data(uint16_t data) {
     // int count = 1;
 
     // for (int i = 0; i < 16; i++) {
-    //     if (data & (1 << i)) 
+    //     if (data & (1 << i))
     //         count++;
     // }
 
@@ -82,13 +82,13 @@ int validate_incoming_data(uint16_t data) {
 }
 
 packet_t* usart_receive() {
-    if (!buffer_avail(incoming_data))
+    if (buffer_available(incoming_data) < 2)
         return NULL;
 
     uint16_t combined_data = (uint16_t) buffer_read(incoming_data);
     combined_data = combined_data << 8;
-    combined_data |= buffer_read(incoming_data); 
-    
+    combined_data |= buffer_read(incoming_data);
+
     return validate_incoming_data(combined_data) ? packet_decode(combined_data) : NULL;
 }
 
@@ -98,7 +98,7 @@ void usart_acknowledge() {
 }
 
 bool usart_available() {
-    return buffer_avail(incoming_data);
+    return buffer_available(incoming_data) / 2;
 }
 
 
