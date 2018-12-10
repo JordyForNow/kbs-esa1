@@ -36,7 +36,7 @@ bool buffer_empty(buffer_t *buffer) {
     return buffer->count == 0;
 }
 
-bool buffer_available(buffer_t *buffer) {
+uint8_t buffer_available(buffer_t *buffer) {
     return buffer->count;
 }
 
