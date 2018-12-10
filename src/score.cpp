@@ -27,8 +27,8 @@ void score_calculate() {
     float score = boxes_per_second * lives_left;
 
     // Separate score into two parts to store in eeprom.
-    score_part_one = boxes_per_second;
-    score_part_two = (boxes_per_second - score_part_one) * 100;
+    score_part_one = score;
+    score_part_two = (score - score_part_one) * 100;
 
     score_calculate_position(score_part_one, score_part_two);
 }
