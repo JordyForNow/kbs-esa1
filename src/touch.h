@@ -62,9 +62,7 @@ int menu_await_input();
 void touch_init();
 void menus_init();
 
-void menu_reset_score(menu_t *menu);
-void menu_set_score();
-
-//void component_change_text(component_t *component, int index, char *text);
+char *menu_get_score(int index, char *label);
+void component_change_text(component_t *component, int index, char *text);
 
 #endif /* TOUCH_H */

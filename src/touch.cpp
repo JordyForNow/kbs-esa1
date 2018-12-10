@@ -59,8 +59,9 @@ void menu_free(menu_t *menu) {
     if (!menu)
         return;
 
-    for (uint8_t i=0; i < sizeof(menu->components)/sizeof(menu->components[0]); i++) {
-        component_free(menu->components[i]);
+    for (uint8_t i=0; i < TOUCH_COMPONENT_COUNT; i++) {
+        if (menu->components[i])
+            component_free(menu->components[i]);
     }
 
     free(menu);
@@ -175,15 +176,9 @@ void menus_init() {
     menu_set_component(menu_play, 3, button_new("Back", menu_main, BUTTON_MODE_DEFAULT));
 
     // menu_score
-    int index = 1;
+    char label[10];
     for (uint8_t i=0; i<6; i+=2) {
-        uint8_t first = eeprom_read_byte(i);
-        uint8_t second = eeprom_read_byte(i+1);
-        
-        char label[1];
-        sprintf(label, "%u. %u,%u", index, first, second);
-        menu_set_component(menu_score, (i+1)/2, label_new(label));
-        index++;
+        menu_set_component(menu_score, (i+1)/2, label_new(menu_get_score(i, label)));
     }
     menu_set_component(menu_score, 3, button_new("Back", menu_main, BUTTON_MODE_DEFAULT));
 
@@ -196,19 +191,17 @@ void menus_init() {
     menu_set_component(menu_win, 3, button_new("Back", menu_main, BUTTON_MODE_DEFAULT));
 }
 
-/*void component_change_text(component_t *component, int index, char *text){
-    //free(component->text);
-    //component->text = strdup(text);
-    menu_free(menu_score);
-    index = 1;
-    for (uint8_t i=0; i<6; i+=2) {
-        uint8_t first = eeprom_read_byte(i);
-        uint8_t second = eeprom_read_byte(i+1);
-        
-        char label[1];
-        sprintf(label, "%u. %u,%u", index, first, second);
-        menu_set_component(menu_score, (i+1)/2, label_new(label));
-        index++;
-    }
-    menu_set_component(menu_score, 3, button_new("Back", menu_main, BUTTON_MODE_DEFAULT));
-}*/
+// Get formated score from eeprom.
+char *menu_get_score(int index, char *label) {
+    int value_one = eeprom_read_byte(index);
+    int value_two = eeprom_read_byte(index+1);
+    
+    int identifier = map(index, 0, 5, 1, 4);
+
+    sprintf(label, "%u. %u,%u", identifier, value_one, value_two);
+    return label;
+}
+
+void component_change_text(component_t *component, int index, char *text) {
+    component->text = strdup(text);
+}
