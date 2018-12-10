@@ -143,13 +143,6 @@ unsigned long *game_get_time(){
     return &game_time;
 }
 
-player_t *game_get_main_player(){
-    // Commented because implementation in multiplayer.
-    /*for(int i = 0; i<world->player_count; i++){
-        if(world->players[i]->is_main){
-            //do someting
-        }
-    }*/
-    
+player_t *game_get_main_player(){   
     return player;
 }
