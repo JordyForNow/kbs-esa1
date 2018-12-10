@@ -111,7 +111,7 @@ void ADC_init(){
     // Use A0 in ADC.
     ADMUX = 0x00;
     
-    // Turn on referantion voltage.
+    // Turn on reference voltage.
     ADMUX |= (1 << REFS0);
 
     // ADCclock = CPUclock / 128.
