@@ -98,7 +98,7 @@ void usart_acknowledge() {
 }
 
 bool usart_available() {
-    return buffer_available(incoming_data) / 2;
+    return buffer_available(incoming_data) >= 2;
 }
 
 
