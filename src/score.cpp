@@ -11,9 +11,6 @@ float boxes_per_second = 0;
 
 // Caclulate score.
 void score_calculate() {
-    int score_part_one = 0;
-    int score_part_two = 0;
-
     // Get total game time.
     total_time = *game_get_time();
     // Get lives left.
@@ -25,14 +22,10 @@ void score_calculate() {
 
     // Multiply by lives and get final score.
     float score = boxes_per_second * lives_left;
+    score *=100;
+    score = (int)score;
 
-    // Separate score into two parts to store in eeprom.
-    // int = float -> Wich removes decimal numbers.
-    score_part_one = score;
-    // (int - float) * 100 -> Wich converts decimal numbers to floored integer above 0.
-    score_part_two = (score - score_part_one) * 100;
-
-    score_calculate_position(score_part_one, score_part_two);
+    score_calculate_position(score);
 }
 
 void score_set_boxes(uint8_t boxes) {
@@ -40,55 +33,67 @@ void score_set_boxes(uint8_t boxes) {
 }
 
 // Check if score should be in top 3.
-void score_calculate_position(uint8_t part_one, uint8_t part_two) {
+void score_calculate_position(uint16_t score) {
     bool written = false;
-    uint8_t value_one;
-    uint8_t value_two;
-    uint8_t temp;
+    uint16_t temp_score;
+    uint16_t temp;
     char label[10];
-    
-    for (uint16_t i = 0; i < 6; i += 2) {
+
+    for (uint8_t i=0; i<6; i+=2) {
         // If the highscore was added to top 3.
         if (written) {
             // Make sure all scores are moved one spot.
-            temp = value_one;
-            value_one = eeprom_read_byte(i);
-            eeprom_write_byte(i, temp);
-            temp = value_two;
-            value_two = eeprom_read_byte(i + 1);
-            eeprom_write_byte(i + 1, temp);
+            temp = eeprom_get(i);
+            eeprom_put(i, temp_score);
+            temp_score = temp;
 
             component_change_text(menu_score->components[(i + 1) / 2], (i + 1) / 2, menu_get_score(i, label));
             continue;
         }
 
         // If the score is elligable to be in the top 3.
-        if (eeprom_read_byte(i) < part_one || (eeprom_read_byte(i) == part_one && eeprom_read_byte(i + 1) < part_two)) {
+        if (eeprom_get(i) < score) {
             written = true;
-            value_one = eeprom_read_byte(i);
-            value_two = eeprom_read_byte(i + 1);
-
-            eeprom_write_byte(i, part_one);
-            eeprom_write_byte(i + 1, part_two);
-
+            temp_score = eeprom_get(i);
+            eeprom_put(i, score);
             component_change_text(menu_score->components[(i + 1) / 2], (i + 1) / 2, menu_get_score(i, label));
         }
     }
 }
 
-void eeprom_write_byte(uint16_t addr, uint8_t data) {
-    // Wait untill we are allowed to write.
-    while (EECR & (1 << EEPE));
-    EEAR = addr;
-    EEDR = data;
-    EECR |= (1 << EEMPE);
-    EECR |= (1 << EEPE);
+// Write 16 bit int to eeprom.
+void eeprom_put(uint16_t addr, uint16_t incoming_data) {
+    uint8_t data;
+    for (int i=0; i<2; i++) {
+        // Wait until we are allowed to write.
+        while (EECR & (1 << EEPE));
+        data = incoming_data;
+        // Set address.
+        EEAR = addr+i;
+        // Store data.
+        EEDR = data;
+        // Execute store.
+        EECR |= (1 << EEMPE);
+        EECR |= (1 << EEPE);
+        // Prepare for next byte.
+        incoming_data >>= 8;
+    }
 }
 
-uint8_t eeprom_read_byte(uint16_t addr) {
-    // Wait untill we are allowed to read.
-    while (EECR & (1 << EEPE));
-    EEAR = addr;
-    EECR |= (1 << EERE);
-    return EEDR;
+// Read 16 bit int from eeprom.
+uint16_t eeprom_get(uint16_t addr) {
+    uint16_t data;
+    uint16_t temp_data;
+    for(int i=1; i>=0; i--){
+        // Wait until we are allowed to read.
+        while (EECR & (1 << EEPE));
+        // Set address.
+        EEAR = addr+i;
+        EECR |= (1 << EERE);
+        // Read data.
+        temp_data = EEDR;
+        // Store data in variable.
+        data |= (temp_data << i*8);
+    }
+    return data;
 }

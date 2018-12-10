@@ -59,6 +59,7 @@ void world_generate(world_t *world, unsigned long seed) {
     }
 
     world->boxes = world_count_boxes(world);
+    world->boxes = 1;
 }
 
 uint8_t world_count_boxes(world_t *world) {

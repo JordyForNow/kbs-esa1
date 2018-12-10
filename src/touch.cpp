@@ -193,12 +193,11 @@ void menus_init() {
 
 // Get formated score from eeprom.
 char *menu_get_score(int index, char *label) {
-    int value_one = eeprom_read_byte(index);
-    int value_two = eeprom_read_byte(index+1);
+    uint16_t score = eeprom_get(index);
     
     int identifier = map(index, 0, 5, 1, 4);
 
-    sprintf(label, "%u. %u,%u", identifier, value_one, value_two);
+    sprintf(label, "%u. %u", identifier, score);
     return label;
 }
 
