@@ -76,8 +76,7 @@ void score_calculate_position(uint8_t part_one, uint8_t part_two) {
 
 void eeprom_write_byte(uint16_t addr, uint8_t data) {
     // Wait untill we are allowed to write.
-    while (EECR & (1 << EEPE))
-        ;
+    while (EECR & (1 << EEPE));
     EEAR = addr;
     EEDR = data;
     EECR |= (1 << EEMPE);
@@ -86,15 +85,8 @@ void eeprom_write_byte(uint16_t addr, uint8_t data) {
 
 uint8_t eeprom_read_byte(uint16_t addr) {
     // Wait untill we are allowed to read.
-    while (EECR & (1 << EEPE))
-        ;
+    while (EECR & (1 << EEPE));
     EEAR = addr;
     EECR |= (1 << EERE);
     return EEDR;
-}
-
-void eeprom_show() {
-    for (uint16_t i = 0; i < 6; i++) {
-        Serial.println(eeprom_read_byte(i));
-    }
 }
