@@ -13,6 +13,9 @@
 // This many input polls will be done between game updates.
 #define GAME_INPUT_FACTOR 25
 
+// The maximum value for timer one
+#define TIMER1_TOP (15625 / GAME_UPDATE_FREQUENCY / GAME_INPUT_FACTOR)
+
 // The inputs are read from the nunchuck once during every game-update
 // and are stored in a single uint8_t when they are passed around to
 // other functions, such as player_update(..). The below defines are
@@ -51,7 +54,7 @@
 #define HIT_DURATION (5 * GAME_UPDATE_FREQUENCY)
 
 // The ports which the screen is connected to.
-#define TFT_CS 10
+#define TFT_CS 7
 #define TFT_DC 9
 
 // The STMPE610 uses hardware SPI on the shield, and #8.
