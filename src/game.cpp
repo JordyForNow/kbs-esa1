@@ -3,6 +3,7 @@
 #include "player.h"
 #include "render.h"
 #include "world.h"
+#include "segments.h"
 
 volatile bool should_poll = false;
 static int should_update = 0;
@@ -28,7 +29,7 @@ void game_init() {
     world_generate(world, TCNT0);
 
     // Create the player and show the lives on the 7-segment display.
-    player = player_new(1, 1);
+    player = player_new(1, 1, 1);
     player_show_lives(player);
     draw_player(player);
 
@@ -37,12 +38,13 @@ void game_init() {
 
 void game_free() {
     world_free(world);
+    segments_hide();
 }
 
 // Update the game, or do nothing if an update hasn't been triggered.
 bool game_update() {
     // Check if the player has died.
-    if (player->lives)
+    if (!player->lives)
         game_state = GAME_STATE_LOST;
 
     // End the game if there are no boxes remaining.
