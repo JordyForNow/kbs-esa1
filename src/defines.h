@@ -39,8 +39,9 @@
 #define WORLD_WIDTH 17
 #define WORLD_HEIGHT 13
 
-// Defines how large a bombs explosion should be.
-#define BOMB_EXPLODE_SIZE 2
+// Chance for a box to drop an upgrade.
+#define BOMB_EXPLODE_SIZE_DROP_CHANCE 10
+#define BOMB_COUNT_UPGRADE_CHANCE 90
 // Defines after how many seconds the bomb should explode.
 #define BOMB_EXPLODE_AGE (3 * GAME_UPDATE_FREQUENCY)
 // Defines after how many seconds the bomb should destroy.

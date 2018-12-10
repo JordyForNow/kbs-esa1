@@ -12,6 +12,10 @@ typedef enum {
     WALL,
     BOX,
     EXPLODING_BOMB,
+    UPGRADE_EXPLOSION_BOMB_SIZE,
+    UPGRADE_BOMB_SIZE,
+    UPGRADE_EXPLOSION_BOMB_COUNT,
+    UPGRADE_BOMB_COUNT,
 } tile_t;
 
 struct world_t;

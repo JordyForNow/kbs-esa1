@@ -17,6 +17,8 @@ player_t *player_new(uint8_t x, uint8_t y, uint8_t is_main) {
     player->bomb = NULL;
     player->hit_duration = 0;
     player->is_main = is_main;
+    player->bomb_count = 1;
+    player->bomb_size = 2;
     return player;
 }
 
@@ -69,7 +71,7 @@ void player_update(world_t *world, player_t *player, uint8_t inputs) {
 
     // Check if we want to and can move into the new tile.
     if ((new_x != player->x || new_y != player->y)
-    && (new_tile == EMPTY || new_tile == EXPLODING_BOMB)) {
+    && (new_tile != WALL && new_tile != BOX && new_tile != BOMB)) {
         // Store where we were, so we can rerender the tile once we've moved.
         uint8_t old_x = player->x;
         uint8_t old_y = player->y;
@@ -82,8 +84,25 @@ void player_update(world_t *world, player_t *player, uint8_t inputs) {
         // but only if they are not already invincible.
         if (new_tile == EXPLODING_BOMB && player_on_hit(player)) {
             LOGLN("Damage from walking into a bomb");
-        }
+        } else if (new_tile == UPGRADE_EXPLOSION_BOMB_SIZE){
+            if(player_on_hit(player))
+                LOGLN("Damage from walking into an explosion with upgrade");
 
+            world_set_tile(world, new_x, new_y, EXPLODING_BOMB);
+            player->bomb_size++;
+        } else if (new_tile == UPGRADE_BOMB_SIZE) {
+            world_set_tile(world, new_x, new_y, EMPTY);
+            player->bomb_size++;
+        } else if (new_tile == UPGRADE_EXPLOSION_BOMB_COUNT) {
+            if(player_on_hit(player))
+                LOGLN("Damage from walking into an explosion with upgrade");
+            
+            world_set_tile(world, new_x, new_y, EXPLODING_BOMB);
+            player->bomb_count++;
+        } else if (new_tile == UPGRADE_BOMB_COUNT) {
+            world_set_tile(world, new_x, new_y, EMPTY);
+            player->bomb_count++;
+        }
         // Rerender the tile we came from, and render the player on top of the new tile.
         world_redraw_tile(world, old_x, old_y);
         redraw = 1;
@@ -120,7 +139,7 @@ void player_show_lives(player_t *player) {
 // Place a bomb on the map if the player doesn't already have one.
 void player_place_bomb(world_t *world, player_t *player) {
     if (!player->bomb) {
-        player->bomb = bomb_new(player->x, player->y);
+        player->bomb = bomb_new(player->x, player->y, player->bomb_size);
         world_set_tile(world, player->bomb->x, player->bomb->y, BOMB);
     }
 }
