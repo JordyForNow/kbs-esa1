@@ -27,7 +27,9 @@ void score_calculate() {
     float score = boxes_per_second * lives_left;
 
     // Separate score into two parts to store in eeprom.
+    // int = float -> Wich removes decimal numbers.
     score_part_one = score;
+    // (int - float) * 100 -> Wich converts decimal numbers to floored integer above 0.
     score_part_two = (score - score_part_one) * 100;
 
     score_calculate_position(score_part_one, score_part_two);
