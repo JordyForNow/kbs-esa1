@@ -35,7 +35,6 @@ int main() {
 
     // The main funtion method for the touch screen.
     menus_init();
-    Serial.println("menus started");
 
     menu_t *menu = menu_main;
     while (1) {
@@ -97,7 +96,7 @@ void timer1_init() {
     // This number is lastly divided by the GAME_INPUT_FACTOR. We check the input
     // that many times before actually performing a game update.
     OCR1A = TIMER1_TOP;
-    OCR1B = 60;        // test initialise value;
+    OCR1B = 60;        // test initialise value. Try: do without this one.
     sei();
 }
 
