@@ -6,7 +6,7 @@
 
 void timer1_init();
 void tft_brightness_init();
-void ADC_init();
+void adc_init();
 
 int main() {
     init();
@@ -19,13 +19,13 @@ int main() {
 
     // Serial.begin() but only if DEBUG is high.
     LOG_INIT();
-    
+
     tft.begin();
     LOGLN("TFT started!");
 
     timer1_init();
     tft_brightness_init();
-    ADC_init();
+    adc_init();
 
     touch_init();
 
@@ -102,11 +102,11 @@ void tft_brightness_init(){
     DDRB |= (1 << PB2);
 }
 
-void ADC_init(){
+void adc_init(){
     // Define A0 as input.
     DDRC = ~(1 << PC0);
 
-    // Use A0 in ADC.
+    // Use A0 as the input for the ADC.
     ADMUX = 0x00;
     
     // Turn on reference voltage.
@@ -118,13 +118,17 @@ void ADC_init(){
     // Enable ADC, enable auto trigger, enable ADC interrupts.
     ADCSRA |= (1 << ADEN) | (1 << ADATE) | (1 << ADIE);
 
-    // Interrupt on timer1 compare match B.
+    // Interrupt on Timer1 compare match B.
     ADCSRB = (1 << ADTS2) | (1 << ADTS1);
     
     // Trigger first update.
     ADCSRA |= (1 << ADSC);
 }
 
+// This interrupt is thrown when the ADC is ready with the conversion.
+// The value from the ADC is from 0-1023 and needs to be mapped to 0-TIMER1_TOP.
+// The mapped value is put in OCR1B to set the right duty cycle so that 
+// the tft has the right brightness.
 ISR(ADC_vect){
     OCR1B = map(ADC, 0, 1023, 0, TIMER1_TOP);
 }
