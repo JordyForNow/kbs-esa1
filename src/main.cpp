@@ -96,7 +96,7 @@ void timer1_init() {
     // This number is lastly divided by the GAME_INPUT_FACTOR. We check the input
     // that many times before actually performing a game update.
     OCR1A = TIMER1_TOP;
-    OCR1B = 60;        // test initialise value. Try: do without this one.
+    //OCR1B = 60;        // test initialise value. Try: do without this one.
     sei();
 }
 
