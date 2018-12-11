@@ -26,4 +26,4 @@ uint8_t player_on_hit(player_t *player);
 void player_show_lives(player_t *player);
 void player_place_bomb(world_t *world, player_t *player);
 
-#endif
+#endif /* PLAYER_H */

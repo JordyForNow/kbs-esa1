@@ -90,6 +90,6 @@
 #define LOG_INIT() {};
 #define LOG(msg) {};
 #define LOGLN(msg) {};
-#endif
+#endif /* DEBUG */
 
-#endif
+#endif /* DEFINES_H */

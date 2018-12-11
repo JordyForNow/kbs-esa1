@@ -102,7 +102,7 @@ void world_subtract_boxes(world_t *world, int subtraction_amount) {
     world->boxes -= subtraction_amount;
 }
 
-int world_get_boxes(world_t *world) {
+int world_get_box_count(world_t *world) {
     return world->boxes;
 }
 
