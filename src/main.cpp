@@ -128,7 +128,7 @@ void adc_init(){
 // This interrupt is thrown when the ADC is ready with the conversion.
 // The value from the ADC is from 0-1023 and needs to be mapped to 0-TIMER1_TOP.
 // The mapped value is put in OCR1B to set the right duty cycle so that 
-// the tft has the right brightness.
+// the TFT has the right brightness.
 ISR(ADC_vect){
     OCR1B = map(ADC, 0, 1023, 0, TIMER1_TOP);
 }
