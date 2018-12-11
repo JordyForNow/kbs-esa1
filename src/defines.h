@@ -51,7 +51,7 @@
 #define HIT_DURATION (5 * GAME_UPDATE_FREQUENCY)
 
 // The ports which the screen is connected to.
-#define TFT_CS 10
+#define TFT_CS 7
 #define TFT_DC 9
 
 //////////////
