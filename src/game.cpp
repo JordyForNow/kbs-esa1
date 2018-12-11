@@ -15,7 +15,7 @@ static uint8_t input_buttons = 0;
 static int16_t input_joy_x = 0;
 static int16_t input_joy_y = 0;
 
-// Keep track of how many game ticks the game is running.
+// Keep track of how many game ticks the game has been running.
 unsigned long game_time = 0;
 
 game_state_t game_state = GAME_STATE_RUNNING;
@@ -32,7 +32,7 @@ void game_init() {
     // Draw the world with blocks and walls.
     world = world_new(1);
     world_generate(world, TCNT0);
-    score_set_boxes(world_get_boxes(world));
+    score_set_boxes(world_get_box_count(world));
 
     // Create the player and show the lives on the 7-segment display.
     player = player_new(1, 1, 1);
@@ -54,7 +54,7 @@ bool game_update() {
         game_state = GAME_STATE_LOST;
 
     // End the game if there are no boxes remaining.
-    if (!world_get_boxes(world))
+    if (!world_get_box_count(world))
         game_state = GAME_STATE_WON;
 
     // Check if the game has finished.

@@ -59,7 +59,7 @@ void menu_free(menu_t *menu) {
     if (!menu)
         return;
 
-    for (uint8_t i=0; i < TOUCH_COMPONENT_COUNT; i++) {
+    for (int i = 0; i < TOUCH_COMPONENT_COUNT; i++) {
         if (menu->components[i])
             component_free(menu->components[i]);
     }
@@ -177,10 +177,10 @@ void menus_init() {
 
     // menu_score
     // Get the 3 highest scores from eeprom and display them in a list.
-    // A loop with an incrementation of 2 is used because the data is stored in two addresses in the eeprom.
+    // A loop with an incrementation of 2 is used because the data is stored in two addresses in the EEPROM.
     // The (i+1)/2 coverts i to the correct index ranging from 1 - 3.
     char label[10];
-    for (uint8_t i=0; i<6; i+=2) {
+    for (int i = 0; i < 6; i += 2) {
         menu_set_component(menu_score, (i+1)/2, label_new(menu_get_score(i, label)));
     }
     menu_set_component(menu_score, 3, button_new("Back", menu_main, BUTTON_MODE_DEFAULT));
@@ -194,7 +194,7 @@ void menus_init() {
     menu_set_component(menu_win, 3, button_new("Back", menu_main, BUTTON_MODE_DEFAULT));
 }
 
-// Get formated score from eeprom.
+// Get formatted score from EEPROM.
 char *menu_get_score(int index, char *label) {
     uint16_t score = eeprom_get(index);
     
@@ -205,5 +205,6 @@ char *menu_get_score(int index, char *label) {
 }
 
 void component_change_text(component_t *component, int index, char *text) {
+    free(component->text);
     component->text = strdup(text);
 }
