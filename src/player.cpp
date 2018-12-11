@@ -4,6 +4,7 @@
 #include "render.h"
 #include "segments.h"
 #include "world.h"
+#include "game.h"
 
 // Create a new player struct.
 player_t *player_new(uint8_t x, uint8_t y, uint8_t is_main) {
@@ -14,7 +15,6 @@ player_t *player_new(uint8_t x, uint8_t y, uint8_t is_main) {
     player->x = x;
     player->y = y;
     player->lives = 3;
-    player->bomb = NULL;
     player->hit_duration = 0;
     player->is_main = is_main;
     player->bomb_count = 1;
@@ -27,7 +27,9 @@ void player_free(player_t *player) {
     if (!player)
         return;
 
-    bomb_free(player->bomb);
+    for (int i=0; i<MAX_BOMB_COUNT; i++) {
+        bomb_free(player->bombs[i]);
+    }
     free(player);
 }
 
@@ -46,8 +48,9 @@ void player_update(world_t *world, player_t *player, uint8_t inputs) {
     }
 
     // Place a bomb if necessary.
-    if (!player->bomb && inputs & (1 << INPUT_BUTTON_C)) {
-        player_place_bomb(world, player);
+    int bomb_index = bomb_allowed(player);
+    if (bomb_index && inputs & (1 << INPUT_BUTTON_C)) {
+        player_place_bomb(game_get_world(), player, bomb_index);
         redraw = 1;
     }
 
@@ -89,19 +92,23 @@ void player_update(world_t *world, player_t *player, uint8_t inputs) {
                 LOGLN("Damage from walking into an explosion with upgrade");
 
             world_set_tile(world, new_x, new_y, EXPLODING_BOMB);
-            player->bomb_size++;
+            if (player->bomb_size <= MAX_BOMB_SIZE)
+                player->bomb_size++;
         } else if (new_tile == UPGRADE_BOMB_SIZE) {
             world_set_tile(world, new_x, new_y, EMPTY);
-            player->bomb_size++;
+            if (player->bomb_size <= MAX_BOMB_SIZE)
+                player->bomb_size++;
         } else if (new_tile == UPGRADE_EXPLOSION_BOMB_COUNT) {
             if(player_on_hit(player))
                 LOGLN("Damage from walking into an explosion with upgrade");
             
             world_set_tile(world, new_x, new_y, EXPLODING_BOMB);
-            player->bomb_count++;
+            if (player->bomb_count <= MAX_BOMB_COUNT)
+                player->bomb_count++;
         } else if (new_tile == UPGRADE_BOMB_COUNT) {
             world_set_tile(world, new_x, new_y, EMPTY);
-            player->bomb_count++;
+            if (player->bomb_count <= MAX_BOMB_COUNT)
+                player->bomb_count++;
         }
         // Rerender the tile we came from, and render the player on top of the new tile.
         world_redraw_tile(world, old_x, old_y);
@@ -136,10 +143,17 @@ void player_show_lives(player_t *player) {
     segments_show(player->lives);
 }
 
-// Place a bomb on the map if the player doesn't already have one.
-void player_place_bomb(world_t *world, player_t *player) {
-    if (!player->bomb) {
-        player->bomb = bomb_new(player->x, player->y, player->bomb_size);
-        world_set_tile(world, player->bomb->x, player->bomb->y, BOMB);
+int bomb_allowed(player_t *player) {
+    for (int i=0; i<player->bomb_count; i++) {
+        if (!player->bombs[i] && world_get_tile(game_get_world(), player->x, player->y) != BOMB) {
+            return i;
+        }
     }
+    return MAX_BOMB_COUNT;
+}
+
+// Place a bomb on the map if the player doesn't already have one.
+void player_place_bomb(world_t *world, player_t *player, uint8_t bomb_index) {
+    player->bombs[bomb_index] = bomb_new(player->x, player->y, player->bomb_size);
+    world_set_tile(world, player->bombs[bomb_index]->x, player->bombs[bomb_index]->y, BOMB);
 }
