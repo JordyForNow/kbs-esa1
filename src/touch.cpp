@@ -177,8 +177,6 @@ void menus_init() {
 
     // menu_score
     // Get the 3 highest scores from eeprom and display them in a list.
-    // A loop with an incrementation of 2 is used because the data is stored in two addresses in the EEPROM.
-    // The (i+1)/2 coverts i to the correct index ranging from 1 - 3.
     char label[10];
     for (int i = 0; i < 3; i++) {
         menu_set_component(menu_score, i, label_new(menu_get_score(i, label)));
