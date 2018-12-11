@@ -19,13 +19,12 @@ int main() {
 
     // Serial.begin() but only if DEBUG is high.
     LOG_INIT();
+    
     tft.begin();
     LOGLN("TFT started!");
 
     timer1_init();
-
     tft_brightness_init();
-
     ADC_init();
 
     touch_init();
@@ -96,7 +95,6 @@ void timer1_init() {
     // This number is lastly divided by the GAME_INPUT_FACTOR. We check the input
     // that many times before actually performing a game update.
     OCR1A = TIMER1_TOP;
-    //OCR1B = 60;        // test initialise value. Try: do without this one.
     sei();
 }
 
