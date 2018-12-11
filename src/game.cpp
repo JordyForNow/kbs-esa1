@@ -3,6 +3,7 @@
 #include "player.h"
 #include "render.h"
 #include "world.h"
+#include "score.h"
 #include "segments.h"
 
 volatile bool should_poll = false;
@@ -14,12 +15,16 @@ static uint8_t input_buttons = 0;
 static int16_t input_joy_x = 0;
 static int16_t input_joy_y = 0;
 
+// Keep track of how many game ticks the game has been running.
+unsigned long game_time = 0;
+
 game_state_t game_state = GAME_STATE_RUNNING;
 
 // Initialize the game state.
 void game_init() {
     // Reset variables when a game is restarting.
     game_state = GAME_STATE_RUNNING;
+    game_time = 0;
 
     // Initialize the nunchuck.
     nunchuck_send_request();
@@ -27,6 +32,7 @@ void game_init() {
     // Draw the world with blocks and walls.
     world = world_new(1);
     world_generate(world, TCNT0);
+    score_set_box_count(world_get_box_count(world));
 
     // Create the player and show the lives on the 7-segment display.
     player = player_new(1, 1, 1);
@@ -48,7 +54,7 @@ bool game_update() {
         game_state = GAME_STATE_LOST;
 
     // End the game if there are no boxes remaining.
-    if (!world_get_boxes(world))
+    if (!world_get_box_count(world))
         game_state = GAME_STATE_WON;
 
     // Check if the game has finished.
@@ -85,6 +91,9 @@ bool game_update() {
     // Don't update unless it's time.
     if (should_update < GAME_INPUT_FACTOR)
         return false;
+    
+    // Increment game time each game update.
+    game_time++;
 
     LOGLN("Updating");
     should_update = 0;
@@ -132,4 +141,12 @@ world_t *game_get_world() {
 // Trigger a game-update the next time game_update() is called.
 void game_trigger_update() {
     should_poll = true;
+}
+
+unsigned long *game_get_time(){
+    return &game_time;
+}
+
+player_t *game_get_main_player(){   
+    return player;
 }

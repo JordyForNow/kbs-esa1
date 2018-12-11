@@ -38,7 +38,7 @@ void world_update(world_t *world, uint8_t inputs);
 
 uint8_t world_set_tile(world_t *world, uint8_t x, uint8_t y, tile_t tile);
 void world_subtract_boxes(world_t *world, int subtraction_factor);
-int world_get_boxes(world_t *world);
+int world_get_box_count(world_t *world);
 tile_t world_get_tile(world_t *world, uint8_t x, uint8_t y);
 void world_redraw_tile(world_t *world, uint8_t x, uint8_t y);
 player_t *world_get_player(world_t *world, uint8_t x, uint8_t y);

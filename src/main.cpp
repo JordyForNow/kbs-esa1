@@ -3,6 +3,7 @@
 #include "render.h"
 #include "segments.h"
 #include "touch.h"
+#include "score.h"
 
 void timer1_init();
 
@@ -53,6 +54,7 @@ int main() {
             game_update();
         
         LOGLN("end game");
+        score_calculate();
         
         // Clean up the game.
         game_free();

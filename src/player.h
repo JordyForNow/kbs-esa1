@@ -29,4 +29,4 @@ void player_show_lives(player_t *player);
 int bomb_allowed(player_t *player, world_t *world);
 void player_place_bomb(world_t *world, player_t *player, uint8_t bomb_index);
 
-#endif
+#endif /* PLAYER_H */
