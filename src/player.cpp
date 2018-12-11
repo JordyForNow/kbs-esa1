@@ -50,7 +50,7 @@ void player_update(world_t *world, player_t *player, uint8_t inputs) {
     // Place a bomb if necessary.
     int bomb_index = bomb_allowed(player);
     if (bomb_index && inputs & (1 << INPUT_BUTTON_C)) {
-        player_place_bomb(game_get_world(), player, bomb_index);
+        player_place_bomb(world, player, bomb_index);
         redraw = 1;
     }
 
