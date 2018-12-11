@@ -6,18 +6,19 @@
 #include <avr/interrupt.h>
 
 #define BUFFER_MAXIMUM_CAPACITY 20
-#define NETWORK_ACK_BYTE 0b11000000
+#define NETWORK_ACK_BYTE 0b1111
 #define NETWORK_MAX_RETRIES 50
 
 buffer_t * incoming_data, * outgoing_data;
 volatile bool acknowledged = false;
 volatile bool first_byte = true;
 uint8_t currently_sending[2];
+uint8_t currently_receiving[2];
 bool waiting = false;
 
 void usart_init() {
    // enable double speed.
-   UCSR0A |= (1 << U2X0);
+   UCSR0A |= (1 << U2X0);
    // Set baud rate.
    int16_t ubbr = (F_CPU / (8ul * USART_BAUD_RATE)) - 1;
    UBRR0H = (uint8_t) (ubbr / 256);
@@ -32,32 +33,27 @@ void usart_init() {
 }
 
 bool usart_wait_until_available() {
-    while( !(UCSR0A & (1 << UDRE0)) ) { }
+    while (!(UCSR0A & (1 << UDRE0))) {}
 }
 
-
 void send_bytes() {
-    usart_wait_until_available();
-    UDR0 = currently_sending[0];
-    usart_wait_until_available();
-    UDR0 = currently_sending[1];
+    for (int i = 0; i < 2; i++) {
+        usart_wait_until_available();
+        UDR0 = currently_sending[i];
+    }
 }
 
 bool usart_update() {
     // The game should be halted because the networking trafic has not been acknowledged yet.
     if (waiting && !acknowledged)
-    {
         return false;
-    }
-
     waiting = false;
 
     if (buffer_available(outgoing_data) < 2)
         return true;
 
     // Read the ints that need to be send into the currently sending array which can be reused during retries.
-    currently_sending[0] = buffer_read(outgoing_data);
-    currently_sending[1] = buffer_read(outgoing_data);
+    buffer_read(outgoing_data, currently_sending, 2);
 
     send_bytes();
     waiting = true;
@@ -85,26 +81,42 @@ packet_t* usart_receive() {
     if (buffer_available(incoming_data) < 2)
         return NULL;
 
-    uint16_t combined_data = (uint16_t) buffer_read(incoming_data);
-    combined_data = combined_data << 8;
-    combined_data |= buffer_read(incoming_data);
+    // Read two bytes into the currently_receiving array.
+    buffer_read(incoming_data, currently_receiving, 2);
 
-    return validate_incoming_data(combined_data) ? packet_decode(combined_data) : NULL;
+    // Interpret the two bytes in currently_receiving as a packet.
+    packet_t *packet = (packet_t*) &currently_receiving;
+    return validate_incoming_data(*((uint16_t*) packet)) ? packet : NULL;
 }
 
 void usart_acknowledge() {
     usart_wait_until_available();
-    UDR0 = NETWORK_ACK_BYTE;
+    UDR0 = 0b11000000;
 }
 
 bool usart_available() {
     return buffer_available(incoming_data) >= 2;
 }
 
+void usart_send_debug(char m[]) {
+    int i = 0;
+
+    while(m[i] != 0) {            
+        usart_wait_until_available();
+
+        /* Put data into buffer, sends the data */
+        UDR0 = m[i];
+        i++;
+    }
+
+}
+
 
 ISR(USART_RX_vect) {
     uint8_t temp = UDR0;
-    if (first_byte && temp == NETWORK_ACK_BYTE)
+    usart_wait_until_available();
+    UDR0 = temp;
+    if (first_byte && temp == 0b11000000)
     {
         acknowledged = true;
         return;

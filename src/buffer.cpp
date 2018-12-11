@@ -48,10 +48,24 @@ uint8_t buffer_read(buffer_t *buffer) {
     return element;
 }
 
+void buffer_read(buffer_t *buffer, uint8_t *arr, int n) {
+    for (int i = 0; i < n; i++) {
+        arr[i] = buffer_read(buffer);
+    }
+}
+
 bool buffer_write(buffer_t *buffer, uint8_t value) {
     // We don't check if we *can* write data, that is the responsibility of the caller.
     buffer->data[buffer->head] = value;
     buffer->head = (buffer->head + 1) % buffer->capacity;
     buffer->count = buffer->count + 1;
+    return true;
+}
+
+bool buffer_write(buffer_t *buffer, uint8_t *arr, int n) {
+    for (int i = 0; i < n; i++) {
+        if (!buffer_write(buffer, arr[i]))
+            return false;
+    }
     return true;
 }

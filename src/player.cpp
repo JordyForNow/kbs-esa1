@@ -44,13 +44,16 @@ void player_update(world_t *world, player_t *player, uint8_t inputs) {
         }
     }
 
-    if(player_move(player, inputs, world))
-        redraw = 1;
+    if (player->is_main)
+    {
+        if(player_move(player, inputs, world))
+            redraw = 1;
 
-    // Place a bomb if necessary.
-    if (!player->bomb && inputs & (1 << INPUT_BUTTON_C)) {
-        player_place_bomb(world, player);
-        redraw = 1;
+        // Place a bomb if necessary.
+        if (!player->bomb && inputs & (1 << INPUT_BUTTON_C)) {
+            player_place_bomb(world, player);
+            redraw = 1;
+        }
     }
 
     // Redraw our player only if we have to.
@@ -118,12 +121,13 @@ uint8_t player_on_hit(player_t *player) {
     if (player->lives){
         player->lives--;
 
-        // Send lose live packet.
-        if(player->is_main)
+        // Send lose live packet and update the lives display for the local player.
+        if(player->is_main) {
+            player_show_lives(player);
             packet_send(LOSE_LIVE, player);
+        }
     }
-        
-    player_show_lives(player);
+    
     return 1;
 }
 

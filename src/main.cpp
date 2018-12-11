@@ -39,7 +39,6 @@ int main() {
 
     timer1_init();
     network_init();
-    game_init();
 
     menu_t *menu = menu_main;
     while (1) {
@@ -51,11 +50,11 @@ int main() {
         draw_background(ILI9341_BLACK);
 
         // Set up the game.
-        game_init();
+        game_init(mode);
         
         // Update the game until it ends.
         while (!game_get_state())
-            if (!network_update())
+            if (network_update())
                 game_update();
         
         // Clean up the game.

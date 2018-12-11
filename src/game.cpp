@@ -7,36 +7,63 @@
 #include "packet.h"
 #include "world.h"
 #include "segments.h"
+#include "touch.h"
 
 volatile bool should_poll = false;
 static int should_update = 0;
 static world_t *world;
-static player_t *player;
 
 static uint8_t input_buttons = 0;
 static int16_t input_joy_x = 0;
 static int16_t input_joy_y = 0;
 
+bool multiplayer;
 game_state_t game_state = GAME_STATE_RUNNING;
 
 // Initialize the game state.
-void game_init() {
+void game_init(button_mode_t game_mode) {
     // Reset variables when a game is restarting.
     game_state = GAME_STATE_RUNNING;
+    
+
+    multiplayer = game_mode == BUTTON_MODE_MULTIPLAYER;
 
     // Initialize the nunchuck.
     nunchuck_send_request();
 
     // Draw the world with blocks and walls.
-    world = world_new(1);
-    world_generate(world, TCNT0);
+    world = world_new(multiplayer ? 2 : 1);
 
-    // Create the player and show the lives on the 7-segment display.
-    player = player_new(1, 1, 1);
+    bool player_1_host = true;
+    if (multiplayer) {
+        player_1_host = world_multiplayer_generate(world, TCNT0);
+    }
+    else {
+        world_generate(world, TCNT0);
+    }
+
+    // Create the local player and show the lives on the 7-segment display.
+    player_t *player = player_new(1, 1, player_1_host);
     player_show_lives(player);
+    
     draw_player(player);
-
+    
     world->players[0] = player;
+
+    // Create the opponent if playing in multiplayer mode
+    if (multiplayer) {
+        player_t *player2 = player_new(15, 11, !player_1_host);
+        draw_player(player2);
+
+        world->players[1] = player2;
+    }
+}
+
+player_t *get_local_player() {
+    for(int i =0; i<world->player_count; i++){
+        if(world->players[i]->is_main)
+            return world->players[i];
+    }
 }
 
 void game_free() {
@@ -49,11 +76,25 @@ bool game_update() {
     // Handle networking
     if (network_available())
     {
-        network_receive();
+        packet_t *packet = network_receive();
+
+        switch (packet->method) {
+            case MOVE:
+                opponent_move(packet->x, packet->y);
+                break;
+            case LOSE_LIVE:
+                opponent_lose_live(packet->x, packet->y);
+                break;
+            case PLACE_BOMB:
+                opponent_place_bomb(packet->x, packet->y);
+                break;
+            default:
+                break;
+        }
     }
     
     // Check if the player has died.
-    if (!player->lives)
+    if (!(get_local_player())->lives)
         game_state = GAME_STATE_LOST;
 
     // End the game if there are no boxes remaining.
@@ -146,8 +187,20 @@ player_t *get_opponent(){
 
 void opponent_move(uint8_t x, uint8_t y){
     player_t *player = get_opponent();
+
+    uint8_t oldx = player->x;
+    uint8_t oldy = player->y;
+
+    while( !(UCSR0A & (1 << UDRE0)) ) { }
+    UDR0 = x;
+    while( !(UCSR0A & (1 << UDRE0)) ) { }
+    UDR0 = y;
+
     player->x = x;
     player->y = y;
+
+    world_redraw_tile(world, oldx, oldy);
+    draw_player(player);
 }
 
 void opponent_place_bomb(uint8_t x, uint8_t y){
@@ -158,6 +211,16 @@ void opponent_place_bomb(uint8_t x, uint8_t y){
 
 void opponent_lose_live(uint8_t x, uint8_t y){
     player_t *player = get_opponent();
+    player_on_hit(player);
+
+    // Set the hit duration 1 higher than the hit duration function because the player will update this update-cycle
+    player->hit_duration++;
+    
+    opponent_move(x, y);
+}
+
+bool game_is_multiplayer() {
+    return multiplayer;
 }
 
 

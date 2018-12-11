@@ -1,6 +1,10 @@
 #include "world.h"
 #include "defines.h"
 #include "render.h"
+#include "packet.h"
+#include "network.h"
+
+#define SEED_MASK 0b1111111111
 
 world_t *world_new(uint8_t player_count) {
     world_t *world = (world_t *)calloc(sizeof(world_t), 1);
@@ -61,6 +65,19 @@ void world_generate(world_t *world, unsigned long seed) {
     world->boxes = world_count_boxes(world);
 }
 
+bool world_multiplayer_generate(world_t *world, unsigned long seed) {
+    seed &= SEED_MASK; 
+
+    packet_setup(seed);
+
+    while (!network_available()) { network_update(); }
+
+    packet_t *packet = network_receive();
+
+    world_generate(world, packet ->seed^seed);
+    return packet->seed<seed;
+}
+
 uint8_t world_count_boxes(world_t *world) {
     uint8_t total = 0;
     for (int y = 0; y < WORLD_HEIGHT; y++) {
@@ -84,7 +101,7 @@ void world_update(world_t *world, uint8_t inputs) {
 
     // Update all players once all bombs have been updated.
     for (int i = 0; i < world->player_count; i++) {
-        player_update(world, world->players[i], inputs);
+            player_update(world, world->players[i], inputs);
     }
 }
 
