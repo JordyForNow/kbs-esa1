@@ -45,10 +45,14 @@ int main() {
 
         // Set up the game.
         game_init();
+
+        LOGLN("Starting game");
         
         // Update the game until it ends.
         while (!game_get_state())
             game_update();
+        
+        LOGLN("end game");
         
         // Clean up the game.
         game_free();
