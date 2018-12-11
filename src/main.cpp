@@ -10,6 +10,9 @@ int main() {
     init();
     Wire.begin();
 
+    DDRD |= (1<<3);
+    PORTD |= (1<<3);
+
     // Use pins A2 and A3 for power for the nunchuck, and then
     // initialize the connection to the device.
     nunchuck_setpowerpins();

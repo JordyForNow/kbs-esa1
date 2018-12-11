@@ -48,8 +48,8 @@ void player_update(world_t *world, player_t *player, uint8_t inputs) {
     }
 
     // Place a bomb if necessary.
-    int bomb_index = bomb_allowed(player);
-    if (bomb_index && inputs & (1 << INPUT_BUTTON_C)) {
+    int bomb_index = bomb_allowed(player, world);
+    if (bomb_index < MAX_BOMB_COUNT && inputs & (1 << INPUT_BUTTON_C)) {
         player_place_bomb(world, player, bomb_index);
         redraw = 1;
     }
@@ -143,9 +143,11 @@ void player_show_lives(player_t *player) {
     segments_show(player->lives);
 }
 
-int bomb_allowed(player_t *player) {
-    for (int i=0; i<player->bomb_count; i++) {
-        if (!player->bombs[i] && world_get_tile(game_get_world(), player->x, player->y) != BOMB) {
+int bomb_allowed(player_t *player, world_t *world) {
+    if (world_get_tile(world, player->x, player->y) == BOMB)
+        return MAX_BOMB_COUNT;
+    for (int i=0; i<player->bomb_count-1; i++) {
+        if (player->bombs[i] == 0 || player->bombs[i] == NULL) {
             return i;
         }
     }
