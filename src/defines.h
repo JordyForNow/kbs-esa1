@@ -13,7 +13,7 @@
 // This many input polls will be done between game updates.
 #define GAME_INPUT_FACTOR 25
 
-// The top for timer one. 15625 is for 1Hz. This will be divided by the desired
+// The TOP for Timer1. 15625 is for 1Hz. This will be divided by the desired
 // update frequency so the timer will generate a signal that is equal to the desired frequency.
 #define TIMER1_TOP (15625 / GAME_UPDATE_FREQUENCY / GAME_INPUT_FACTOR)
 
