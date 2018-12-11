@@ -32,7 +32,7 @@ void game_init() {
     // Draw the world with blocks and walls.
     world = world_new(1);
     world_generate(world, TCNT0);
-    score_set_boxes(world_get_box_count(world));
+    score_set_box_count(world_get_box_count(world));
 
     // Create the player and show the lives on the 7-segment display.
     player = player_new(1, 1, 1);

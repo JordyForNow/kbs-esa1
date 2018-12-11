@@ -25,7 +25,7 @@ void score_calculate() {
     score_insert((int)score);
 }
 
-void score_set_boxes(uint8_t boxes) {
+void score_set_box_count(uint8_t boxes) {
     total_boxes = boxes;
 }
 
