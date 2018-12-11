@@ -22,7 +22,7 @@ void score_calculate() {
     float score = boxes_per_second * lives_left;
     score *= 100;
 
-    score_insert((int)score);
+    score_insert(score);
 }
 
 void score_set_box_count(uint8_t boxes) {
