@@ -77,8 +77,10 @@ void world_update(world_t *world, uint8_t inputs) {
     // Update all bombs first.
     for (int i = 0; i < world->player_count; i++) {
         player_t *player = world->players[i];
-        if (player->bomb) {
-            player->bomb = bomb_update(world, player->bomb);
+        for(int i=0; i<MAX_BOMB_COUNT; i++){
+            if (player->bombs[i]) {
+                bomb_update(world, player->bombs[i]);
+            }
         }
     }
 
@@ -102,7 +104,7 @@ void world_subtract_boxes(world_t *world, int subtraction_amount) {
     world->boxes -= subtraction_amount;
 }
 
-int world_get_boxes(world_t *world) {
+int world_get_box_count(world_t *world) {
     return world->boxes;
 }
 
@@ -130,10 +132,9 @@ player_t *world_get_player(world_t *world, uint8_t x, uint8_t y) {
 bomb_t *world_get_bomb(world_t *world, uint8_t x, uint8_t y) {
     for (int i = 0; i < world->player_count; i++) {
         player_t *player = world->players[i];
-        bomb_t *bomb = player->bomb;
-
-        if (bomb && bomb->x == x && bomb->y == y) {
-            return bomb;
+        for (int j=0; j<MAX_BOMB_COUNT; j++) {
+            if (player->bombs[j]->x == x && player->bombs[j]->y == y)
+                return player->bombs[j];
         }
     }
     return NULL;
