@@ -36,7 +36,7 @@ void score_insert(uint16_t score) {
     uint16_t temp;
     char label[10];
 
-    for (uint8_t i = 0; i < 6; i += 2) {
+    for (int i = 0; i < 3; i++) {
         // If the highscore was added to top 3.
         if (written) {
             // Make sure all scores are moved one spot.
@@ -44,7 +44,7 @@ void score_insert(uint16_t score) {
             eeprom_put(i, temp_score);
             temp_score = temp;
 
-            component_change_text(menu_score->components[(i + 1) / 2], (i + 1) / 2, menu_get_score(i, label));
+            component_change_text(menu_score->components[i], i, menu_get_score(i, label));
             continue;
         }
 
@@ -53,7 +53,7 @@ void score_insert(uint16_t score) {
             written = true;
             temp_score = eeprom_get(i);
             eeprom_put(i, score);
-            component_change_text(menu_score->components[(i + 1) / 2], (i + 1) / 2, menu_get_score(i, label));
+            component_change_text(menu_score->components[i], i, menu_get_score(i, label));
         }
     }
 }
@@ -65,6 +65,7 @@ inline void eeprom_wait() {
 
 // Write 16 bit int to EEPROM.
 void eeprom_put(uint16_t addr, uint16_t incoming_data) {
+    addr *= 2;
     uint8_t data;
     for (int i = 0; i < 2; i++) {
         // Wait until we are allowed to write.
@@ -84,6 +85,7 @@ void eeprom_put(uint16_t addr, uint16_t incoming_data) {
 
 // Read 16 bit int from EEPROM.
 uint16_t eeprom_get(uint16_t addr) {
+    addr *= 2;
     uint16_t data;
     uint16_t temp_data;
     for (int i = 1; i >= 0; i--) {

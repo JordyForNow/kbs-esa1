@@ -180,8 +180,8 @@ void menus_init() {
     // A loop with an incrementation of 2 is used because the data is stored in two addresses in the EEPROM.
     // The (i+1)/2 coverts i to the correct index ranging from 1 - 3.
     char label[10];
-    for (int i = 0; i < 6; i += 2) {
-        menu_set_component(menu_score, (i+1)/2, label_new(menu_get_score(i, label)));
+    for (int i = 0; i < 3; i++) {
+        menu_set_component(menu_score, i, label_new(menu_get_score(i, label)));
     }
     menu_set_component(menu_score, 3, button_new("Back", menu_main, BUTTON_MODE_DEFAULT));
 
@@ -197,10 +197,8 @@ void menus_init() {
 // Get formatted score from EEPROM.
 char *menu_get_score(int index, char *label) {
     uint16_t score = eeprom_get(index);
-    
-    int identifier = map(index, 0, 5, 1, 4);
 
-    sprintf(label, "%u. %u", identifier, score);
+    sprintf(label, "%u. %u", index+1, score);
     return label;
 }
 
