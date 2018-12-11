@@ -20,4 +20,4 @@ game_state_t game_get_state();
 unsigned long *game_get_time();
 player_t *game_get_main_player();
 
-#endif
+#endif /* GAME_H */

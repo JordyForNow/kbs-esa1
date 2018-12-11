@@ -71,7 +71,7 @@ void menu_set_component(menu_t *menu, int index, component_t *component) {
     menu->components[index] = component;
 }
 
-void menu_draw (menu_t *menu) {
+void menu_draw(menu_t *menu) {
     draw_background(ILI9341_NAVY);
     tft.setTextSize(3);
 
@@ -89,7 +89,7 @@ void menu_draw (menu_t *menu) {
     }
 }
 
-button_mode_t menu_loop (menu_t *menu) {
+button_mode_t menu_loop(menu_t *menu) {
     // Draw the firt menu upon entering the menu loop.
     menu_draw(menu);
 
@@ -176,6 +176,8 @@ void menus_init() {
     menu_set_component(menu_play, 3, button_new("Back", menu_main, BUTTON_MODE_DEFAULT));
 
     // menu_score
+    // Get the 3 highest scores from eeprom and display them in a list.
+    // The (i+1)/2 coverts i to the correct index ranging from 1 - 3.
     char label[10];
     for (uint8_t i=0; i<6; i+=2) {
         menu_set_component(menu_score, (i+1)/2, label_new(menu_get_score(i, label)));
