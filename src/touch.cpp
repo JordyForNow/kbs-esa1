@@ -70,13 +70,12 @@ void menu_free(menu_t *menu) {
         if (menu->components[i])
             component_free(menu->components[i]);
     }
-
     free(menu);
 }
-void menu_free_all(){
+
+void menus_free() {
     menu_free(menu_main);
     menu_free(menu_play);
-    menu_free(menu_select_level);
     menu_free(menu_score);
     menu_free(menu_win);
     menu_free(menu_lose);
@@ -122,7 +121,7 @@ button_mode_t menu_loop(menu_t *menu) {
             if(component->mode == BUTTON_MODE_SINGLEPLAYER){
                 set_game_level(component->selected_level);
             }
-            menu_free_all();
+            menus_free();
             return component->mode;
         }
 
@@ -180,7 +179,7 @@ void touch_init() {
     tft.setRotation(1);
 }
 
-void menus_init() {
+void menus_new() {
     menu_main = menu_new("BOMBERMAN");
     menu_play = menu_new("PLAY GAME");
     menu_select_level = menu_new("SELECT LEVEL");
