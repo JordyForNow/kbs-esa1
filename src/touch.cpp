@@ -7,11 +7,16 @@ Adafruit_STMPE610 ts = Adafruit_STMPE610(STMPE_CS);
 
 menu_t *menu_main = NULL;
 menu_t *menu_play = NULL;
+menu_t *menu_select_level = NULL;
 menu_t *menu_score = NULL;
 menu_t *menu_win = NULL;
 menu_t *menu_lose = NULL;
 
 component_t *button_new(const char *text, menu_t *target, button_mode_t mode) {
+    return button_new(text, target, mode, 0);
+}
+
+component_t *button_new(const char *text, menu_t *target, button_mode_t mode, int level){
     component_t *button = (component_t *)malloc(sizeof(component_t));
     if (!button)
         return NULL;
@@ -19,6 +24,7 @@ component_t *button_new(const char *text, menu_t *target, button_mode_t mode) {
     button->text = strdup(text);
     button->target = target;
     button->mode = mode;
+    button->selected_level = level;
     return button;
 }
 
@@ -30,6 +36,7 @@ component_t *label_new(char *text) {
     label->text = strdup(text);
     label->target = NULL;
     label->mode = BUTTON_MODE_DEFAULT;
+    label->selected_level = 0;
     return label;
 }
 
@@ -103,8 +110,12 @@ button_mode_t menu_loop(menu_t *menu) {
             continue;
 
         // If this starts the game, do that now.
-        if (component->mode != BUTTON_MODE_DEFAULT)
+        if (component->mode != BUTTON_MODE_DEFAULT){
+            if(component->mode == BUTTON_MODE_SINGLEPLAYER){
+                set_game_level(component->selected_level);
+            }
             return component->mode;
+        }
 
         // If it is a menu button, it should go to the next menu.
         if (component->target) {
@@ -163,6 +174,7 @@ void touch_init() {
 void menus_init() {
     menu_main = menu_new("BOMBERMAN");
     menu_play = menu_new("PLAY GAME");
+    menu_select_level = menu_new("SELECT LEVEL");
     menu_score = menu_new("HIGH SCORES");
     menu_lose = menu_new("GAME ENDED");
     menu_win = menu_new("GAME ENDED");
@@ -172,8 +184,14 @@ void menus_init() {
     menu_set_component(menu_main, 1, button_new("High scores", menu_score, BUTTON_MODE_DEFAULT));
 
     // menu_play
-    menu_set_component(menu_play, 0, button_new("Singleplayer", NULL, BUTTON_MODE_SINGLEPLAYER));
+    menu_set_component(menu_play, 0, button_new("Singleplayer", menu_select_level, BUTTON_MODE_DEFAULT));
     menu_set_component(menu_play, 3, button_new("Back", menu_main, BUTTON_MODE_DEFAULT));
+
+    // menu_select_level
+    menu_set_component(menu_select_level, 0, button_new("Random", NULL, BUTTON_MODE_SINGLEPLAYER, 1));
+    menu_set_component(menu_select_level, 1, button_new("Level 1", NULL, BUTTON_MODE_SINGLEPLAYER, 2));
+    menu_set_component(menu_select_level, 2, button_new("Level 2", NULL, BUTTON_MODE_SINGLEPLAYER, 3));
+    menu_set_component(menu_select_level, 3, button_new("Back", menu_play, BUTTON_MODE_DEFAULT));
 
     // menu_score
     // Get the 3 highest scores from eeprom and display them in a list.

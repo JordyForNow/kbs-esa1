@@ -55,7 +55,7 @@
 #define HIT_DURATION (5 * GAME_UPDATE_FREQUENCY)
 
 // The ports which the screen is connected to.
-#define TFT_CS 7
+#define TFT_CS 10 // must be 7.
 #define TFT_DC 9
 
 // The STMPE610 uses hardware SPI on the shield, and #8.

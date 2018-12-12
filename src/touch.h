@@ -27,6 +27,7 @@ typedef struct {
     char *text;
     menu_t *target;
     button_mode_t mode;
+    int selected_level;
 } component_t;
 
 // The menu struct contains a title and a list of components. It represents
@@ -39,12 +40,14 @@ typedef struct menu_t {
 // The menu screens that exist in the game.
 extern menu_t *menu_main;
 extern menu_t *menu_play;
+extern menu_t *menu_select_levels;
 extern menu_t *menu_score;
 extern menu_t *menu_win;
 extern menu_t *menu_lose;
 
 // Component functions.
 component_t *button_new(char *text, menu_t *target, uint8_t start);
+component_t *button_new(const char *text, menu_t *target, button_mode_t mode, int selected_level);
 component_t *label_new(char *text);
 void component_free(component_t *component);
 void component_draw(component_t *component, int index);

@@ -2,6 +2,8 @@
 #include "defines.h"
 #include "render.h"
 
+int game_level;
+
 world_t *world_new(uint8_t player_count) {
     world_t *world = (world_t *)calloc(sizeof(world_t), 1);
     if (!world)
@@ -137,4 +139,17 @@ bomb_t *world_get_bomb(world_t *world, uint8_t x, uint8_t y) {
         }
     }
     return NULL;
+}
+
+int get_game_level(){
+    return game_level;
+}
+void set_game_level(int level){
+    game_level = level;
+
+    Serial.print("Game level gezet! ");
+    Serial.print("Level: ");
+    Serial.print(level);
+    Serial.print(" Game level: ");
+    Serial.println(game_level);
 }
