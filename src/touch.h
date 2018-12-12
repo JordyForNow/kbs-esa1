@@ -52,6 +52,7 @@ void component_draw(component_t *component, int index);
 // Menu functions.
 menu_t *menu_new(const char *title);
 void menu_free(menu_t *menu);
+void menu_free_all();
 
 void menu_set_component(menu_t *menu, int index, component_t *component);
 void menu_draw(menu_t *menu);

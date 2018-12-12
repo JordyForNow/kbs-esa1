@@ -69,7 +69,6 @@ void menu_free(menu_t *menu) {
 void menu_free_all(){
     menu_free(menu_main);
     menu_free(menu_play);
-    menu_free(menu_select_level);
     menu_free(menu_score);
     menu_free(menu_win);
     menu_free(menu_lose);

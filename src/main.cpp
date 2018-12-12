@@ -85,7 +85,7 @@ void timer1_init() {
     TIMSK1 = (1 << TOIE1);
 
     // Compare output mode, set OC1B on Compare Match, clear at BOTTOM.
-    TCCR1A |= (1 << COM1B0) | (1 << COM1B1);
+    //TCCR1A |= (1 << COM1B0) | (1 << COM1B1);
 
     // Timer1 will start counting when the init function is called.
     // This means the TCNT1 can already have a value that is greater than the
