@@ -6,6 +6,8 @@
 #include "score.h"
 
 void timer1_init();
+void tft_brightness_init();
+void adc_init();
 
 int main() {
     init();
@@ -18,9 +20,13 @@ int main() {
 
     // Serial.begin() but only if DEBUG is high.
     LOG_INIT();
-    tft.begin();
 
+    tft.begin();
     LOGLN("TFT started!");
+
+    timer1_init();
+    tft_brightness_init();
+    adc_init();
 
     touch_init();
 
@@ -29,8 +35,6 @@ int main() {
 
     // The main funtion method for the touch screen.
     menus_init();
-
-    timer1_init();
 
     menu_t *menu = menu_main;
     while (1) {
@@ -52,6 +56,9 @@ int main() {
         
         // Clean up the game.
         game_free();
+
+        // Initialise the menus.
+        menus_init();
         
         // Show the correct menu depending on the game result.
         menu = game_get_state() == GAME_STATE_WON ? menu_win : menu_lose;
@@ -77,6 +84,9 @@ void timer1_init() {
     // Interrupts: overflow
     TIMSK1 = (1 << TOIE1);
 
+    // Compare output mode, set OC1B on Compare Match, clear at BOTTOM.
+    TCCR1A |= (1 << COM1B0) | (1 << COM1B1);
+
     // Timer1 will start counting when the init function is called.
     // This means the TCNT1 can already have a value that is greater than the
     // TOP, which is equal to the OCR1A register, which in turn will lead to freezes.
@@ -90,6 +100,41 @@ void timer1_init() {
     // (15625 is used because this will make the timer generate a signal with a frequency of 1 Hz.)
     // This number is lastly divided by the GAME_INPUT_FACTOR. We check the input
     // that many times before actually performing a game update.
-    OCR1A = 15625 / GAME_UPDATE_FREQUENCY / GAME_INPUT_FACTOR;
+    OCR1A = TIMER1_TOP;
     sei();
+}
+
+void tft_brightness_init(){
+    DDRB |= (1 << PB2);
+}
+
+void adc_init(){
+    // Define A0 as input.
+    DDRC = ~(1 << PC0);
+
+    // Use A0 as the input for the ADC.
+    ADMUX = 0x00;
+    
+    // Turn on reference voltage.
+    ADMUX |= (1 << REFS0);
+
+    // ADCclock = CPUclock / 128.
+    ADCSRA = (1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0);
+
+    // Enable ADC, enable auto trigger, enable ADC interrupts.
+    ADCSRA |= (1 << ADEN) | (1 << ADATE) | (1 << ADIE);
+
+    // Interrupt on Timer1 compare match B.
+    ADCSRB = (1 << ADTS2) | (1 << ADTS1);
+    
+    // Trigger first update.
+    ADCSRA |= (1 << ADSC);
+}
+
+// This interrupt is thrown when the ADC is ready with the conversion.
+// The value from the ADC is from 0-1023 and needs to be mapped to 0-TIMER1_TOP.
+// The mapped value is put in OCR1B to set the right duty cycle so that 
+// the TFT has the right brightness.
+ISR(ADC_vect){
+    OCR1B = map(ADC, 0, 1023, 0, TIMER1_TOP);
 }
