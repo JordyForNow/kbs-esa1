@@ -66,7 +66,7 @@ void menu_free(menu_t *menu) {
     free(menu);
 }
 
-void menu_free_all() {
+void menus_free() {
     menu_free(menu_main);
     menu_free(menu_play);
     menu_free(menu_score);
@@ -111,7 +111,7 @@ button_mode_t menu_loop(menu_t *menu) {
 
         // If this starts the game, do that now.
         if (component->mode != BUTTON_MODE_DEFAULT) {
-            menu_free_all();
+            menus_free();
             return component->mode;
         }
 
@@ -169,7 +169,7 @@ void touch_init() {
     tft.setRotation(1);
 }
 
-void menus_init() {
+void menus_new() {
     menu_main = menu_new("BOMBERMAN");
     menu_play = menu_new("PLAY GAME");
     menu_score = menu_new("HIGH SCORES");

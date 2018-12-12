@@ -52,7 +52,7 @@ void component_draw(component_t *component, int index);
 // Menu functions.
 menu_t *menu_new(const char *title);
 void menu_free(menu_t *menu);
-void menu_free_all();
+void menus_free();
 
 void menu_set_component(menu_t *menu, int index, component_t *component);
 void menu_draw(menu_t *menu);
@@ -61,7 +61,7 @@ int menu_await_input();
 
 // Initializer functions.
 void touch_init();
-void menus_init();
+void menus_new();
 
 char *menu_get_score(int index, char *label);
 void component_change_text(component_t *component, int index, char *text);
