@@ -73,6 +73,14 @@ void menu_free(menu_t *menu) {
 
     free(menu);
 }
+void menu_free_all(){
+    menu_free(menu_main);
+    menu_free(menu_play);
+    menu_free(menu_select_level);
+    menu_free(menu_score);
+    menu_free(menu_win);
+    menu_free(menu_lose);
+}
 
 void menu_set_component(menu_t *menu, int index, component_t *component) {
     menu->components[index] = component;
@@ -114,6 +122,7 @@ button_mode_t menu_loop(menu_t *menu) {
             if(component->mode == BUTTON_MODE_SINGLEPLAYER){
                 set_game_level(component->selected_level);
             }
+            menu_free_all();
             return component->mode;
         }
 
