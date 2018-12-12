@@ -25,8 +25,12 @@ int main() {
     LOGLN("TFT started!");
 
     timer1_init();
+
+    // Don't read the potentiometer if the dimming the TFT is disabled
+    #if DIMMING_BACKLIGHT
     tft_brightness_init();
     adc_init();
+    #endif
 
     touch_init();
 
@@ -82,7 +86,10 @@ void timer1_init() {
     TIMSK1 = (1 << TOIE1);
 
     // Compare output mode, set OC1B on Compare Match, clear at BOTTOM.
-    //TCCR1A |= (1 << COM1B0) | (1 << COM1B1);                                              // this should not be commented out
+    // Only use this if dimming the TFT is enabled.
+    #if DIMMING_BACKLIGHT
+    TCCR1A |= (1 << COM1B0) | (1 << COM1B1);
+    #endif
 
     // Timer1 will start counting when the init function is called.
     // This means the TCNT1 can already have a value that is greater than the

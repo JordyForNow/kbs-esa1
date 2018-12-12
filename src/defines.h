@@ -4,6 +4,10 @@
 #define DEBUG 1
 #define SEGMENTS_ENABLE 1
 
+// Set to 1 if the TFT-backlight is connected to Arduino PIN 10.
+// If the screen is connected directly, set this define to 0;
+#define DIMMING_BACKLIGHT 0
+
 // The length to clear the corner from boxes.
 #define GAME_STARTING_AREA 4
 
@@ -55,7 +59,14 @@
 #define HIT_DURATION (5 * GAME_UPDATE_FREQUENCY)
 
 // The ports which the screen is connected to.
-#define TFT_CS 10 // must be 7.
+// If the TFT brightness doesn't need to be changd the TFT_CS
+// can be connected to pin 10, otherwise this needs to be pin 7
+#if DIMMING_BACKLIGHT
+#define TFT_CS 7
+#else
+#define TFT_CS 10
+#endif
+
 #define TFT_DC 9
 
 // The STMPE610 uses hardware SPI on the shield, and #8.
