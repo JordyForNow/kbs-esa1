@@ -23,6 +23,11 @@ bomb_t *bomb_new(uint8_t x, uint8_t y, uint8_t size) {
 // Delete a bomb struct.
 void bomb_free(bomb_t *bomb) {
     if (bomb) {
+        for (int i = 0; i < MAX_BOMB_SIZE * BOMB_DIRECTION_COUNT + 1; i++) {
+            if (bomb->bomb_exploded_tiles[i] != NULL) {
+                free(bomb->bomb_exploded_tiles[i]);
+            }
+        }
         free(bomb->bomb_exploded_tiles);
         free(bomb);
     }
@@ -54,6 +59,8 @@ void bomb_explosion_toggle_tile(world_t *world, uint8_t x, uint8_t y, tile_t til
         for (int i = 0; i < MAX_BOMB_SIZE * BOMB_DIRECTION_COUNT + 1; i++) {
             if (bomb->bomb_exploded_tiles[i] == NULL) {
                 location_t *location = (location_t *)calloc(sizeof(location_t), 1);
+                location->x = x;
+                location->y = y;
                 bomb->bomb_exploded_tiles[i] = location;
                 LOGLN("Added to list");
                 break;
@@ -76,6 +83,7 @@ void bomb_explosion_toggle_tile(world_t *world, uint8_t x, uint8_t y, tile_t til
     }
 
     if (tile == EMPTY && world_check_bomb(x, y, world)) {
+        LOGLN("found one");
         for (int i = 0; i < MAX_BOMB_SIZE * BOMB_DIRECTION_COUNT + 1; i++) {
             if (bomb->bomb_exploded_tiles[i]->x == x && bomb->bomb_exploded_tiles[i]->y == y) {
                 free(bomb->bomb_exploded_tiles[i]);

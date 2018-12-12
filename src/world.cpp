@@ -152,17 +152,30 @@ bool world_check_bomb(uint8_t x, uint8_t y, world_t *world) {
     // Keep track of times found because it will also find the bomb wich is checking.
     int total_times_found = 0;
     for (int i = 0; i < world->player_count; i++) {
+        LOGLN("hi1");
         for (int j = 0; j < world->players[i]->bomb_count; j++) {
-            if (!world->players[i]->bombs[j])
+            LOGLN("hi2");
+            if (world->players[i]->bombs[j] == NULL)
                 continue;
-            for (int k = 0; k < world->players[i]->bomb_size * BOMB_DIRECTION_COUNT; k++) {
+            for (int k = 0; k < world->players[i]->bomb_size * BOMB_DIRECTION_COUNT + 1; k++) {
+                LOGLN("hi3");
+                Serial.println(i);
+                Serial.println(x);
+                Serial.println(y);
+                Serial.println(world->players[i]->bombs[j]->bomb_exploded_tiles[k]->x);
+                Serial.println(world->players[i]->bombs[j]->bomb_exploded_tiles[k]->y);
                 if (world->players[i]->bombs[j]->bomb_exploded_tiles[k]->x == x &&
-                world->players[i]->bombs[j]->bomb_exploded_tiles[k]->y == y)
+                world->players[i]->bombs[j]->bomb_exploded_tiles[k]->y == y){
+                    LOGLN("hi5");
                     total_times_found++;
-                if (total_times_found > 1)
-                    return 1;
+                    LOGLN("hi4");
+                    if (total_times_found > 1){
+                        LOGLN("hi");
+                        return true;
+                    }
+                }
             }
         }
     }
-    return 0;
+    return false;
 }
