@@ -134,10 +134,6 @@ game_state_t game_get_state() {
     return game_state;
 }
 
-world_t *game_get_world() {
-    return world;
-}
-
 // Trigger a game-update the next time game_update() is called.
 void game_trigger_update() {
     should_poll = true;

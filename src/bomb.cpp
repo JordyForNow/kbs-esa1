@@ -4,7 +4,7 @@
 #include "world.h"
 
 // Addition for x and y axis in every direction.
-int bomb_explode_addition[4][2] = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+int bomb_explode_addition[BOMB_DIRECTION_COUNT][2] = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
 
 // Create a new bomb struct.
 bomb_t *bomb_new(uint8_t x, uint8_t y, uint8_t size) {
@@ -48,13 +48,19 @@ void bomb_explosion_toggle_tile(world_t *world, uint8_t x, uint8_t y, tile_t til
         if (player && player_on_hit(player)) {
             LOGLN("Damage from exploding bomb");
         }
+        for (int i = 0; i < MAX_BOMB_SIZE * BOMB_DIRECTION_COUNT + 1; i++) {
+            if (!bomb->bomb_exploded_tiles[i]) {
+                bomb->bomb_exploded_tiles[i][0] = x;
+                bomb->bomb_exploded_tiles[i][1] = y;
+                break;
+            }
+        }
     }
 
     if (world_get_tile(world, x, y) == BOX && tile == EXPLODING_BOMB) {
         long random_number = random(100);
         if (random_number < BOMB_EXPLODE_SIZE_DROP_CHANCE) {
             tile = UPGRADE_EXPLOSION_BOMB_SIZE;
-
         } else if (random_number < BOMB_EXPLODE_SIZE_DROP_CHANCE + BOMB_COUNT_UPGRADE_CHANCE) {
             tile = UPGRADE_EXPLOSION_BOMB_COUNT;
         }
@@ -65,6 +71,7 @@ void bomb_explosion_toggle_tile(world_t *world, uint8_t x, uint8_t y, tile_t til
         tile = UPGRADE_BOMB_COUNT;
     }
 
+    if ()
     world_set_tile(world, x, y, tile);
 }
 

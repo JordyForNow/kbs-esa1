@@ -1,6 +1,8 @@
 #ifndef BOMB_H
 #define BOMB_H
 
+#include "defines.h"
+
 #include <stdint.h>
 
 typedef struct {
@@ -8,6 +10,7 @@ typedef struct {
     uint8_t y;
     uint8_t age;
     uint8_t bomb_size;
+    uint8_t bomb_exploded_tiles[MAX_BOMB_SIZE * BOMB_DIRECTION_COUNT + 1][2];
 } bomb_t;
 
 #include "world.h"

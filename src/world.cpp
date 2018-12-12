@@ -75,11 +75,13 @@ uint8_t world_count_boxes(world_t *world) {
 
 void world_update(world_t *world, uint8_t inputs) {
     // Update all bombs first.
+    player_t *player;
     for (int i = 0; i < world->player_count; i++) {
-        player_t *player = world->players[i];
-        for(int i=0; i<MAX_BOMB_COUNT; i++){
-            if (player->bombs[i]) {
-                bomb_update(world, player->bombs[i]);
+        player = world->players[i];
+        for(int j=0; j<player->bomb_count; j++){
+            if(player->bombs[j] != 0 && player->bombs[j] != NULL){
+                if(!bomb_update(world,player->bombs[j]))
+                    player->bombs[j] = NULL;
             }
         }
     }
@@ -130,11 +132,16 @@ player_t *world_get_player(world_t *world, uint8_t x, uint8_t y) {
 }
 
 bomb_t *world_get_bomb(world_t *world, uint8_t x, uint8_t y) {
+    bomb_t *bomb;
+    player_t *player;
     for (int i = 0; i < world->player_count; i++) {
-        player_t *player = world->players[i];
-        for (int j=0; j<MAX_BOMB_COUNT; j++) {
-            if (player->bombs[j]->x == x && player->bombs[j]->y == y)
-                return player->bombs[j];
+        player = world->players[i];
+        for (int j=0; j<player->bomb_count; j++) {
+            if (player->bombs[j] != 0 && player->bombs[j] != NULL) {
+                bomb = player->bombs[j];
+                if (bomb->x == x && bomb->y == y)
+                    return bomb;
+            }
         }
     }
     return NULL;

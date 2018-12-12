@@ -11,9 +11,6 @@ int main() {
     init();
     Wire.begin();
 
-    DDRD |= (1<<3);
-    PORTD |= (1<<3);
-
     // Use pins A2 and A3 for power for the nunchuck, and then
     // initialize the connection to the device.
     nunchuck_setpowerpins();
@@ -47,13 +44,10 @@ int main() {
         // Set up the game.
         game_init();
 
-        LOGLN("Starting game");
-        
         // Update the game until it ends.
         while (!game_get_state())
             game_update();
-        
-        LOGLN("end game");
+
         score_calculate();
         
         // Clean up the game.
