@@ -66,7 +66,7 @@ void menu_free(menu_t *menu) {
     free(menu);
 }
 
-void menu_free_all(){
+void menu_free_all() {
     menu_free(menu_main);
     menu_free(menu_play);
     menu_free(menu_score);
