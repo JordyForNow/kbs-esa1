@@ -43,11 +43,4 @@ bomb_t *world_get_bomb(world_t *world, uint8_t x, uint8_t y);
 int get_game_level();
 void set_game_level(int level);
 
-// typedef int (*game_level_getter)();
-// typedef void (*game_level_setter)();
-
-// game_level_getter a = get_game_level;
-
-
-
 #endif /* WORLD_H */
