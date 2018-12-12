@@ -66,6 +66,14 @@ void menu_free(menu_t *menu) {
 
     free(menu);
 }
+void menu_free_all(){
+    menu_free(menu_main);
+    menu_free(menu_play);
+    menu_free(menu_select_level);
+    menu_free(menu_score);
+    menu_free(menu_win);
+    menu_free(menu_lose);
+}
 
 void menu_set_component(menu_t *menu, int index, component_t *component) {
     menu->components[index] = component;
@@ -103,8 +111,10 @@ button_mode_t menu_loop(menu_t *menu) {
             continue;
 
         // If this starts the game, do that now.
-        if (component->mode != BUTTON_MODE_DEFAULT)
+        if (component->mode != BUTTON_MODE_DEFAULT) {
+            menu_free_all();
             return component->mode;
+        }
 
         // If it is a menu button, it should go to the next menu.
         if (component->target) {

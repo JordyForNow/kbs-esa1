@@ -56,6 +56,9 @@ int main() {
         
         // Clean up the game.
         game_free();
+
+        // Initialise the menus.
+        menus_init();
         
         // Show the correct menu depending on the game result.
         menu = game_get_state() == GAME_STATE_WON ? menu_win : menu_lose;
