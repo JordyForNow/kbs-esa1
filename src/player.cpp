@@ -1,4 +1,5 @@
 #include "player.h"
+#include "game.h"
 #include "bomb.h"
 #include "defines.h"
 #include "render.h"
@@ -92,7 +93,7 @@ uint8_t player_move(player_t *player, uint8_t inputs, world_t *world){
         player->y = new_y;
 
         // Send move player packet.
-        if(player->is_main)
+        if(player->is_main && game_is_multiplayer())
             packet_send(MOVE, player);
 
         // Damage the player if they are walking into an exploding bomb,
@@ -124,7 +125,8 @@ uint8_t player_on_hit(player_t *player) {
         // Send lose live packet and update the lives display for the local player.
         if(player->is_main) {
             player_show_lives(player);
-            packet_send(LOSE_LIVE, player);
+            if (game_is_multiplayer())
+                packet_send(LOSE_LIVE, player);
         }
     }
     
@@ -143,7 +145,7 @@ void player_place_bomb(world_t *world, player_t *player) {
         world_set_tile(world, player->bomb->x, player->bomb->y, BOMB);
 
         // Send place bomb packet.
-        if(player->is_main)
+        if(player->is_main && game_is_multiplayer())
             packet_send(PLACE_BOMB, player);
     }
 }

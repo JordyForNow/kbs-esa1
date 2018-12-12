@@ -25,7 +25,6 @@ void game_init(button_mode_t game_mode) {
     // Reset variables when a game is restarting.
     game_state = GAME_STATE_RUNNING;
     
-
     multiplayer = game_mode == BUTTON_MODE_MULTIPLAYER;
 
     // Initialize the nunchuck.
@@ -78,18 +77,21 @@ bool game_update() {
     {
         packet_t *packet = network_receive();
 
-        switch (packet->method) {
-            case MOVE:
-                opponent_move(packet->x, packet->y);
-                break;
-            case LOSE_LIVE:
-                opponent_lose_live(packet->x, packet->y);
-                break;
-            case PLACE_BOMB:
-                opponent_place_bomb(packet->x, packet->y);
-                break;
-            default:
-                break;
+        if (packet)
+        {
+            switch (packet->method) {
+                case MOVE:
+                    opponent_move(packet->x, packet->y);
+                    break;
+                case LOSE_LIVE:
+                    opponent_lose_live(packet->x, packet->y);
+                    break;
+                case PLACE_BOMB:
+                    opponent_place_bomb(packet->x, packet->y);
+                    break;
+                default:
+                    break;
+            }
         }
     }
     
@@ -190,11 +192,6 @@ void opponent_move(uint8_t x, uint8_t y){
 
     uint8_t oldx = player->x;
     uint8_t oldy = player->y;
-
-    while( !(UCSR0A & (1 << UDRE0)) ) { }
-    UDR0 = x;
-    while( !(UCSR0A & (1 << UDRE0)) ) { }
-    UDR0 = y;
 
     player->x = x;
     player->y = y;

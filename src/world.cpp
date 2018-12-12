@@ -70,12 +70,15 @@ bool world_multiplayer_generate(world_t *world, unsigned long seed) {
 
     packet_setup(seed);
 
-    while (!network_available()) { network_update(); }
+    while (!network_available()) 
+        network_update();
 
     packet_t *packet = network_receive();
-
-    world_generate(world, packet ->seed^seed);
-    return packet->seed<seed;
+    if (packet) {
+        world_generate(world, packet->seed ^ seed);
+        return packet->seed <= seed;
+    }
+    
 }
 
 uint8_t world_count_boxes(world_t *world) {

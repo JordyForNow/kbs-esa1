@@ -26,7 +26,8 @@ typedef struct {
 } packet_t;
 
 
-packet_t* packet_new(method_t method, uint8_t x, uint8_t y);
+void packet_decode(packet_t *p, uint16_t i);
+uint16_t packet_encode(packet_t *p);
 void packet_free(packet_t packet);
 void packet_setup(uint16_t map_seed);
 void packet_send(method_t method, player_t *player);

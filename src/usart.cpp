@@ -5,15 +5,15 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
-#define BUFFER_MAXIMUM_CAPACITY 20
+#define BUFFER_MAXIMUM_CAPACITY 16
 #define NETWORK_ACK_BYTE 0b1111
 #define NETWORK_MAX_RETRIES 50
 
 buffer_t * incoming_data, * outgoing_data;
 volatile bool acknowledged = false;
 volatile bool first_byte = true;
-uint8_t currently_sending[2];
-uint8_t currently_receiving[2];
+uint8_t currently_sending[2], currently_receiving[2];
+packet_t incoming_packet;
 bool waiting = false;
 
 void usart_init() {
@@ -27,12 +27,14 @@ void usart_init() {
    // Enable Receiver and Transmitter and Reciever interrupt.
    UCSR0B = (1 << TXEN0) | (1 << RXEN0) | (1 << RXCIE0);
 
+   UDR0 = 't';
+
    // Create the incoming and outgoing data buffers.
    incoming_data = buffer_new(BUFFER_MAXIMUM_CAPACITY);
    outgoing_data = buffer_new(BUFFER_MAXIMUM_CAPACITY);
 }
 
-bool usart_wait_until_available() {
+void usart_wait_until_available() {
     while (!(UCSR0A & (1 << UDRE0))) {}
 }
 
@@ -57,6 +59,7 @@ bool usart_update() {
 
     send_bytes();
     waiting = true;
+    acknowledged = false;
     return true;
 }
 
@@ -85,8 +88,10 @@ packet_t* usart_receive() {
     buffer_read(incoming_data, currently_receiving, 2);
 
     // Interpret the two bytes in currently_receiving as a packet.
-    packet_t *packet = (packet_t*) &currently_receiving;
-    return validate_incoming_data(*((uint16_t*) packet)) ? packet : NULL;
+    packet_decode(&incoming_packet, ( (((uint16_t) currently_receiving[0]) << 8 ) | currently_receiving[1]));
+
+    usart_acknowledge();
+    return validate_incoming_data(packet_encode(&incoming_packet)) ? &incoming_packet : NULL;
 }
 
 void usart_acknowledge() {
@@ -98,7 +103,7 @@ bool usart_available() {
     return buffer_available(incoming_data) >= 2;
 }
 
-void usart_send_debug(char m[]) {
+void usart_send_debug(const char *m) {
     int i = 0;
 
     while(m[i] != 0) {            
@@ -108,7 +113,6 @@ void usart_send_debug(char m[]) {
         UDR0 = m[i];
         i++;
     }
-
 }
 
 

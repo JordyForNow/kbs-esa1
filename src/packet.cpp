@@ -3,21 +3,21 @@
 #include "defines.h"
 #include "network.h"
 
-packet_t* packet_new(method_t method, uint8_t x, uint8_t y) {
-    packet_t* packet = (packet_t*)malloc(sizeof(packet_t));
-    packet->method = method;
-    packet->x = x;
-    packet->y = y;
-
-    return packet;
+uint16_t packet_encode(packet_t *p) {
+  return (p->method << 11) + (p->x << 6) + (p->y << 1) + (p->parity);
 }
 
-packet_t* packet_new(uint16_t seed) {
-    packet_t* packet = (packet_t*)malloc(sizeof(packet_t));
-    packet->method = INIT;
-    packet->seed = seed;
+void packet_decode(packet_t *p, uint16_t i) {
+    p->method = (method_t) ((i >> 11) & 0b111);
+    
+    if (p->method == INIT) {
+        p->seed = (i >> 1) & 0b1111111111;
+    } else {
+        p->x = (i >> 6) & 0b11111;
+        p->y = (i >> 1) & 0b11111;
+    }
 
-    return packet;
+    p->parity = i & 0b1;
 }
 
 void packet_free(packet_t* packet) {
@@ -34,13 +34,13 @@ void packet_send(method_t method, player_t* player) {
     packet.y = player->y;
 
     // Look at the packet as if it's an uint16_t.
-    uint16_t *raw = (uint16_t*) &packet;
+    uint16_t raw = packet_encode(&packet);
 
     // Determine the value of the parity bit.
-    packet.parity = !has_even_parity(*raw);
+    raw |= has_even_parity(raw);
 
     // Transmit the packet.
-    network_send(*raw);
+    network_send(raw);
 }
 
 // Send communication packet with map seed.

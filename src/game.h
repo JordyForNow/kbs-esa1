@@ -24,5 +24,6 @@ void opponent_lose_live(uint8_t x, uint8_t y);
 player_t *get_opponent();
 
 game_state_t game_get_state();
+bool game_is_multiplayer();
 
 #endif
