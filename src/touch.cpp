@@ -63,9 +63,9 @@ void menu_free(menu_t *menu) {
         if (menu->components[i])
             component_free(menu->components[i]);
     }
-
     free(menu);
 }
+
 void menu_free_all(){
     menu_free(menu_main);
     menu_free(menu_play);
