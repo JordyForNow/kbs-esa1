@@ -6,6 +6,7 @@
 #include "usart.h"
 #include "packet.h"
 #include "world.h"
+#include "score.h"
 #include "segments.h"
 #include "touch.h"
 
@@ -18,6 +19,9 @@ static int16_t input_joy_x = 0;
 static int16_t input_joy_y = 0;
 
 bool multiplayer;
+// Keep track of how many game ticks the game has been running.
+unsigned long game_time = 0;
+
 game_state_t game_state = GAME_STATE_RUNNING;
 
 // Initialize the game state.
@@ -26,6 +30,8 @@ void game_init(button_mode_t game_mode) {
     game_state = GAME_STATE_RUNNING;
     
     multiplayer = game_mode == BUTTON_MODE_MULTIPLAYER;
+
+    game_time = 0;
 
     // Initialize the nunchuck.
     nunchuck_send_request();
@@ -40,6 +46,8 @@ void game_init(button_mode_t game_mode) {
     else {
         world_generate(world, TCNT0);
     }
+
+    score_set_box_count(world_get_box_count(world));
 
     // Create the local player and show the lives on the 7-segment display.
     player_t *player = player_new(1, 1, player_1_host);
@@ -100,7 +108,7 @@ bool game_update() {
         game_state = GAME_STATE_LOST;
 
     // End the game if there are no boxes remaining.
-    if (!world_get_boxes(world))
+    if (!world_get_box_count(world))
         game_state = GAME_STATE_WON;
 
     // Check if the game has finished.
@@ -137,6 +145,9 @@ bool game_update() {
     // Don't update unless it's time.
     if (should_update < GAME_INPUT_FACTOR)
         return false;
+    
+    // Increment game time each game update.
+    game_time++;
 
     LOGLN("Updating");
     should_update = 0;
@@ -221,3 +232,13 @@ bool game_is_multiplayer() {
 }
 
 
+unsigned long *game_get_time(){
+    return &game_time;
+}
+
+player_t *game_get_main_player(){   
+    for(int i =0; i<world->player_count; i++){
+        if(world->players[i]->is_main)
+            return world->players[i];
+    };
+}

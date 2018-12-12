@@ -39,6 +39,7 @@ typedef struct menu_t {
 // The menu screens that exist in the game.
 extern menu_t *menu_main;
 extern menu_t *menu_play;
+extern menu_t *menu_score;
 extern menu_t *menu_win;
 extern menu_t *menu_lose;
 
@@ -60,5 +61,8 @@ int menu_await_input();
 // Initializer functions.
 void touch_init();
 void menus_init();
+
+char *menu_get_score(int index, char *label);
+void component_change_text(component_t *component, int index, char *text);
 
 #endif /* TOUCH_H */

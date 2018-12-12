@@ -1,6 +1,8 @@
 #ifndef GAME_H
 #define GAME_H
 
+#include "player.h"
+
 #include <nunchuck_funcs.h>
 #include <stdbool.h>
 #include "touch.h"
@@ -25,5 +27,7 @@ player_t *get_opponent();
 
 game_state_t game_get_state();
 bool game_is_multiplayer();
+unsigned long *game_get_time();
+player_t *game_get_main_player();
 
-#endif
+#endif /* GAME_H */
