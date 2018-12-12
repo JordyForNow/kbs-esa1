@@ -50,8 +50,8 @@ void bomb_explosion_toggle_tile(world_t *world, uint8_t x, uint8_t y, tile_t til
         }
         for (int i = 0; i < MAX_BOMB_SIZE * BOMB_DIRECTION_COUNT + 1; i++) {
             if (!bomb->bomb_exploded_tiles[i]) {
-                bomb->bomb_exploded_tiles[i][0] = x;
-                bomb->bomb_exploded_tiles[i][1] = y;
+                location_t *location = (location_t *)malloc(sizeof(location_t));
+                bomb->bomb_exploded_tiles[i] = location;
                 break;
             }
         }
@@ -71,7 +71,16 @@ void bomb_explosion_toggle_tile(world_t *world, uint8_t x, uint8_t y, tile_t til
         tile = UPGRADE_BOMB_COUNT;
     }
 
-    if ()
+    if (tile == EMPTY && world_check_bomb(x, y, world)) {
+        for (int i = 0; i < MAX_BOMB_SIZE * BOMB_DIRECTION_COUNT + 1; i++) {
+            if (bomb->bomb_exploded_tiles[i]->x == x && bomb->bomb_exploded_tiles[i]->y == y) {
+                bomb->bomb_exploded_tiles[i] = NULL;
+                break;
+            }
+        }
+        return;
+    }
+    
     world_set_tile(world, x, y, tile);
 }
 

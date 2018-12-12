@@ -8,9 +8,14 @@
 typedef struct {
     uint8_t x;
     uint8_t y;
+} location_t;
+
+typedef struct {
+    uint8_t x;
+    uint8_t y;
     uint8_t age;
     uint8_t bomb_size;
-    uint8_t bomb_exploded_tiles[MAX_BOMB_SIZE * BOMB_DIRECTION_COUNT + 1][2];
+    location_t *bomb_exploded_tiles[MAX_BOMB_SIZE * BOMB_DIRECTION_COUNT + 1];
 } bomb_t;
 
 #include "world.h"
