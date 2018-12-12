@@ -22,8 +22,10 @@ bomb_t *bomb_new(uint8_t x, uint8_t y, uint8_t size) {
 
 // Delete a bomb struct.
 void bomb_free(bomb_t *bomb) {
-    if (bomb)
+    if (bomb) {
+        free(bomb->bomb_exploded_tiles);
         free(bomb);
+    }
 }
 
 // Update a bomb.
@@ -49,13 +51,14 @@ void bomb_explosion_toggle_tile(world_t *world, uint8_t x, uint8_t y, tile_t til
         if (player && player_on_hit(player)) {
             LOGLN("Damage from exploding bomb");
         }
-        /*for (int i = 0; i < MAX_BOMB_SIZE * BOMB_DIRECTION_COUNT + 1; i++) {
-            if (!bomb->bomb_exploded_tiles[i]) {
+        for (int i = 0; i < MAX_BOMB_SIZE * BOMB_DIRECTION_COUNT + 1; i++) {
+            if (bomb->bomb_exploded_tiles[i] == NULL) {
                 location_t *location = (location_t *)calloc(sizeof(location_t), 1);
                 bomb->bomb_exploded_tiles[i] = location;
+                LOGLN("Added to list");
                 break;
             }
-        }*/
+        }
     }
 
     if (world_get_tile(world, x, y) == BOX && tile == EXPLODING_BOMB) {
@@ -72,15 +75,17 @@ void bomb_explosion_toggle_tile(world_t *world, uint8_t x, uint8_t y, tile_t til
         tile = UPGRADE_BOMB_COUNT;
     }
 
-    /*if (tile == EMPTY && world_check_bomb(x, y, world)) {
+    if (tile == EMPTY && world_check_bomb(x, y, world)) {
         for (int i = 0; i < MAX_BOMB_SIZE * BOMB_DIRECTION_COUNT + 1; i++) {
             if (bomb->bomb_exploded_tiles[i]->x == x && bomb->bomb_exploded_tiles[i]->y == y) {
+                free(bomb->bomb_exploded_tiles[i]);
                 bomb->bomb_exploded_tiles[i] = NULL;
+                LOGLN("Already here");
                 break;
             }
         }
         return;
-    }*/
+    }
     
     world_set_tile(world, x, y, tile);
 }

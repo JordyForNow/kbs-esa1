@@ -148,7 +148,7 @@ bomb_t *world_get_bomb(world_t *world, uint8_t x, uint8_t y) {
 }
 
 // Check if another bomb has exploded on a specific tile.
-/*bool world_check_bomb(uint8_t x, uint8_t y, world_t *world) {
+bool world_check_bomb(uint8_t x, uint8_t y, world_t *world) {
     // Keep track of times found because it will also find the bomb wich is checking.
     int total_times_found = 0;
     for (int i = 0; i < world->player_count; i++) {
@@ -165,4 +165,4 @@ bomb_t *world_get_bomb(world_t *world, uint8_t x, uint8_t y) {
         }
     }
     return 0;
-}*/
+}
