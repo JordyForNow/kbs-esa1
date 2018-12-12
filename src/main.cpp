@@ -34,7 +34,7 @@ int main() {
     tft.setRotation(1);
 
     // The main funtion method for the touch screen.
-    menus_init();
+    menus_new();
 
     menu_t *menu = menu_main;
     while (1) {
@@ -56,6 +56,9 @@ int main() {
         
         // Clean up the game.
         game_free();
+
+        // Initialise the menus.
+        menus_new();
         
         // Show the correct menu depending on the game result.
         menu = game_get_state() == GAME_STATE_WON ? menu_win : menu_lose;
