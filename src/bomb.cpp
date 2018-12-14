@@ -41,7 +41,8 @@ bomb_t *bomb_update(world_t *world, bomb_t *bomb) {
 // Change the tile at the given coordinates to the given tile type, taking into account
 // that there could be a player on the given tile. This player may receive damage if the
 // tile we're changing to is an EXPLODING_BOMB.
-void bomb_explode_tile(world_t *world, uint8_t x, uint8_t y, tile_t tile) {
+void bomb_explode_tile(world_t *world, uint8_t x, uint8_t y) {
+    tile_t tile = EXPLODING_BOMB;
     player_t *player = world_get_player(world, x, y);
     if (player && player_on_hit(player))
         LOGLN("Damage from exploding bomb");
@@ -76,9 +77,8 @@ void bomb_explode_tile(world_t *world, uint8_t x, uint8_t y, tile_t tile) {
 
 // The action variable given with this function will determine whether to show or hide the explosion.
 void bomb_explode(world_t *world, bomb_t *bomb) {
-    tile_t tile = EXPLODING_BOMB;
     // Change bombs location to exploded.
-    bomb_explode_tile(world, bomb->x, bomb->y, tile);
+    bomb_explode_tile(world, bomb->x, bomb->y);
 
     // Loop through directions.
     for (int i = 0; i < BOMB_DIRECTION_COUNT; i++) {
@@ -97,16 +97,13 @@ void bomb_explode(world_t *world, bomb_t *bomb) {
                 // A wall can't be broken.
                 break;
             } else if (tile_temp == BOX) {
-                // If the tile should become an EXPLODING_BOMB and the tile is a box:
                 // - Subtract 1 from the total number of boxes.
                 // - After a box the explosion should stop.
-                if (tile == EXPLODING_BOMB) {
-                    bomb_explode_tile(world, x_temp, y_temp, tile);
-                    world_subtract_boxes(world, 1);
-                }
+                bomb_explode_tile(world, x_temp, y_temp);
+                world_subtract_boxes(world, 1);
                 break;
             }
-            bomb_explode_tile(world, x_temp, y_temp, tile);
+            bomb_explode_tile(world, x_temp, y_temp);
         }
     }
 }

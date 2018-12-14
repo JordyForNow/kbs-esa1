@@ -36,32 +36,16 @@ void player_free(player_t *player) {
     free(player);
 }
 
-// Process user input and optionally rerender the player.
-void player_update(world_t *world, player_t *player, uint8_t inputs) {
-    uint8_t redraw = 0;
+void player_increment_bomb_size(player_t *player){
+    // Check if the incrementation is allowed.
+    if (player->bomb_size < MAX_BOMB_SIZE);
+        player->bomb_size++;
+}
 
-    // Decrease our invincibility.
-    if (player->hit_duration) {
-        player->hit_duration--;
-
-        // If we are no longer invincible, redraw.
-        if (!player->hit_duration) {
-            redraw = 1;
-        }
-    }
-
-    redraw = player_move(player, inputs, world, redraw);
-
-    // Place a bomb if necessary.
-    int bomb_index = bomb_allowed(player, world);
-    if (bomb_index < MAX_BOMB_COUNT && inputs & (1 << INPUT_BUTTON_C)) {
-        player_place_bomb(world, player, bomb_index);
-        redraw = 1;
-    }
-
-    // Redraw our player only if we have to.
-    if (redraw)
-        draw_player(player);
+void player_increment_bomb_count(player_t *player){
+    // Check if the incrementation is allowed.
+    if (player->bomb_size < MAX_BOMB_COUNT);
+        player->bomb_count++;
 }
 
 uint8_t player_move(player_t *player, uint8_t inputs, world_t *world, uint8_t redraw) {
@@ -146,16 +130,32 @@ uint8_t player_move(player_t *player, uint8_t inputs, world_t *world, uint8_t re
     return redraw;
 }
 
-void player_increment_bomb_size(player_t *player){
-    // Check if the incrementation is allowed.
-    if (player->bomb_size < MAX_BOMB_SIZE);
-        player->bomb_size++;
-}
+// Process user input and optionally rerender the player.
+void player_update(world_t *world, player_t *player, uint8_t inputs) {
+    uint8_t redraw = 0;
 
-void player_increment_bomb_count(player_t *player){
-    // Check if the incrementation is allowed.
-    if (player->bomb_size < MAX_BOMB_COUNT);
-        player->bomb_count++;
+    // Decrease our invincibility.
+    if (player->hit_duration) {
+        player->hit_duration--;
+
+        // If we are no longer invincible, redraw.
+        if (!player->hit_duration) {
+            redraw = 1;
+        }
+    }
+
+    redraw = player_move(player, inputs, world, redraw);
+
+    // Place a bomb if necessary.
+    int bomb_index = bomb_allowed(player, world);
+    if (bomb_index < MAX_BOMB_COUNT && inputs & (1 << INPUT_BUTTON_C)) {
+        player_place_bomb(world, player, bomb_index);
+        redraw = 1;
+    }
+
+    // Redraw our player only if we have to.
+    if (redraw)
+        draw_player(player);
 }
 
 // Whenever the player should take damage, we check if they are invincible and
