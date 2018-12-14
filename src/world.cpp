@@ -84,8 +84,8 @@ void world_update(world_t *world, uint8_t inputs) {
     player_t *player;
     for (int i = 0; i < world->player_count; i++) {
         player = world->players[i];
-        for(int j=0; j<player->bomb_count; j++){
-            if(player->bombs[j] != 0 && player->bombs[j] != NULL){
+        for(int j=0; j<player->bomb_count; j++) {
+            if(player->bombs[j] != 0 && player->bombs[j] != NULL) {
                 if(!bomb_update(world,player->bombs[j]))
                     player->bombs[j] = NULL;
             }
@@ -175,10 +175,12 @@ bomb_t *world_get_bomb(world_t *world, uint8_t x, uint8_t y) {
 }
 
 uint8_t world_get_explosion_counter(world_t *world, uint8_t x, uint8_t y) {
+    // Retrieve data from specific nibble.
     uint8_t counter = 0;
     int index_x = x / 2;
     x %= 2;
 
+    // Retrieve most significant and least significant four bits.
     if (x) {
         counter |= (world->tile_explosion_duration[index_x][y] >> 4);
     } else {
@@ -189,13 +191,17 @@ uint8_t world_get_explosion_counter(world_t *world, uint8_t x, uint8_t y) {
 }
 
 void world_set_explosion_counter(world_t *world, uint8_t x, uint8_t y, uint8_t value) {
+    // Set data in specific nibble.
     int index_x = x / 2;
     x %=2;
 
+    // Set most significant and least significant four bits.
     if (x) {
+        // Reset bits.
         world->tile_explosion_duration[index_x][y] &= ~0xF0;
         world->tile_explosion_duration[index_x][y] |= (value << 4) & 0xF0;
     } else {
+        // Reset bits.
         world->tile_explosion_duration[index_x][y] &= ~0xF;
         world->tile_explosion_duration[index_x][y] |= value & 0xF;
     }
