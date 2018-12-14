@@ -66,10 +66,9 @@ void bomb_explode_tile(world_t *world, uint8_t x, uint8_t y) {
         }
         
         // Check if a powerup is currently present and replace it with the exploded version.
-    } else if (current_tile == UPGRADE_BOMB_COUNT || current_tile == UPGRADE_EXPLOSION_BOMB_COUNT) {
-        tile = UPGRADE_EXPLOSION_BOMB_COUNT;
-    } else if (current_tile == UPGRADE_BOMB_SIZE || current_tile == UPGRADE_EXPLOSION_BOMB_SIZE) {
-        tile = UPGRADE_EXPLOSION_BOMB_SIZE;
+    } else if (current_tile & (1 << 3)) {
+        Serial.println("found upgrade");
+        tile = current_tile | 1;
     }
 
     world_set_tile(world, x, y, tile);
