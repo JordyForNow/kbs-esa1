@@ -45,7 +45,7 @@
 
 // Maximum amount of bombs a player can have.
 #define MAX_BOMB_COUNT 7
-// Maximum size a bomb can be.
+// Maximum size a bombs explosion can be.
 #define MAX_BOMB_SIZE 10
 // Chance for a box to drop an upgrade.
 #define BOMB_EXPLODE_SIZE_DROP_CHANCE 15

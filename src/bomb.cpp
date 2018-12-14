@@ -55,20 +55,17 @@ void bomb_explode_tile(world_t *world, uint8_t x, uint8_t y) {
     tile_t current_tile = world_get_tile(world, x, y);
     if (current_tile == BOX) {
         long random_number = random(100);
-
-        // Check if a size power-up should drop.
         if (random_number < BOMB_EXPLODE_SIZE_DROP_CHANCE) {
+            // Check if a size power-up should drop.
             tile = UPGRADE_EXPLOSION_BOMB_SIZE;
 
-            // Check if a bomb count power-up should drop.
         } else if (random_number < BOMB_EXPLODE_SIZE_DROP_CHANCE + BOMB_COUNT_UPGRADE_CHANCE) {
+            // Check if a bomb count power-up should drop.
             tile = UPGRADE_EXPLOSION_BOMB_COUNT;
         }
-        
-        // Check if a powerup is currently present and replace it with the exploded version.
     } else if (current_tile & (1 << 3)) {
-        Serial.println("found upgrade");
-        tile = current_tile | 1;
+        // Check if a powerup is currently present and replace it with the exploded version.
+        tile = (tile_t)(current_tile | 1);
     }
 
     world_set_tile(world, x, y, tile);
@@ -78,13 +75,11 @@ void bomb_explode(world_t *world, bomb_t *bomb) {
     // Change bombs location to exploded.
     bomb_explode_tile(world, bomb->x, bomb->y);
 
-    // Loop through directions.
     for (int i = 0; i < BOMB_DIRECTION_COUNT; i++) {
         // Set default location to the location of the bomb.
         uint8_t x_temp = bomb->x;
         uint8_t y_temp = bomb->y;
 
-        // Loop to max explosion size.
         for (int j = 0; j < bomb->size; j++) {
             // Convert location to a tile within the explosion radius.
             x_temp += bomb_explode_addition[i][0];
