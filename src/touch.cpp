@@ -119,7 +119,7 @@ button_mode_t menu_loop(menu_t *menu) {
 
         // If this starts the game, do that now but first set the level.
         if (component->mode != BUTTON_MODE_DEFAULT) {
-            if(component->mode == BUTTON_MODE_SINGLEPLAYER) {
+            if (component->mode == BUTTON_MODE_SINGLEPLAYER) {
                 set_game_level(component->selected_level);
             }
             menus_free();
