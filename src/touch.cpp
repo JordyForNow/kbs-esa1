@@ -16,7 +16,7 @@ component_t *button_new(const char *text, menu_t *target, button_mode_t mode) {
     return button_new(text, target, mode, 0);
 }
 
-component_t *button_new(const char *text, menu_t *target, button_mode_t mode, int level){
+component_t *button_new(const char *text, menu_t *target, button_mode_t mode, int level) {
     component_t *button = (component_t *)malloc(sizeof(component_t));
     if (!button)
         return NULL;
@@ -76,6 +76,7 @@ void menu_free(menu_t *menu) {
 void menus_free() {
     menu_free(menu_main);
     menu_free(menu_play);
+    menu_free(menu_select_level);
     menu_free(menu_score);
     menu_free(menu_win);
     menu_free(menu_lose);
@@ -116,9 +117,9 @@ button_mode_t menu_loop(menu_t *menu) {
         if (!component)
             continue;
 
-        // If this starts the game, do that now.
-        if (component->mode != BUTTON_MODE_DEFAULT){
-            if(component->mode == BUTTON_MODE_SINGLEPLAYER){
+        // If this starts the game, do that now but first set the level.
+        if (component->mode != BUTTON_MODE_DEFAULT) {
+            if(component->mode == BUTTON_MODE_SINGLEPLAYER) {
                 set_game_level(component->selected_level);
             }
             menus_free();

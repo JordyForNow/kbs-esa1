@@ -26,7 +26,7 @@ int main() {
 
     timer1_init();
 
-    // Don't read the potentiometer if the dimming the TFT is disabled
+    // Don't read the potentiometer if the dimming of the TFT is disabled.
     #if DIMMING_BACKLIGHT
     tft_brightness_init();
     adc_init();
@@ -89,7 +89,7 @@ void timer1_init() {
     TIMSK1 = (1 << TOIE1);
 
     // Compare output mode, set OC1B on Compare Match, clear at BOTTOM.
-    // Only use this if dimming the TFT is enabled.
+    // Only do this if dimming the TFT is enabled.
     #if DIMMING_BACKLIGHT
     TCCR1A |= (1 << COM1B0) | (1 << COM1B1);
     #endif
