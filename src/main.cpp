@@ -44,13 +44,14 @@ int main() {
     while (1) {
         // Show the menu.
         button_mode_t mode = menu_loop(menu);
+
         // Singleplayer/ Multiplayer
-        
+
         // Paint background black.
         draw_background(ILI9341_BLACK);
 
         // Set up the game.
-        game_init();
+        game_init(mode);
         
         // Update the game until it ends.
         while (!game_get_state())
@@ -111,7 +112,7 @@ void timer1_init() {
     sei();
 }
 
-void tft_brightness_init() {
+void tft_brightness_init(){
     DDRB |= (1 << PB2);
 }
 

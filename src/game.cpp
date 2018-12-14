@@ -21,7 +21,7 @@ unsigned long game_time = 0;
 game_state_t game_state = GAME_STATE_RUNNING;
 
 // Initialize the game state.
-void game_init() {
+void game_init(button_mode_t game_mode) {
     // Reset variables when a game is restarting.
     game_state = GAME_STATE_RUNNING;
     game_time = 0;
@@ -31,7 +31,7 @@ void game_init() {
 
     // Draw the world with blocks and walls.
     world = world_new(1);
-    world_generate(world, TCNT0);
+    world_generate(world, TCNT0, game_mode);
     score_set_box_count(world_get_box_count(world));
 
     // Create the player and show the lives on the 7-segment display.

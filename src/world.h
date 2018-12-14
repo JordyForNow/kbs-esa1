@@ -2,6 +2,7 @@
 #define WORLD_H
 
 #include "defines.h"
+#include "touch.h"
 
 #include <Adafruit_ILI9341.h>
 
@@ -28,6 +29,7 @@ typedef struct world_t {
 world_t *world_new(uint8_t player_count);
 void world_free(world_t *world);
 void world_generate(world_t *world, unsigned long seed);
+void world_generate(world_t *world, unsigned long seed, button_mode_t mode);
 uint8_t world_count_boxes(world_t *world);
 
 void world_update(world_t *world, uint8_t inputs);
@@ -39,7 +41,5 @@ tile_t world_get_tile(world_t *world, uint8_t x, uint8_t y);
 void world_redraw_tile(world_t *world, uint8_t x, uint8_t y);
 player_t *world_get_player(world_t *world, uint8_t x, uint8_t y);
 bomb_t *world_get_bomb(world_t *world, uint8_t x, uint8_t y);
-
-void set_game_level(int level);
 
 #endif /* WORLD_H */

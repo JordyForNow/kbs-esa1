@@ -12,11 +12,9 @@ menu_t *menu_score = NULL;
 menu_t *menu_win = NULL;
 menu_t *menu_lose = NULL;
 
-component_t *button_new(const char *text, menu_t *target, button_mode_t mode) {
-    return button_new(text, target, mode, 0);
-}
 
-component_t *button_new(const char *text, menu_t *target, button_mode_t mode, int level) {
+
+component_t *button_new(const char *text, menu_t *target, button_mode_t mode) {
     component_t *button = (component_t *)malloc(sizeof(component_t));
     if (!button)
         return NULL;
@@ -24,7 +22,6 @@ component_t *button_new(const char *text, menu_t *target, button_mode_t mode, in
     button->text = strdup(text);
     button->target = target;
     button->mode = mode;
-    button->selected_level = level;
     return button;
 }
 
@@ -36,7 +33,6 @@ component_t *label_new(char *text) {
     label->text = strdup(text);
     label->target = NULL;
     label->mode = BUTTON_MODE_DEFAULT;
-    label->selected_level = 0;
     return label;
 }
 
@@ -117,13 +113,11 @@ button_mode_t menu_loop(menu_t *menu) {
         if (!component)
             continue;
 
-        // If this starts the game, do that now but first set the level.
+        // If this starts the game, do that now but.
         if (component->mode != BUTTON_MODE_DEFAULT) {
-            if (component->mode == BUTTON_MODE_SINGLEPLAYER) {
-                set_game_level(component->selected_level);
-            }
+            button_mode_t mode = component->mode;
             menus_free();
-            return component->mode;
+            return mode;
         }
 
         // If it is a menu button, it should go to the next menu.
@@ -197,9 +191,9 @@ void menus_new() {
     menu_set_component(menu_play, 3, button_new("Back", menu_main, BUTTON_MODE_DEFAULT));
 
     // menu_select_level
-    menu_set_component(menu_select_level, 0, button_new("Random", NULL, BUTTON_MODE_SINGLEPLAYER, 1));
-    menu_set_component(menu_select_level, 1, button_new("Level 1", NULL, BUTTON_MODE_SINGLEPLAYER, 2));
-    menu_set_component(menu_select_level, 2, button_new("Level 2", NULL, BUTTON_MODE_SINGLEPLAYER, 3));
+    menu_set_component(menu_select_level, 0, button_new("Random", NULL, BUTTON_MODE_SINGLEPLAYER_RANDOM));
+    menu_set_component(menu_select_level, 1, button_new("Level 1", NULL, BUTTON_MODE_SINGLEPLAYER_PLUS));
+    menu_set_component(menu_select_level, 2, button_new("Level 2", NULL, BUTTON_MODE_SINGLEPLAYER_FULL));
     menu_set_component(menu_select_level, 3, button_new("Back", menu_play, BUTTON_MODE_DEFAULT));
 
     // menu_score

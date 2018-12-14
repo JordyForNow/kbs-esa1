@@ -13,8 +13,10 @@ struct menu_t;
 // given mode.
 typedef enum {
     BUTTON_MODE_DEFAULT,
-    BUTTON_MODE_SINGLEPLAYER,
     BUTTON_MODE_MULTIPLAYER,
+    BUTTON_MODE_SINGLEPLAYER_RANDOM,
+    BUTTON_MODE_SINGLEPLAYER_PLUS,
+    BUTTON_MODE_SINGLEPLAYER_FULL,    
 } button_mode_t;
 
 // A component can be either a label or button, and is part of a menu.
@@ -27,7 +29,6 @@ typedef struct {
     char *text;
     menu_t *target;
     button_mode_t mode;
-    int selected_level;
 } component_t;
 
 // The menu struct contains a title and a list of components. It represents
@@ -46,8 +47,7 @@ extern menu_t *menu_win;
 extern menu_t *menu_lose;
 
 // Component functions.
-component_t *button_new(char *text, menu_t *target, uint8_t start);
-component_t *button_new(const char *text, menu_t *target, button_mode_t mode, int selected_level);
+component_t *button_new(char *text, menu_t *target, button_mode_t mode);
 component_t *label_new(char *text);
 void component_free(component_t *component);
 void component_draw(component_t *component, int index);

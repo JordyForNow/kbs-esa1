@@ -30,7 +30,11 @@ void world_free(world_t *world) {
     free(world);
 }
 
-void world_generate(world_t *world, unsigned long seed) {
+void world_generate(world_t *world, unsigned long seed){
+    world_generate(world, seed, BUTTON_MODE_SINGLEPLAYER_RANDOM);
+}
+
+void world_generate(world_t *world, unsigned long seed, button_mode_t mode) {
     randomSeed(seed);
 
     for (int y = 0; y < WORLD_HEIGHT; y++) {
@@ -42,18 +46,17 @@ void world_generate(world_t *world, unsigned long seed) {
                 // If it isn't a sidewall, put walls in the field or put some boxes in the field.
                 if (y % 2 == 0 && x % 2 == 0) {
                     world_set_tile(world, x, y, WALL);
-                } else if (game_level == 1) {
+                } else if (mode == BUTTON_MODE_SINGLEPLAYER_PLUS) {
+                    // Put boxes in the 3 horizontal and vertical center rows and colums.
+                    if ((x > WORLD_WIDTH / 2 - 2 && x  < WORLD_WIDTH / 2 + 2 )
+                    || ( y > WORLD_HEIGHT / 2 - 2 && y < WORLD_HEIGHT / 2 + 2)) 
+                        world_set_tile(world, x, y, BOX);
+                } else if (mode == BUTTON_MODE_SINGLEPLAYER_FULL) {
+                    world_set_tile(world, x, y, BOX);
+                    } else {
                     if (random(0, 2)) { 
                         world_set_tile(world, x, y, BOX);
                     }
-                } else if (game_level == 2) {
-                    // Put boxes in the 3 horizontal and vertical center rows and colums.
-                    if ((x > WORLD_WIDTH / 2 - 2 && x  < WORLD_WIDTH / 2 + 2 )
-                    || ( y > WORLD_HEIGHT / 2 - 2 && y < WORLD_HEIGHT / 2 + 2)) {
-                        world_set_tile(world, x, y, BOX);
-                    }
-                } else if (game_level == 3) {
-                    world_set_tile(world, x, y, BOX);
                 }
             }
         }
@@ -149,8 +152,4 @@ bomb_t *world_get_bomb(world_t *world, uint8_t x, uint8_t y) {
         }
     }
     return NULL;
-}
-
-void set_game_level(int level) {
-    game_level = level;
 }
