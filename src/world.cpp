@@ -48,8 +48,8 @@ void world_generate(world_t *world, unsigned long seed) {
                         world_set_tile(world, x, y, BOX);
                     }
                 } else if(game_level == 2) {
-                    if((x > WORLD_WIDTH / 2 - 2 && x  < WORLD_WIDTH / 2 + 2 ) ||
-                    ( y > WORLD_HEIGHT / 2 - 2 && y < WORLD_HEIGHT / 2 + 2)) {
+                    if((x > WORLD_WIDTH / 2 - 2 && x  < WORLD_WIDTH / 2 + 2 )
+                    || ( y > WORLD_HEIGHT / 2 - 2 && y < WORLD_HEIGHT / 2 + 2)) {
                         world_set_tile(world, x, y, BOX);
                     }
                 } else if(game_level == 3) {
