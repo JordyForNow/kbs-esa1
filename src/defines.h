@@ -58,10 +58,10 @@
 // How many seconds a player should be invinsible to bombs after being hit.
 #define HIT_DURATION (5 * GAME_UPDATE_FREQUENCY)
 
-// The ports which the screen is connected to.
-// If the TFT brightness doesn't need to be changd the TFT_CS
-// can be connected to pin 10, otherwise this needs to be pin 7.
+// The PIN which the screen is connected to.
 #define TFT_DC 9
+// If the TFT brightness doesn't need to be changd the TFT_CS
+// can be connected to PIN 10, otherwise this needs to be PIN 7.
 #if ENABLE_DIMMING_BACKLIGHT
 #define TFT_CS 7
 #else
