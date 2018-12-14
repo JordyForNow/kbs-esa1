@@ -6,7 +6,7 @@
 
 // Set to 1 if the TFT-backlight is connected to Arduino PIN 10.
 // If the screen is connected directly, set this define to 0;
-#define ENABLE_DIMMING_BACKLIGHT 0
+#define ENABLE_ENABLE_DIMMING_BACKLIGHT 0
 
 // The length to clear the corner from boxes.
 #define GAME_STARTING_AREA 4
@@ -61,7 +61,7 @@
 // The ports which the screen is connected to.
 // If the TFT brightness doesn't need to be changd the TFT_CS
 // can be connected to pin 10, otherwise this needs to be pin 7
-#if DIMMING_BACKLIGHT
+#if ENABLE_DIMMING_BACKLIGHT
 #define TFT_CS 7
 #else
 #define TFT_CS 10
