@@ -59,7 +59,7 @@ int main() {
 
         // Initialise the menus.
         menus_new();
-        
+
         // Show the correct menu depending on the game result.
         menu = game_get_state() == GAME_STATE_WON ? menu_win : menu_lose;
     }

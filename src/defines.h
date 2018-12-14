@@ -49,7 +49,7 @@
 #define MAX_BOMB_SIZE 10
 // Chance for a box to drop an upgrade.
 #define BOMB_EXPLODE_SIZE_DROP_CHANCE 10
-#define BOMB_COUNT_UPGRADE_CHANCE 90
+#define BOMB_COUNT_UPGRADE_CHANCE 10
 // Defines after how many seconds the bomb should explode.
 #define BOMB_EXPLODE_AGE (3 * GAME_UPDATE_FREQUENCY)
 // Defines after how many seconds the bomb should destroy.

@@ -24,6 +24,7 @@ struct world_t;
 
 typedef struct world_t {
     tile_t tiles[WORLD_WIDTH][WORLD_HEIGHT];
+    uint8_t tile_explosion_duration[(WORLD_WIDTH-1)/2][WORLD_HEIGHT-2];
     player_t **players;
     uint8_t player_count;
     uint8_t boxes;
@@ -43,6 +44,7 @@ tile_t world_get_tile(world_t *world, uint8_t x, uint8_t y);
 void world_redraw_tile(world_t *world, uint8_t x, uint8_t y);
 player_t *world_get_player(world_t *world, uint8_t x, uint8_t y);
 bomb_t *world_get_bomb(world_t *world, uint8_t x, uint8_t y);
-bool world_check_bomb(uint8_t x, uint8_t y, world_t *world);
+uint8_t world_get_explosion_counter(world_t *world, uint8_t x, uint8_t y);
+void world_set_explosion_counter(world_t *world, uint8_t x, uint8_t y, uint8_t value);
 
 #endif /* WORLD_H */

@@ -208,8 +208,3 @@ char *menu_get_score(int index, char *label) {
     sprintf(label, "%u. %u", index+1, score);
     return label;
 }
-
-void component_change_text(component_t *component, int index, char *text) {
-    free(component->text);
-    component->text = strdup(text);
-}

@@ -34,7 +34,6 @@ void score_insert(uint16_t score) {
     bool written = false;
     uint16_t temp_score;
     uint16_t temp;
-    char label[10];
 
     for (int i = 0; i < 3; i++) {
         // If the highscore was added to top 3.
@@ -43,8 +42,6 @@ void score_insert(uint16_t score) {
             temp = eeprom_get(i);
             eeprom_put(i, temp_score);
             temp_score = temp;
-
-            component_change_text(menu_score->components[i], i, menu_get_score(i, label));
             continue;
         }
 
@@ -53,7 +50,6 @@ void score_insert(uint16_t score) {
             written = true;
             temp_score = eeprom_get(i);
             eeprom_put(i, score);
-            component_change_text(menu_score->components[i], i, menu_get_score(i, label));
         }
     }
 }

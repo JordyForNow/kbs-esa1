@@ -15,6 +15,12 @@ world_t *world_new(uint8_t player_count) {
         return NULL;
     }
 
+    for (int x = 0; x < WORLD_WIDTH - 2; x++) {
+        for (int y = 0; y < WORLD_HEIGHT - 2; y++) {
+            world_set_explosion_counter(world, x, y, 0);
+        }
+    }
+
     return world;
 }
 
@@ -86,6 +92,27 @@ void world_update(world_t *world, uint8_t inputs) {
         }
     }
 
+    // Update all tiles to remove exploded terrain if needed.
+    tile_t tile;
+    uint8_t value;
+    for (int x = 0; x < WORLD_WIDTH - 2; x++) {
+        for (int y = 0; y < WORLD_HEIGHT - 2; y++) {
+            // Check if duration == 1 because we don't want to reset every tile every update.
+            value = world_get_explosion_counter(world, x, y);
+            if (value == 1) {
+                tile = EMPTY;
+                if (world_get_tile(world, x+1, y+1) == UPGRADE_EXPLOSION_BOMB_SIZE) {
+                    tile = UPGRADE_BOMB_SIZE;
+                } else if (world_get_tile(world, x+1, y+1) == UPGRADE_EXPLOSION_BOMB_COUNT) {
+                    tile = UPGRADE_BOMB_COUNT;
+                }
+                world_set_tile(world, x+1, y+1, tile);
+            }
+            if (value)
+                world_set_explosion_counter(world, x, y, value-1);
+        }
+    }
+
     // Update all players once all bombs have been updated.
     for (int i = 0; i < world->player_count; i++) {
         player_update(world, world->players[i], inputs);
@@ -147,35 +174,29 @@ bomb_t *world_get_bomb(world_t *world, uint8_t x, uint8_t y) {
     return NULL;
 }
 
-// Check if another bomb has exploded on a specific tile.
-bool world_check_bomb(uint8_t x, uint8_t y, world_t *world) {
-    // Keep track of times found because it will also find the bomb wich is checking.
-    int total_times_found = 0;
-    for (int i = 0; i < world->player_count; i++) {
-        LOGLN("hi1");
-        for (int j = 0; j < world->players[i]->bomb_count; j++) {
-            LOGLN("hi2");
-            if (world->players[i]->bombs[j] == NULL)
-                continue;
-            for (int k = 0; k < world->players[i]->bomb_size * BOMB_DIRECTION_COUNT + 1; k++) {
-                LOGLN("hi3");
-                Serial.println(i);
-                Serial.println(x);
-                Serial.println(y);
-                Serial.println(world->players[i]->bombs[j]->bomb_exploded_tiles[k]->x);
-                Serial.println(world->players[i]->bombs[j]->bomb_exploded_tiles[k]->y);
-                if (world->players[i]->bombs[j]->bomb_exploded_tiles[k]->x == x &&
-                world->players[i]->bombs[j]->bomb_exploded_tiles[k]->y == y){
-                    LOGLN("hi5");
-                    total_times_found++;
-                    LOGLN("hi4");
-                    if (total_times_found > 1){
-                        LOGLN("hi");
-                        return true;
-                    }
-                }
-            }
-        }
+uint8_t world_get_explosion_counter(world_t *world, uint8_t x, uint8_t y) {
+    uint8_t counter = 0;
+    int index_x = x / 2;
+    x %= 2;
+
+    if (x) {
+        counter |= (world->tile_explosion_duration[index_x][y] >> 4);
+    } else {
+        counter = (world->tile_explosion_duration[index_x][y] & 0xF);
     }
-    return false;
+
+    return counter;
+}
+
+void world_set_explosion_counter(world_t *world, uint8_t x, uint8_t y, uint8_t value) {
+    int index_x = x / 2;
+    x %=2;
+
+    if (x) {
+        world->tile_explosion_duration[index_x][y] &= ~0xF0;
+        world->tile_explosion_duration[index_x][y] |= (value << 4) & 0xF0;
+    } else {
+        world->tile_explosion_duration[index_x][y] &= ~0xF;
+        world->tile_explosion_duration[index_x][y] |= value & 0xF;
+    }
 }

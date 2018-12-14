@@ -64,6 +64,5 @@ void touch_init();
 void menus_new();
 
 char *menu_get_score(int index, char *label);
-void component_change_text(component_t *component, int index, char *text);
 
 #endif /* TOUCH_H */

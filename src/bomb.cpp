@@ -16,19 +16,12 @@ bomb_t *bomb_new(uint8_t x, uint8_t y, uint8_t size) {
     bomb->y = y;
     bomb->age = 0;
     bomb->bomb_size = size;
-    bomb->bomb_exploded_tiles = (location_t**)calloc(sizeof(location_t *), MAX_BOMB_SIZE * BOMB_DIRECTION_COUNT + 1);
     return bomb;
 }
 
 // Delete a bomb struct.
 void bomb_free(bomb_t *bomb) {
     if (bomb) {
-        for (int i = 0; i < MAX_BOMB_SIZE * BOMB_DIRECTION_COUNT + 1; i++) {
-            if (bomb->bomb_exploded_tiles[i] != NULL) {
-                free(bomb->bomb_exploded_tiles[i]);
-            }
-        }
-        free(bomb->bomb_exploded_tiles);
         free(bomb);
     }
 }
@@ -36,12 +29,11 @@ void bomb_free(bomb_t *bomb) {
 // Update a bomb.
 bomb_t *bomb_update(world_t *world, bomb_t *bomb) {
     if (bomb->age == BOMB_DESTROY_AGE) {
-        // Delete the bomb when we should.
-        bomb_explosion_toggle(world, bomb, EMPTY);
+        // Free the bomb the deletion process will be handled within the world_update.
         bomb_free(bomb);
         return NULL;
     } else if (bomb->age == BOMB_EXPLODE_AGE) {
-        bomb_explosion_toggle(world, bomb, EXPLODING_BOMB);
+        bomb_explode(world, bomb);
     }
     bomb->age++;
     return bomb;
@@ -50,58 +42,39 @@ bomb_t *bomb_update(world_t *world, bomb_t *bomb) {
 // Change the tile at the given coordinates to the given tile type, taking into account
 // that there could be a player on the given tile. This player may receive damage if the
 // tile we're changing to is an EXPLODING_BOMB.
-void bomb_explosion_toggle_tile(world_t *world, uint8_t x, uint8_t y, tile_t tile, bomb_t *bomb) {
-    if (tile == EXPLODING_BOMB) {
-        player_t *player = world_get_player(world, x, y);
-        if (player && player_on_hit(player)) {
-            LOGLN("Damage from exploding bomb");
-        }
-        for (int i = 0; i < MAX_BOMB_SIZE * BOMB_DIRECTION_COUNT + 1; i++) {
-            if (bomb->bomb_exploded_tiles[i] == NULL) {
-                location_t *location = (location_t *)calloc(sizeof(location_t), 1);
-                location->x = x;
-                location->y = y;
-                bomb->bomb_exploded_tiles[i] = location;
-                LOGLN("Added to list");
-                break;
-            }
-        }
+void bomb_explode_tile(world_t *world, uint8_t x, uint8_t y, tile_t tile) {
+    player_t *player = world_get_player(world, x, y);
+    if (player && player_on_hit(player)) {
+        LOGLN("Damage from exploding bomb");
     }
 
-    if (world_get_tile(world, x, y) == BOX && tile == EXPLODING_BOMB) {
+    // Reset the explosion counter of the corresponding tile.
+    // X and y - 1 because outer walls are not within array.
+    // Add 1 to explosion duration because we are going to remove the explosion at counter 1;
+    world_set_explosion_counter(world, x-1, y-1, BOMB_DESTROY_AGE - BOMB_EXPLODE_AGE + 1);
+
+    tile_t current_tile = world_get_tile(world, x, y);
+    if (current_tile == BOX) {
         long random_number = random(100);
         if (random_number < BOMB_EXPLODE_SIZE_DROP_CHANCE) {
             tile = UPGRADE_EXPLOSION_BOMB_SIZE;
         } else if (random_number < BOMB_EXPLODE_SIZE_DROP_CHANCE + BOMB_COUNT_UPGRADE_CHANCE) {
             tile = UPGRADE_EXPLOSION_BOMB_COUNT;
         }
-    } else if (world_get_tile(world, x, y) == UPGRADE_EXPLOSION_BOMB_SIZE && tile == EMPTY) {
-        tile = UPGRADE_BOMB_SIZE;
-
-    } else if (world_get_tile(world, x, y) == UPGRADE_EXPLOSION_BOMB_COUNT && tile == EMPTY) {
-        tile = UPGRADE_BOMB_COUNT;
+    } else if (current_tile == UPGRADE_BOMB_COUNT || current_tile == UPGRADE_EXPLOSION_BOMB_COUNT) {
+        tile = UPGRADE_EXPLOSION_BOMB_COUNT;
+    } else if (current_tile == UPGRADE_BOMB_SIZE || current_tile == UPGRADE_EXPLOSION_BOMB_SIZE) {
+        tile = UPGRADE_EXPLOSION_BOMB_SIZE;
     }
 
-    if (tile == EMPTY && world_check_bomb(x, y, world)) {
-        LOGLN("found one");
-        for (int i = 0; i < MAX_BOMB_SIZE * BOMB_DIRECTION_COUNT + 1; i++) {
-            if (bomb->bomb_exploded_tiles[i]->x == x && bomb->bomb_exploded_tiles[i]->y == y) {
-                free(bomb->bomb_exploded_tiles[i]);
-                bomb->bomb_exploded_tiles[i] = NULL;
-                LOGLN("Already here");
-                break;
-            }
-        }
-        return;
-    }
-    
     world_set_tile(world, x, y, tile);
 }
 
 // The action variable given with this function will determine whether to show or hide the explosion.
-void bomb_explosion_toggle(world_t *world, bomb_t *bomb, tile_t tile) {
+void bomb_explode(world_t *world, bomb_t *bomb) {
+    tile_t tile = EXPLODING_BOMB;
     // Change bombs location to exploded.
-    bomb_explosion_toggle_tile(world, bomb->x, bomb->y, tile, bomb);
+    bomb_explode_tile(world, bomb->x, bomb->y, tile);
 
     // Loop through directions.
     for (int i = 0; i < BOMB_DIRECTION_COUNT; i++) {
@@ -124,13 +97,12 @@ void bomb_explosion_toggle(world_t *world, bomb_t *bomb, tile_t tile) {
                 // - Subtract 1 from the total number of boxes.
                 // - After a box the explosion should stop.
                 if (tile == EXPLODING_BOMB) {
-                    bomb_explosion_toggle_tile(world, x_temp, y_temp, tile, bomb);
+                    bomb_explode_tile(world, x_temp, y_temp, tile);
                     world_subtract_boxes(world, 1);
                 }
                 break;
             }
-
-            bomb_explosion_toggle_tile(world, x_temp, y_temp, tile, bomb);
+            bomb_explode_tile(world, x_temp, y_temp, tile);
         }
     }
 }
