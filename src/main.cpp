@@ -111,11 +111,11 @@ void timer1_init() {
     sei();
 }
 
-void tft_brightness_init(){
+void tft_brightness_init() {
     DDRB |= (1 << PB2);
 }
 
-void adc_init(){
+void adc_init() {
     // Define A0 as input.
     DDRC = ~(1 << PC0);
 
@@ -142,6 +142,6 @@ void adc_init(){
 // The value from the ADC is from 0-1023 and needs to be mapped to 0-TIMER1_TOP.
 // The mapped value is put in OCR1B to set the right duty cycle so that 
 // the TFT has the right brightness.
-ISR(ADC_vect){
+ISR(ADC_vect) {
     OCR1B = map(ADC, 0, 1023, 0, TIMER1_TOP);
 }

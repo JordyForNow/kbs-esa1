@@ -139,10 +139,10 @@ void game_trigger_update() {
     should_poll = true;
 }
 
-unsigned long *game_get_time(){
+unsigned long *game_get_time() {
     return &game_time;
 }
 
-player_t *game_get_main_player(){   
+player_t *game_get_main_player() {   
     return player;
 }

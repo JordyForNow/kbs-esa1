@@ -32,7 +32,7 @@ void draw_rect(int x, int y, uint16_t color) {
     tft.fillRect(x, y, WORLD_TILE_SIZE, WORLD_TILE_SIZE, color);
 }
 
-void draw_rect(int x, int y, int width, int height, uint16_t color){
+void draw_rect(int x, int y, int width, int height, uint16_t color) {
     tft.fillRect(x, y, width, height, color);
 }
 
@@ -43,7 +43,7 @@ void draw_circle(int x, int y, uint16_t color) {
     tft.fillCircle(x, y, (WORLD_TILE_SIZE / 2), color);
 }
 
-void draw_background(int color){
+void draw_background(int color) {
     tft.fillScreen(color);
 }
 
