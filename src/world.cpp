@@ -52,7 +52,7 @@ void world_generate(world_t *world, unsigned long seed, button_mode_t mode) {
                     }
                 } else if (mode == BUTTON_MODE_SINGLEPLAYER_FULL) {
                     world_set_tile(world, x, y, BOX);
-                    } else {
+                } else {
                     if (random(0, 2)) { 
                         world_set_tile(world, x, y, BOX);
                     }
