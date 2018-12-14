@@ -12,8 +12,6 @@ menu_t *menu_score = NULL;
 menu_t *menu_win = NULL;
 menu_t *menu_lose = NULL;
 
-
-
 component_t *button_new(const char *text, menu_t *target, button_mode_t mode) {
     component_t *button = (component_t *)malloc(sizeof(component_t));
     if (!button)
