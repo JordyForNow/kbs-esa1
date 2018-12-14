@@ -21,9 +21,8 @@ bomb_t *bomb_new(uint8_t x, uint8_t y, uint8_t size) {
 
 // Delete a bomb struct.
 void bomb_free(bomb_t *bomb) {
-    if (bomb) {
+    if (bomb)
         free(bomb);
-    }
 }
 
 // Update a bomb.
