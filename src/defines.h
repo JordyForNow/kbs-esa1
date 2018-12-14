@@ -65,7 +65,7 @@
 #define TFT_CS 7
 #else
 #define TFT_CS 10
-#endif
+#endif /* ENABLE_DIMMING_BACKLIGHT */
 
 #define TFT_DC 9
 

@@ -30,7 +30,7 @@ int main() {
     #if ENABLE_DIMMING_BACKLIGHT
     tft_brightness_init();
     adc_init();
-    #endif
+    #endif /* ENABLE_DIMMING_BACKLIGHT */
 
     touch_init();
 
@@ -92,7 +92,7 @@ void timer1_init() {
     // Only do this if dimming the TFT is enabled.
     #if ENABLE_DIMMING_BACKLIGHT
     TCCR1A |= (1 << COM1B0) | (1 << COM1B1);
-    #endif
+    #endif /* ENABLE_DIMMING_BACKLIGHT */
 
     // Timer1 will start counting when the init function is called.
     // This means the TCNT1 can already have a value that is greater than the
