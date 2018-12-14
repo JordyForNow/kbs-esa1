@@ -44,9 +44,8 @@ bomb_t *bomb_update(world_t *world, bomb_t *bomb) {
 // tile we're changing to is an EXPLODING_BOMB.
 void bomb_explode_tile(world_t *world, uint8_t x, uint8_t y, tile_t tile) {
     player_t *player = world_get_player(world, x, y);
-    if (player && player_on_hit(player)) {
+    if (player && player_on_hit(player))
         LOGLN("Damage from exploding bomb");
-    }
 
     // Reset the explosion counter of the corresponding tile.
     // X and y - 1 because outer walls are not within array.
@@ -56,11 +55,17 @@ void bomb_explode_tile(world_t *world, uint8_t x, uint8_t y, tile_t tile) {
     tile_t current_tile = world_get_tile(world, x, y);
     if (current_tile == BOX) {
         long random_number = random(100);
+
+        // Check if a size power-up should drop.
         if (random_number < BOMB_EXPLODE_SIZE_DROP_CHANCE) {
             tile = UPGRADE_EXPLOSION_BOMB_SIZE;
+
+            // Check if a bomb count power-up should drop.
         } else if (random_number < BOMB_EXPLODE_SIZE_DROP_CHANCE + BOMB_COUNT_UPGRADE_CHANCE) {
             tile = UPGRADE_EXPLOSION_BOMB_COUNT;
         }
+        
+        // Check if a powerup is currently present and replace it with the exploded version.
     } else if (current_tile == UPGRADE_BOMB_COUNT || current_tile == UPGRADE_EXPLOSION_BOMB_COUNT) {
         tile = UPGRADE_EXPLOSION_BOMB_COUNT;
     } else if (current_tile == UPGRADE_BOMB_SIZE || current_tile == UPGRADE_EXPLOSION_BOMB_SIZE) {

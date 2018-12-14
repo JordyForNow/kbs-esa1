@@ -5,11 +5,6 @@
 
 #include <stdint.h>
 
-typedef struct location_t {
-    uint8_t x;
-    uint8_t y;
-} location_t;
-
 typedef struct {
     uint8_t x;
     uint8_t y;
