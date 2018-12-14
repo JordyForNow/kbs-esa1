@@ -2,7 +2,7 @@
 #include "defines.h"
 #include "render.h"
 
-int game_level;
+int game_level = 0;
 
 world_t *world_new(uint8_t player_count) {
     world_t *world = (world_t *)calloc(sizeof(world_t), 1);
