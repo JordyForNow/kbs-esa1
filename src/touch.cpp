@@ -113,7 +113,7 @@ button_mode_t menu_loop(menu_t *menu) {
         if (!component)
             continue;
 
-        // If this starts the game, do that now but.
+        // If this starts the game, do that now.
         if (component->mode != BUTTON_MODE_DEFAULT) {
             button_mode_t mode = component->mode;
             menus_free();

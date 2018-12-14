@@ -2,8 +2,6 @@
 #include "defines.h"
 #include "render.h"
 
-int game_level = 0;
-
 world_t *world_new(uint8_t player_count) {
     world_t *world = (world_t *)calloc(sizeof(world_t), 1);
     if (!world)
@@ -49,8 +47,9 @@ void world_generate(world_t *world, unsigned long seed, button_mode_t mode) {
                 } else if (mode == BUTTON_MODE_SINGLEPLAYER_PLUS) {
                     // Put boxes in the 3 horizontal and vertical center rows and colums.
                     if ((x > WORLD_WIDTH / 2 - 2 && x  < WORLD_WIDTH / 2 + 2 )
-                    || ( y > WORLD_HEIGHT / 2 - 2 && y < WORLD_HEIGHT / 2 + 2)) 
+                    || ( y > WORLD_HEIGHT / 2 - 2 && y < WORLD_HEIGHT / 2 + 2)) { 
                         world_set_tile(world, x, y, BOX);
+                    }
                 } else if (mode == BUTTON_MODE_SINGLEPLAYER_FULL) {
                     world_set_tile(world, x, y, BOX);
                     } else {
