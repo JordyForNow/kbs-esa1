@@ -84,9 +84,9 @@ void world_update(world_t *world, uint8_t inputs) {
     player_t *player;
     for (int i = 0; i < world->player_count; i++) {
         player = world->players[i];
-        for(int j=0; j<player->bomb_count; j++) {
-            if(player->bombs[j] != 0 && player->bombs[j] != NULL) {
-                if(!bomb_update(world,player->bombs[j]))
+        for (int j = 0; j < player->bomb_count; j++) {
+            if (player->bombs[j] != 0 && player->bombs[j] != NULL) {
+                if (!bomb_update(world,player->bombs[j]))
                     player->bombs[j] = NULL;
             }
         }
@@ -106,10 +106,10 @@ void world_update(world_t *world, uint8_t inputs) {
                 } else if (world_get_tile(world, x+1, y+1) == UPGRADE_EXPLOSION_BOMB_COUNT) {
                     tile = UPGRADE_BOMB_COUNT;
                 }
-                world_set_tile(world, x+1, y+1, tile);
+                world_set_tile(world, x + 1, y + 1, tile);
             }
             if (value)
-                world_set_explosion_counter(world, x, y, value-1);
+                world_set_explosion_counter(world, x, y, value - 1);
         }
     }
 
@@ -163,7 +163,7 @@ bomb_t *world_get_bomb(world_t *world, uint8_t x, uint8_t y) {
     player_t *player;
     for (int i = 0; i < world->player_count; i++) {
         player = world->players[i];
-        for (int j=0; j<player->bomb_count; j++) {
+        for (int j = 0; j < player->bomb_count; j++) {
             if (player->bombs[j] != 0 && player->bombs[j] != NULL) {
                 bomb = player->bombs[j];
                 if (bomb->x == x && bomb->y == y)

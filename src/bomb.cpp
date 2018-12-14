@@ -15,7 +15,7 @@ bomb_t *bomb_new(uint8_t x, uint8_t y, uint8_t size) {
     bomb->x = x;
     bomb->y = y;
     bomb->age = 0;
-    bomb->bomb_size = size;
+    bomb->size = size;
     return bomb;
 }
 
@@ -28,7 +28,7 @@ void bomb_free(bomb_t *bomb) {
 // Update a bomb.
 bomb_t *bomb_update(world_t *world, bomb_t *bomb) {
     if (bomb->age == BOMB_DESTROY_AGE) {
-        // Free the bomb the deletion process will be handled within the world_update.
+        // Free the bomb, the deletion process will be handled within the world_update.
         bomb_free(bomb);
         return NULL;
     } else if (bomb->age == BOMB_EXPLODE_AGE) {
@@ -47,9 +47,10 @@ void bomb_explode_tile(world_t *world, uint8_t x, uint8_t y) {
         LOGLN("Damage from exploding bomb");
 
     // Reset the explosion counter of the corresponding tile.
-    // X and y - 1 because outer walls are not within array.
-    // Add 1 to explosion duration because we are going to remove the explosion at counter 1;
-    world_set_explosion_counter(world, x-1, y-1, BOMB_DESTROY_AGE - BOMB_EXPLODE_AGE + 1);
+    // X and y - 1, because the outer walls are not within the array.
+    // Add 1 to the explosion duration because we are going to remove the explosion at counter = 1.
+    // If the explosion would be removed at 0, all tiles would constantly be redrawn because the default is 0.
+    world_set_explosion_counter(world, x - 1, y - 1, BOMB_DESTROY_AGE - BOMB_EXPLODE_AGE + 1);
 
     tile_t current_tile = world_get_tile(world, x, y);
     if (current_tile == BOX) {
@@ -85,7 +86,7 @@ void bomb_explode(world_t *world, bomb_t *bomb) {
         uint8_t y_temp = bomb->y;
 
         // Loop to max explosion size.
-        for (int j = 0; j < bomb->bomb_size; j++) {
+        for (int j = 0; j < bomb->size; j++) {
             // Convert location to a tile within the explosion radius.
             x_temp += bomb_explode_addition[i][0];
             y_temp += bomb_explode_addition[i][1];

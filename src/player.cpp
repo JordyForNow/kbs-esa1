@@ -36,13 +36,13 @@ void player_free(player_t *player) {
     free(player);
 }
 
-void player_increment_bomb_size(player_t *player){
+void player_increment_bomb_size(player_t *player) {
     // Check if the incrementation is allowed.
     if (player->bomb_size < MAX_BOMB_SIZE);
         player->bomb_size++;
 }
 
-void player_increment_bomb_count(player_t *player){
+void player_increment_bomb_count(player_t *player) {
     // Check if the incrementation is allowed.
     if (player->bomb_size < MAX_BOMB_COUNT);
         player->bomb_count++;
@@ -78,45 +78,26 @@ uint8_t player_move(player_t *player, uint8_t inputs, world_t *world, uint8_t re
         player->x = new_x;
         player->y = new_y;
 
-        // Damage the player if they are walking into an exploding bomb,
-        // but only if they are not already invincible.
-        if (new_tile == EXPLODING_BOMB && player_on_hit(player)) {
-            LOGLN("Damage from walking into a bomb");
-            
-        // Check if player walked into an exploding size power-up.
-        } else if (new_tile == UPGRADE_EXPLOSION_BOMB_SIZE) {
-            if(player_on_hit(player))
-                LOGLN("Damage from walking into an explosion with a power-up");
-
-            world_set_tile(world, new_x, new_y, EXPLODING_BOMB);
-            
-            // Increment bomb size.
-            player_increment_bomb_size(player);
-            
-        // Check if player walked into a size power-up.
-        } else if (new_tile == UPGRADE_BOMB_SIZE) {
-            world_set_tile(world, new_x, new_y, EMPTY);
-
-            // Increment bomb size.
-            player_increment_bomb_size(player);
-        
-        // Check if player is walking into an exploding bomb count power-up.
-        } else if (new_tile == UPGRADE_EXPLOSION_BOMB_COUNT) {
-            if(player_on_hit(player))
-                LOGLN("Damage from walking into an explosion with a power-up");
-            
-            world_set_tile(world, new_x, new_y, EXPLODING_BOMB);
-
-            // Increment bomb count.
-            player_increment_bomb_count(player);
-
-        // Check if player is walking into a bomb count power-up.
-        } else if (new_tile == UPGRADE_BOMB_COUNT) {
-            world_set_tile(world, new_x, new_y, EMPTY);
-
-            // Increment bomb count.
-            player_increment_bomb_count(player);
+        // If next position is a power-up.
+        if (new_tile & (1<<3)) {
+            // If the next position is a size power-up.
+            if (new_tile & (1<<2)) {
+                player_increment_bomb_size(player);
+            } else {
+                player_increment_bomb_count(player);
+            }
         }
+
+        bool exploding = false;
+        
+        // If next position is exploded.
+        if (new_tile & (1)) {
+            exploding = true;
+            // Remove a life if player is not invincible.
+            player_on_hit(player);
+        }
+
+        world_set_tile(world, new_x, new_y, exploding ? EXPLODING_BOMB : EMPTY);
 
         // Rerender the tile we came from, and render the player on top of the new tile.
         world_redraw_tile(world, old_x, old_y);
@@ -180,7 +161,7 @@ void player_show_lives(player_t *player) {
 uint8_t bomb_allowed(player_t *player, world_t *world) {
     if (world_get_tile(world, player->x, player->y) == BOMB)
         return MAX_BOMB_COUNT;
-    for (int i=0; i<player->bomb_count; i++) {
+    for (int i = 0; i < player->bomb_count; i++) {
         if (player->bombs[i] == 0 || player->bombs[i] == NULL) {
             return i;
         }

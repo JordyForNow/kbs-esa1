@@ -7,15 +7,15 @@
 
 // The possible items a tile can contain.
 typedef enum {
-    EMPTY,
-    BOMB,
-    WALL,
-    BOX,
-    EXPLODING_BOMB,
-    UPGRADE_EXPLOSION_BOMB_SIZE,
-    UPGRADE_BOMB_SIZE,
-    UPGRADE_EXPLOSION_BOMB_COUNT,
-    UPGRADE_BOMB_COUNT,
+    EMPTY = 0b0000,
+    BOMB = 0b0010,
+    WALL = 0b0100,
+    BOX = 0b0110,
+    EXPLODING_BOMB = 0b0001,
+    UPGRADE_EXPLOSION_BOMB_SIZE = 0b1101,
+    UPGRADE_BOMB_SIZE = 0b1100,
+    UPGRADE_EXPLOSION_BOMB_COUNT = 0b1011,
+    UPGRADE_BOMB_COUNT = 0b1010,
 } tile_t;
 
 struct world_t;

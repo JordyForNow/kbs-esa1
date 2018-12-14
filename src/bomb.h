@@ -9,7 +9,7 @@ typedef struct {
     uint8_t x;
     uint8_t y;
     uint8_t age;
-    uint8_t bomb_size;
+    uint8_t size;
 } bomb_t;
 
 #include "world.h"
