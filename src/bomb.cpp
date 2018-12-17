@@ -56,8 +56,7 @@ void bomb_explode_tile(world_t *world, uint8_t x, uint8_t y, bool is_origin) {
 
     tile_t current_tile = world_get_tile(world, x, y);
     if (current_tile == BOX) {
-        long random_number = random(100);
-        //long random_number = 13;
+        uint8_t random_number = random(100);
         if (random_number < BOMB_EXPLODE_SIZE_DROP_CHANCE) {
             // Check if a size power-up should drop.
             tile = UPGRADE_EXPLOSION_BOMB_SIZE;
