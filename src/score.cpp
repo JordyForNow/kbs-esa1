@@ -50,7 +50,6 @@ void score_insert(uint16_t score) {
         if (eeprom_get(i) < score) {
             written = true;
             temp_score = eeprom_get(i);
-            Serial.println("Putting");
             eeprom_put(i, score);
         }
     }
