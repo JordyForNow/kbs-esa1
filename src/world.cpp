@@ -124,7 +124,7 @@ uint8_t world_set_tile(world_t *world, uint8_t x, uint8_t y, tile_t tile) {
     // Do not accidentally override walls.
     if (world->tiles[x][y] == WALL)
         return 0;
-    
+
     world->tiles[x][y] = tile;
     world_redraw_tile(world, x, y);
     return 1;
