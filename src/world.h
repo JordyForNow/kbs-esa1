@@ -46,7 +46,6 @@ int world_get_box_count(world_t *world);
 tile_t world_get_tile(world_t *world, uint8_t x, uint8_t y);
 void world_redraw_tile(world_t *world, uint8_t x, uint8_t y);
 player_t *world_get_player(world_t *world, uint8_t x, uint8_t y);
-bomb_t *world_get_bomb(world_t *world, uint8_t x, uint8_t y);
 uint8_t world_get_explosion_counter(world_t *world, uint8_t x, uint8_t y);
 void world_set_explosion_counter(world_t *world, uint8_t x, uint8_t y, uint8_t value);
 

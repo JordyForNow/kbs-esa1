@@ -159,22 +159,6 @@ player_t *world_get_player(world_t *world, uint8_t x, uint8_t y) {
     return NULL;
 }
 
-bomb_t *world_get_bomb(world_t *world, uint8_t x, uint8_t y) {
-    bomb_t *bomb;
-    player_t *player;
-    for (int i = 0; i < world->player_count; i++) {
-        player = world->players[i];
-        for (int j = 0; j < player->bomb_count; j++) {
-            if (player->bombs[j] != 0 && player->bombs[j] != NULL) {
-                bomb = player->bombs[j];
-                if (bomb->x == x && bomb->y == y)
-                    return bomb;
-            }
-        }
-    }
-    return NULL;
-}
-
 uint8_t world_get_explosion_counter(world_t *world, uint8_t x, uint8_t y) {
     // Retrieve data from specific nibble.
     uint8_t counter = 0;
