@@ -102,7 +102,7 @@ void world_update(world_t *world, uint8_t inputs) {
             // Check if duration == 1 because we don't want to reset every tile every update.
             value = world_get_explosion_counter(world, x, y);
             if (value == 1) {
-                tile = world_get_tile(world, x+1, y+1);
+                tile = world_get_tile(world, x + 1, y + 1);
 
                 // Remove exploding bit from nibble.
                 tile = (tile_t)(tile & ~1);

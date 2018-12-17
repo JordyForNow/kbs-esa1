@@ -44,10 +44,10 @@
 #define WORLD_HEIGHT 13
 
 // The properties a tile can have.
-#define IS_EXPLODING 0
-#define IS_BOMB 1
-#define IS_SIZE_UPGRADE 2
-#define IS_UPGRADE 3
+#define IS_EXPLODING 1
+#define IS_BOMB 2
+#define IS_SIZE_UPGRADE 4
+#define IS_UPGRADE 8
 
 // The maximum amount of bombs a player can have.
 #define MAX_BOMB_COUNT 7

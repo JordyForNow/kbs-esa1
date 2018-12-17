@@ -20,8 +20,7 @@ void score_calculate() {
     boxes_per_second = (float)total_boxes / (float)total_time;
 
     // Multiply by lives and get final score.
-    score = boxes_per_second * lives_left;
-    score *= 100;
+    score = boxes_per_second * lives_left * 100;
 
     score_insert(score);
 }
@@ -60,7 +59,7 @@ inline void eeprom_wait() {
     while (EECR & (1 << EEPE));
 }
 
-float get_score() {
+float score_get() {
     return score;
 }
 

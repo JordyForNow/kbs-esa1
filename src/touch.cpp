@@ -197,7 +197,7 @@ void menus_new() {
     menu_set_component(menu_lose, 3, button_new("Back", menu_main, BUTTON_MODE_DEFAULT));
 
     // menu_win
-    float score = get_score();
+    float score = score_get();
     sprintf(label, "Score: %u", (int)score);
     menu_set_component(menu_win, 0, label_new("You win!"));
     menu_set_component(menu_win, 2, label_new(label));

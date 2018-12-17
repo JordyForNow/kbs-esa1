@@ -63,7 +63,7 @@ void bomb_explode_tile(world_t *world, uint8_t x, uint8_t y, bool is_origin) {
             // Check if a bomb count power-up should drop.
             tile = UPGRADE_EXPLOSION_BOMB_COUNT;
         }
-    } else if (current_tile & (1 << IS_UPGRADE) || (current_tile & (1 << IS_BOMB) && !is_origin)) {
+    } else if (current_tile & IS_UPGRADE || (current_tile & IS_BOMB && !is_origin)) {
         // Check if a powerup or a bomb is currently present then replace it with the exploded version.
         // But a bomb shouldn't be replaced if its the origin of the explosion.
         tile = (tile_t)(current_tile | 1);
@@ -96,8 +96,7 @@ void bomb_explode(world_t *world, bomb_t *bomb) {
                 // A wall can't be broken.
                 break;
             } else if (tile_temp == BOX) {
-                // - Subtract 1 from the total number of boxes.
-                // - After a box the explosion should stop.
+                // Subtract 1 from the total number of boxes and stop the explosion.
                 bomb_explode_tile(world, x_temp, y_temp, false);
                 world_subtract_boxes(world, 1);
                 break;
