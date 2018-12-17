@@ -29,7 +29,9 @@ void bomb_free(bomb_t *bomb) {
 bomb_t *bomb_update(world_t *world, bomb_t *bomb) {
     if (bomb->age == BOMB_DESTROY_AGE) {
         // Free the bomb, the deletion process will be handled within the world_update.
+        Serial.println("freeing");
         bomb_free(bomb);
+        Serial.println("freed");
         return NULL;
     } else if (bomb->age == BOMB_EXPLODE_AGE) {
         bomb_explode(world, bomb);
@@ -40,7 +42,7 @@ bomb_t *bomb_update(world_t *world, bomb_t *bomb) {
 
 // Change the tile at the given coordinates to exploding, taking into account
 // that there could be a player on the given tile. This player will then receive damage.
-void bomb_explode_tile(world_t *world, uint8_t x, uint8_t y) {
+void bomb_explode_tile(world_t *world, uint8_t x, uint8_t y, bool is_origin) {
     tile_t tile = EXPLODING_BOMB;
     player_t *player = world_get_player(world, x, y);
     if (player && player_on_hit(player))
@@ -55,6 +57,7 @@ void bomb_explode_tile(world_t *world, uint8_t x, uint8_t y) {
     tile_t current_tile = world_get_tile(world, x, y);
     if (current_tile == BOX) {
         long random_number = random(100);
+        //long random_number = 13;
         if (random_number < BOMB_EXPLODE_SIZE_DROP_CHANCE) {
             // Check if a size power-up should drop.
             tile = UPGRADE_EXPLOSION_BOMB_SIZE;
@@ -63,8 +66,9 @@ void bomb_explode_tile(world_t *world, uint8_t x, uint8_t y) {
             // Check if a bomb count power-up should drop.
             tile = UPGRADE_EXPLOSION_BOMB_COUNT;
         }
-    } else if (current_tile & (1 << 3)) {
-        // Check if a powerup is currently present and replace it with the exploded version.
+    } else if (current_tile & (1 << 3) || (current_tile & (1 << 1) && !is_origin)) {
+        // Check if a powerup or a bomb is currently present then replace it with the exploded version.
+        // But a bomb shouldn't be replaced if its the origin of the explosion.
         tile = (tile_t)(current_tile | 1);
     }
 
@@ -73,7 +77,7 @@ void bomb_explode_tile(world_t *world, uint8_t x, uint8_t y) {
 
 void bomb_explode(world_t *world, bomb_t *bomb) {
     // Change bombs location to exploded.
-    bomb_explode_tile(world, bomb->x, bomb->y);
+    bomb_explode_tile(world, bomb->x, bomb->y, true);
 
     for (int i = 0; i < BOMB_DIRECTION_COUNT; i++) {
         // Set default location to the location of the bomb.
@@ -84,6 +88,11 @@ void bomb_explode(world_t *world, bomb_t *bomb) {
             // Convert location to a tile within the explosion radius.
             x_temp += bomb_explode_addition[i][0];
             y_temp += bomb_explode_addition[i][1];
+
+            // Check if location is outside screen.
+            if (x_temp > WORLD_WIDTH || x_temp < 0 || y_temp > WORLD_HEIGHT || y_temp < 0)
+                continue;
+
             tile_t tile_temp = world_get_tile(world, x_temp, y_temp);
 
             if (tile_temp == WALL) {
@@ -92,11 +101,11 @@ void bomb_explode(world_t *world, bomb_t *bomb) {
             } else if (tile_temp == BOX) {
                 // - Subtract 1 from the total number of boxes.
                 // - After a box the explosion should stop.
-                bomb_explode_tile(world, x_temp, y_temp);
+                bomb_explode_tile(world, x_temp, y_temp, false);
                 world_subtract_boxes(world, 1);
                 break;
             }
-            bomb_explode_tile(world, x_temp, y_temp);
+            bomb_explode_tile(world, x_temp, y_temp, false);
         }
     }
 }

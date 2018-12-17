@@ -44,9 +44,9 @@
 #define WORLD_HEIGHT 13
 
 // Maximum amount of bombs a player can have.
-#define MAX_BOMB_COUNT 7
+#define MAX_BOMB_COUNT 4
 // Maximum size a bombs explosion can be.
-#define MAX_BOMB_SIZE 10
+#define MAX_BOMB_SIZE 6
 // Chance for a box to drop an upgrade.
 #define BOMB_EXPLODE_SIZE_DROP_CHANCE 15
 #define BOMB_COUNT_UPGRADE_CHANCE 15

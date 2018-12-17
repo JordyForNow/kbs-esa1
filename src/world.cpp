@@ -86,8 +86,9 @@ void world_update(world_t *world, uint8_t inputs) {
         player = world->players[i];
         for (int j = 0; j < player->bomb_count; j++) {
             if (player->bombs[j] != 0 && player->bombs[j] != NULL) {
-                if (!bomb_update(world,player->bombs[j]))
+                if (!bomb_update(world,player->bombs[j])) {
                     player->bombs[j] = NULL;
+                }
             }
         }
     }

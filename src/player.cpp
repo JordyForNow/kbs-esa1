@@ -15,7 +15,7 @@ player_t *player_new(uint8_t x, uint8_t y, uint8_t is_main) {
     player->x = x;
     player->y = y;
     player->lives = 3;
-    player->bombs = (bomb_t **)calloc(sizeof(bomb_t *), MAX_BOMB_COUNT);
+    player->bombs = (bomb_t **)calloc(sizeof(bomb_t *), MAX_BOMB_COUNT+1);
     player->hit_duration = 0;
     player->is_main = is_main;
     player->bomb_count = 1;
@@ -38,13 +38,13 @@ void player_free(player_t *player) {
 
 void player_increment_bomb_size(player_t *player) {
     // Check if the incrementation is allowed.
-    if (player->bomb_size < MAX_BOMB_SIZE);
+    if (player->bomb_size < MAX_BOMB_SIZE)
         player->bomb_size++;
 }
 
 void player_increment_bomb_count(player_t *player) {
     // Check if the incrementation is allowed.
-    if (player->bomb_size < MAX_BOMB_COUNT);
+    if (player->bomb_count < MAX_BOMB_COUNT)
         player->bomb_count++;
 }
 

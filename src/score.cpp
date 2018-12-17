@@ -7,6 +7,7 @@
 // Calculation variables.
 uint8_t total_boxes = 0;
 unsigned long total_time = 0;
+float score = 0;
 
 // Caclulate score.
 void score_calculate() {
@@ -19,7 +20,7 @@ void score_calculate() {
     boxes_per_second = (float)total_boxes / (float)total_time;
 
     // Multiply by lives and get final score.
-    float score = boxes_per_second * lives_left;
+    score = boxes_per_second * lives_left;
     score *= 100;
 
     score_insert(score);
@@ -49,6 +50,7 @@ void score_insert(uint16_t score) {
         if (eeprom_get(i) < score) {
             written = true;
             temp_score = eeprom_get(i);
+            Serial.println("Putting");
             eeprom_put(i, score);
         }
     }
@@ -57,6 +59,10 @@ void score_insert(uint16_t score) {
 // Wait for EEPROM to be ready.
 inline void eeprom_wait() {
     while (EECR & (1 << EEPE));
+}
+
+float get_score() {
+    return score;
 }
 
 // Write 16 bit int to EEPROM.
