@@ -15,6 +15,13 @@ world_t *world_new(uint8_t player_count) {
         return NULL;
     }
 
+    // For every tile reset the explosion counter to 0.
+    for (int x = 0; x < WORLD_WIDTH - 2; x++) {
+        for (int y = 0; y < WORLD_HEIGHT - 2; y++) {
+            world_set_explosion_counter(world, x, y, 0);
+        }
+    }
+
     return world;
 }
 
@@ -89,10 +96,35 @@ uint8_t world_count_boxes(world_t *world) {
 
 void world_update(world_t *world, uint8_t inputs) {
     // Update all bombs first.
+    player_t *player;
     for (int i = 0; i < world->player_count; i++) {
-        player_t *player = world->players[i];
-        if (player->bomb) {
-            player->bomb = bomb_update(world, player->bomb);
+        player = world->players[i];
+        for (int j = 0; j < player->bomb_count; j++) {
+            if (player->bombs[j]) {
+                if (!bomb_update(world,player->bombs[j])) {
+                    player->bombs[j] = NULL;
+                }
+            }
+        }
+    }
+
+    // Update all tiles to remove exploded terrain if needed.
+    tile_t tile;
+    uint8_t value;
+    for (int x = 0; x < WORLD_WIDTH - 2; x++) {
+        for (int y = 0; y < WORLD_HEIGHT - 2; y++) {
+            // Check if duration == 1 because we don't want to reset every tile every update.
+            value = world_get_explosion_counter(world, x, y);
+            if (value == 1) {
+                tile = world_get_tile(world, x + 1, y + 1);
+
+                // Remove exploding bit from nibble.
+                tile = (tile_t)(tile & ~1);
+                
+                world_set_tile(world, x + 1, y + 1, tile);
+            }
+            if (value)
+                world_set_explosion_counter(world, x, y, value - 1);
         }
     }
 
@@ -141,14 +173,35 @@ player_t *world_get_player(world_t *world, uint8_t x, uint8_t y) {
     return NULL;
 }
 
-bomb_t *world_get_bomb(world_t *world, uint8_t x, uint8_t y) {
-    for (int i = 0; i < world->player_count; i++) {
-        player_t *player = world->players[i];
-        bomb_t *bomb = player->bomb;
+uint8_t world_get_explosion_counter(world_t *world, uint8_t x, uint8_t y) {
+    // Retrieve data from specific nibble.
+    uint8_t counter = 0;
+    int index_x = x / 2;
+    x %= 2;
 
-        if (bomb && bomb->x == x && bomb->y == y) {
-            return bomb;
-        }
+    // Retrieve most significant or least significant four bits.
+    if (x) {
+        counter |= (world->tile_explosion_duration[index_x][y] >> 4);
+    } else {
+        counter = (world->tile_explosion_duration[index_x][y] & 0xF);
     }
-    return NULL;
+
+    return counter;
+}
+
+void world_set_explosion_counter(world_t *world, uint8_t x, uint8_t y, uint8_t value) {
+    // Set data in specific nibble.
+    int index_x = x / 2;
+    x %= 2;
+
+    // Set most significant or least significant four bits.
+    if (x) {
+        // Reset bits.
+        world->tile_explosion_duration[index_x][y] &= ~0xF0;
+        world->tile_explosion_duration[index_x][y] |= (value << 4) & 0xF0;
+    } else {
+        // Reset bits.
+        world->tile_explosion_duration[index_x][y] &= ~0xF;
+        world->tile_explosion_duration[index_x][y] |= value & 0xF;
+    }
 }

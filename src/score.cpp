@@ -7,6 +7,7 @@
 // Calculation variables.
 uint8_t total_boxes = 0;
 unsigned long total_time = 0;
+float score = 0;
 
 // Caclulate score.
 void score_calculate() {
@@ -19,8 +20,7 @@ void score_calculate() {
     boxes_per_second = (float)total_boxes / (float)total_time;
 
     // Multiply by lives and get final score.
-    float score = boxes_per_second * lives_left;
-    score *= 100;
+    score = boxes_per_second * lives_left * 100;
 
     score_insert(score);
 }
@@ -34,7 +34,6 @@ void score_insert(uint16_t score) {
     bool written = false;
     uint16_t temp_score;
     uint16_t temp;
-    char label[10];
 
     for (int i = 0; i < 3; i++) {
         // If the highscore was added to top 3.
@@ -43,8 +42,6 @@ void score_insert(uint16_t score) {
             temp = eeprom_get(i);
             eeprom_put(i, temp_score);
             temp_score = temp;
-
-            component_change_text(menu_score->components[i], i, menu_get_score(i, label));
             continue;
         }
 
@@ -53,7 +50,6 @@ void score_insert(uint16_t score) {
             written = true;
             temp_score = eeprom_get(i);
             eeprom_put(i, score);
-            component_change_text(menu_score->components[i], i, menu_get_score(i, label));
         }
     }
 }
@@ -61,6 +57,10 @@ void score_insert(uint16_t score) {
 // Wait for EEPROM to be ready.
 inline void eeprom_wait() {
     while (EECR & (1 << EEPE));
+}
+
+float score_get() {
+    return score;
 }
 
 // Write 16 bit int to EEPROM.

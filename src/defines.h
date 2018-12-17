@@ -47,8 +47,19 @@
 #define WORLD_WIDTH 17
 #define WORLD_HEIGHT 13
 
-// Defines how large a bombs explosion should be.
-#define BOMB_EXPLODE_SIZE 2
+// The properties a tile can have.
+#define TILE_MASK_IS_EXPLODING 1
+#define TILE_MASK_IS_BOMB 2
+#define TILE_MASK_IS_SIZE_UPGRADE 4
+#define TILE_MASK_IS_UPGRADE 8
+
+// The maximum amount of bombs a player can have.
+#define MAX_BOMB_COUNT 7
+// The maximum size the explosion of a bomb can be.
+#define MAX_BOMB_SIZE 7
+// Chance for a box to drop an upgrade.
+#define BOMB_EXPLODE_SIZE_DROP_CHANCE 15
+#define BOMB_COUNT_UPGRADE_CHANCE 15
 // Defines after how many seconds the bomb should explode.
 #define BOMB_EXPLODE_AGE (3 * GAME_UPDATE_FREQUENCY)
 // Defines after how many seconds the bomb should destroy.

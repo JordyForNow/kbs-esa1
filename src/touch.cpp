@@ -207,7 +207,10 @@ void menus_new() {
     menu_set_component(menu_lose, 3, button_new("Back", menu_main, BUTTON_MODE_DEFAULT));
 
     // menu_win
-    menu_set_component(menu_win, 1, label_new("You win!"));
+    float score = score_get();
+    sprintf(label, "Score: %u", (int)score);
+    menu_set_component(menu_win, 0, label_new("You win!"));
+    menu_set_component(menu_win, 2, label_new(label));
     menu_set_component(menu_win, 3, button_new("Back", menu_main, BUTTON_MODE_DEFAULT));
 }
 
@@ -217,9 +220,4 @@ char *menu_get_score(int index, char *label) {
 
     sprintf(label, "%u. %u", index+1, score);
     return label;
-}
-
-void component_change_text(component_t *component, int index, char *text) {
-    free(component->text);
-    component->text = strdup(text);
 }

@@ -7,13 +7,15 @@ typedef struct {
     uint8_t x;
     uint8_t y;
     uint8_t age;
+    uint8_t size;
 } bomb_t;
 
 #include "world.h"
 
-bomb_t *bomb_new(uint8_t x, uint8_t y);
+bomb_t *bomb_new(uint8_t x, uint8_t y, uint8_t size);
 void bomb_free(bomb_t *bomb);
 bomb_t *bomb_update(world_t *world, bomb_t *bomb);
-void bomb_explosion_toggle(world_t *world, bomb_t *bomb, tile_t action);
+void bomb_explode(world_t *world, bomb_t *bomb);
+void bomb_explode_tile(world_t *world, uint8_t x, uint8_t y, bool is_origin);
 
 #endif /* BOMB_H */

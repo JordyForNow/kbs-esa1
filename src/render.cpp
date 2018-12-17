@@ -25,6 +25,26 @@ void draw_tile(int x, int y, tile_t type) {
         case EXPLODING_BOMB:
             draw_rect(x, y, ILI9341_WHITE);
             break;
+        case BOMB_EXPLOSION:
+            draw_rect(x, y, ILI9341_WHITE);
+            draw_circle(x, y, ILI9341_OLIVE);
+            break;
+        case UPGRADE_EXPLOSION_BOMB_SIZE:
+            draw_rect(x,y, ILI9341_WHITE);
+            draw_circle(x,y, ILI9341_MAROON);
+            break;
+        case UPGRADE_BOMB_SIZE:
+            draw_rect(x,y, ILI9341_BLACK);
+            draw_circle(x, y, ILI9341_MAROON);
+            break;
+        case UPGRADE_EXPLOSION_BOMB_COUNT:
+            draw_rect(x,y, ILI9341_WHITE);
+            draw_circle(x,y, ILI9341_CASET);
+            break;
+        case UPGRADE_BOMB_COUNT:
+            draw_rect(x,y, ILI9341_BLACK);
+            draw_circle(x, y, ILI9341_CASET);
+            break;
     }
 }
 
