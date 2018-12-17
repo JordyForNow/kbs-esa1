@@ -6,8 +6,8 @@
 #include <Adafruit_ILI9341.h>
 
 // The possible items a tile can contain.
-// fourth bit says its a power up.
-// first bit says its exploding.
+// Fourth bit says it's a power up.
+// First bit says it's exploding.
 typedef enum {
     EMPTY = 0b0000,
     BOMB = 0b0010,
