@@ -29,9 +29,7 @@ void bomb_free(bomb_t *bomb) {
 bomb_t *bomb_update(world_t *world, bomb_t *bomb) {
     if (bomb->age == BOMB_DESTROY_AGE) {
         // Free the bomb, the deletion process will be handled within the world_update.
-        Serial.println("freeing");
         bomb_free(bomb);
-        Serial.println("freed");
         return NULL;
     } else if (bomb->age == BOMB_EXPLODE_AGE) {
         bomb_explode(world, bomb);
