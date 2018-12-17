@@ -15,6 +15,7 @@ world_t *world_new(uint8_t player_count) {
         return NULL;
     }
 
+    // For every tile reset the explosion counter to 0.
     for (int x = 0; x < WORLD_WIDTH - 2; x++) {
         for (int y = 0; y < WORLD_HEIGHT - 2; y++) {
             world_set_explosion_counter(world, x, y, 0);
@@ -181,7 +182,7 @@ uint8_t world_get_explosion_counter(world_t *world, uint8_t x, uint8_t y) {
     int index_x = x / 2;
     x %= 2;
 
-    // Retrieve most significant and least significant four bits.
+    // Retrieve most significant or least significant four bits.
     if (x) {
         counter |= (world->tile_explosion_duration[index_x][y] >> 4);
     } else {
@@ -196,7 +197,7 @@ void world_set_explosion_counter(world_t *world, uint8_t x, uint8_t y, uint8_t v
     int index_x = x / 2;
     x %= 2;
 
-    // Set most significant and least significant four bits.
+    // Set most significant or least significant four bits.
     if (x) {
         // Reset bits.
         world->tile_explosion_duration[index_x][y] &= ~0xF0;
