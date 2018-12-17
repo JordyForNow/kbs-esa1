@@ -25,8 +25,12 @@ int main() {
     LOGLN("TFT started!");
 
     timer1_init();
+
+    // Don't read the potentiometer if the dimming of the TFT is disabled.
+    #if ENABLE_DIMMING_BACKLIGHT
     tft_brightness_init();
     adc_init();
+    #endif /* ENABLE_DIMMING_BACKLIGHT */
 
     touch_init();
 
@@ -40,14 +44,15 @@ int main() {
     while (1) {
         // Show the menu.
         button_mode_t mode = menu_loop(menu);
+
         // Singleplayer/ Multiplayer
-        
+
         // Paint background black.
         draw_background(ILI9341_BLACK);
 
         // Set up the game.
-        game_init();
-
+        game_init(mode);
+        
         // Update the game until it ends.
         while (!game_get_state())
             game_update();
@@ -85,7 +90,10 @@ void timer1_init() {
     TIMSK1 = (1 << TOIE1);
 
     // Compare output mode, set OC1B on Compare Match, clear at BOTTOM.
+    // Only do this if dimming the TFT is enabled.
+    #if ENABLE_DIMMING_BACKLIGHT
     TCCR1A |= (1 << COM1B0) | (1 << COM1B1);
+    #endif /* ENABLE_DIMMING_BACKLIGHT */
 
     // Timer1 will start counting when the init function is called.
     // This means the TCNT1 can already have a value that is greater than the
@@ -108,7 +116,7 @@ void tft_brightness_init(){
     DDRB |= (1 << PB2);
 }
 
-void adc_init(){
+void adc_init() {
     // Define A0 as input.
     DDRC = ~(1 << PC0);
 
@@ -135,6 +143,6 @@ void adc_init(){
 // The value from the ADC is from 0-1023 and needs to be mapped to 0-TIMER1_TOP.
 // The mapped value is put in OCR1B to set the right duty cycle so that 
 // the TFT has the right brightness.
-ISR(ADC_vect){
+ISR(ADC_vect) {
     OCR1B = map(ADC, 0, 1023, 0, TIMER1_TOP);
 }
