@@ -15,7 +15,7 @@ player_t *player_new(uint8_t x, uint8_t y, uint8_t is_main) {
     player->x = x;
     player->y = y;
     player->lives = 3;
-    player->bombs = (bomb_t **)calloc(sizeof(bomb_t *), MAX_BOMB_COUNT+1);
+    player->bombs = (bomb_t **)calloc(sizeof(bomb_t *), MAX_BOMB_COUNT);
     player->hit_duration = 0;
     player->is_main = is_main;
     player->bomb_count = 1;
