@@ -79,9 +79,9 @@ uint8_t player_move(player_t *player, uint8_t inputs, world_t *world, uint8_t re
         player->y = new_y;
 
         // If next position is a power-up.
-        if (new_tile & IS_UPGRADE) {
+        if (new_tile & TILE_MASK_IS_UPGRADE) {
             // If the next position is a size power-up.
-            if (new_tile & IS_SIZE_UPGRADE) {
+            if (new_tile & TILE_MASK_IS_SIZE_UPGRADE) {
                 player_increment_bomb_size(player);
             } else {
                 player_increment_bomb_count(player);
@@ -91,7 +91,7 @@ uint8_t player_move(player_t *player, uint8_t inputs, world_t *world, uint8_t re
         bool exploding = false;
         
         // If next position is exploded.
-        if (new_tile & IS_EXPLODING) {
+        if (new_tile & TILE_MASK_IS_EXPLODING) {
             exploding = true;
             // Remove a life if the player is not invincible.
             player_on_hit(player);
@@ -162,7 +162,7 @@ uint8_t bomb_allowed(player_t *player, world_t *world) {
     if (world_get_tile(world, player->x, player->y) == BOMB)
         return MAX_BOMB_COUNT;
     for (int i = 0; i < player->bomb_count; i++) {
-        if (player->bombs[i] == 0 || player->bombs[i] == NULL) {
+        if (!player->bombs[i]) {
             return i;
         }
     }
