@@ -1,8 +1,6 @@
 #ifndef BOMB_H
 #define BOMB_H
 
-#include "defines.h"
-
 #include <stdint.h>
 
 typedef struct {
