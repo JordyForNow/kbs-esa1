@@ -6,12 +6,13 @@
 #include <avr/interrupt.h>
 
 #define BUFFER_MAXIMUM_CAPACITY 16
-#define NETWORK_ACK_BYTE 0b1111
+#define NETWORK_ACK_BYTE 0b11000000
 #define NETWORK_MAX_RETRIES 50
 
 buffer_t * incoming_data, * outgoing_data;
 volatile bool acknowledged = false;
 volatile bool first_byte = true;
+volatile bool retry = false;
 uint8_t currently_sending[2], currently_receiving[2];
 packet_t incoming_packet;
 bool waiting = false;
@@ -47,8 +48,14 @@ void send_bytes() {
 
 bool usart_update() {
     // The game should be halted because the networking trafic has not been acknowledged yet.
-    if (waiting && !acknowledged)
+    if (waiting && !acknowledged) {
+        if (retry)
+            send_bytes();
+        retry = false;
         return false;
+        
+    }
+
     waiting = false;
 
     if (buffer_available(outgoing_data) < 2)
@@ -69,15 +76,14 @@ void usart_send(uint16_t bytes) {
 }
 
 int validate_incoming_data(uint16_t data) {
-    // int count = 1;
+    int count = 1;
 
-    // for (int i = 0; i < 16; i++) {
-    //     if (data & (1 << i))
-    //         count++;
-    // }
+    for (int i = 0; i < 16; i++) {
+        if (data & (1 << i))
+            count++;
+    }
 
-    // return count % 2;
-    return true;
+    return count % 2;
 }
 
 packet_t* usart_receive() {
@@ -88,9 +94,8 @@ packet_t* usart_receive() {
     buffer_read(incoming_data, currently_receiving, 2);
 
     // Interpret the two bytes in currently_receiving as a packet.
-    packet_decode(&incoming_packet, ( (((uint16_t) currently_receiving[0]) << 8 ) | currently_receiving[1]));
+    packet_decode(&incoming_packet, ((((uint16_t) currently_receiving[0]) << 8) | currently_receiving[1]));
 
-    usart_acknowledge();
     return validate_incoming_data(packet_encode(&incoming_packet)) ? &incoming_packet : NULL;
 }
 
@@ -103,23 +108,12 @@ bool usart_available() {
     return buffer_available(incoming_data) >= 2;
 }
 
-void usart_send_debug(const char *m) {
-    int i = 0;
-
-    while(m[i] != 0) {            
-        usart_wait_until_available();
-
-        /* Put data into buffer, sends the data */
-        UDR0 = m[i];
-        i++;
-    }
+void resend() {
+    retry = true;
 }
-
 
 ISR(USART_RX_vect) {
     uint8_t temp = UDR0;
-    usart_wait_until_available();
-    UDR0 = temp;
     if (first_byte && temp == 0b11000000)
     {
         acknowledged = true;
@@ -127,4 +121,7 @@ ISR(USART_RX_vect) {
     }
     first_byte = !first_byte;
     buffer_write(incoming_data, temp);
+
+    if (!first_byte) 
+        usart_acknowledge();
 }

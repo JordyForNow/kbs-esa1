@@ -20,14 +20,9 @@ bool game_update();
 void game_trigger_update();
 void game_trigger_network_update();
 
-void opponent_move(uint8_t x, uint8_t y);
-void opponent_place_bomb(uint8_t x, uint8_t y);
-void opponent_lose_live(uint8_t x, uint8_t y);
-player_t *get_opponent();
-
 game_state_t game_get_state();
 bool game_is_multiplayer();
 unsigned long *game_get_time();
-player_t *game_get_main_player();
+player_t *game_get_local_player();
 
 #endif /* GAME_H */

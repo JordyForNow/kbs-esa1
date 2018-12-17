@@ -12,7 +12,7 @@ unsigned long total_time = 0;
 void score_calculate() {
     float boxes_per_second = 0;
     total_time = *game_get_time();
-    uint8_t lives_left = game_get_main_player()->lives;
+    uint8_t lives_left = game_get_local_player()->lives;
 
     // Convert game time to seconds and calculate boxes per second.
     total_time /= GAME_UPDATE_FREQUENCY;

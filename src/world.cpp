@@ -4,7 +4,7 @@
 #include "packet.h"
 #include "network.h"
 
-#define SEED_MASK 0b1111111111
+#define SEED_MASK 0b01111111111
 
 world_t *world_new(uint8_t player_count) {
     world_t *world = (world_t *)calloc(sizeof(world_t), 1);
@@ -39,7 +39,7 @@ void world_generate(world_t *world, unsigned long seed) {
         for (int x = 0; x < WORLD_WIDTH; x++) {
             if (x == 0 || x == (WORLD_WIDTH - 1) || y == 0 || y == (WORLD_HEIGHT - 1)) {
                 // Make vertical and horizontal walls.
-                world_set_tile(world, x, y, WALL);
+                  world_set_tile(world, x, y, WALL);
             } else if (y > 0 && y < (WORLD_HEIGHT - 1) && x > 0 && x < (WORLD_WIDTH - 1)) {
                 // If it isn't a sidewall, put walls in the field or put some boxes in the field.
                 if (y % 2 == 0 && x % 2 == 0) {
