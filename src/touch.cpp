@@ -198,7 +198,6 @@ void menus_new() {
 
     // menu_win
     float score = get_score();
-    Serial.println(score);
     sprintf(label, "Score: %u", (int)score);
     menu_set_component(menu_win, 0, label_new("You win!"));
     menu_set_component(menu_win, 2, label_new(label));
