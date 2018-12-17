@@ -127,9 +127,9 @@ inline void recieve_networking_data() {
     }
 }
 
-/***********************
- * Accesible functions *
- ***********************/
+/************************
+ * Accessible functions *
+ ************************/
 
 // Initialize the game state.
 void game_init(button_mode_t game_mode) {

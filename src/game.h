@@ -5,8 +5,6 @@
 
 #include <nunchuck_funcs.h>
 #include <stdbool.h>
-#include "touch.h"
-#include "player.h"
 
 typedef enum {
     GAME_STATE_RUNNING,

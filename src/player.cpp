@@ -45,8 +45,7 @@ void player_update(world_t *world, player_t *player, uint8_t inputs) {
         }
     }
 
-    if (player->is_main)
-    {
+    if (player->is_main) {
         if(player_move(player, inputs, world))
             redraw = 1;
 
@@ -119,7 +118,7 @@ uint8_t player_on_hit(player_t *player) {
         return 0;
 
     player->hit_duration = HIT_DURATION;
-    if (player->lives){
+    if (player->lives) {
         player->lives--;
 
         // Send lose live packet and update the lives display for the local player.

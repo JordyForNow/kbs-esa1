@@ -1,5 +1,4 @@
 #include "packet.h"
-#include <Arduino.h>
 #include "defines.h"
 #include "network.h"
 
@@ -28,12 +27,12 @@ void packet_free(packet_t* packet) {
 }
 
 // Send a packet with a method and the location of the player.
-void packet_send(method_t method, player_t* player) {
+void packet_send(method_t method, uint8_t x, uint8_t y) {
     // Construct the packet.
     packet_t packet;
     packet.method = method;
-    packet.x = player->x;
-    packet.y = player->y;
+    packet.x = x;
+    packet.y = y;
     packet.parity = 0;
 
     // Look at the packet as if it's an uint16_t.
@@ -45,6 +44,8 @@ void packet_send(method_t method, player_t* player) {
     // Transmit the packet.
     network_send(raw);
 }
+
+void packet_send()
 
 // Send communication packet with map seed.
 void packet_setup(uint16_t map_seed) {

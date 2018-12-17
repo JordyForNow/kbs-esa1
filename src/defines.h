@@ -63,6 +63,7 @@
 //////////////
 
 //Usart settings
+#define USART_ENABLED 1
 #define USART_BAUD_RATE 57600
 
 // Extra colors to use in the screen.

@@ -1,13 +1,11 @@
+#ifdef USART_ENABLED = 1
 #include "usart.h"
 #include "defines.h"
 #include "game.h"
 #include "buffer.h"
-#include <avr/io.h>
-#include <avr/interrupt.h>
 
 #define BUFFER_MAXIMUM_CAPACITY 16
 #define NETWORK_ACK_BYTE 0b11000000
-#define NETWORK_MAX_RETRIES 50
 
 buffer_t * incoming_data, * outgoing_data;
 volatile bool acknowledged = false;
@@ -101,7 +99,7 @@ packet_t* usart_receive() {
 
 void usart_acknowledge() {
     usart_wait_until_available();
-    UDR0 = 0b11000000;
+    UDR0 = NETWORK_ACK_BYTE;
 }
 
 bool usart_available() {
@@ -114,7 +112,7 @@ void resend() {
 
 ISR(USART_RX_vect) {
     uint8_t temp = UDR0;
-    if (first_byte && temp == 0b11000000)
+    if (first_byte && temp == NETWORK_ACK_BYTE)
     {
         acknowledged = true;
         return;
@@ -125,3 +123,5 @@ ISR(USART_RX_vect) {
     if (!first_byte) 
         usart_acknowledge();
 }
+
+#endif /*USART_ENABLED*/

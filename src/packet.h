@@ -1,10 +1,9 @@
 #ifndef PACKET_H
 #define PACKET_H
+#include "player.h"
 
 #include <stdint.h>
 #include <stdbool.h>
-#include "player.h"
-#include "world.h"
 
 typedef enum __attribute__ ((__packed__)) {
     MOVE = 0b000,
