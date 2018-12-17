@@ -49,7 +49,7 @@ void bomb_explode_tile(world_t *world, uint8_t x, uint8_t y, bool is_origin) {
         LOGLN("Damage from exploding bomb");
 
     // Reset the explosion counter of the corresponding tile.
-    // X and y - 1, because the outer walls are not within the array.
+    // X and Y - 1, because the outer walls are not within the tile explosion counter array.
     // Add 1 to the explosion duration because we are going to remove the explosion at counter = 1.
     // If the explosion would be removed at 0, all tiles would constantly be redrawn because the default is 0.
     world_set_explosion_counter(world, x - 1, y - 1, BOMB_DESTROY_AGE - BOMB_EXPLODE_AGE + 1);

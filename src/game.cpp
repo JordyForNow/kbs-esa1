@@ -95,11 +95,6 @@ bool game_update() {
     // Increment game time each game update.
     game_time++;
 
-    /*LOGLN("Updating");
-
-    Serial.print("freeMemory()=");
-    Serial.println(freeMemory());*/
-
     should_update = 0;
 
     // Collect the definitive inputs. These are the button inputs
