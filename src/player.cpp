@@ -79,9 +79,9 @@ uint8_t player_move(player_t *player, uint8_t inputs, world_t *world, uint8_t re
         player->y = new_y;
 
         // If next position is a power-up.
-        if (new_tile & (1 << 3)) {
+        if (new_tile & (1 << IS_UPGRADE)) {
             // If the next position is a size power-up.
-            if (new_tile & (1 << 2)) {
+            if (new_tile & (1 << IS_SIZE_UPGRADE)) {
                 player_increment_bomb_size(player);
             } else {
                 player_increment_bomb_count(player);
