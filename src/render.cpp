@@ -25,6 +25,26 @@ void draw_tile(int x, int y, tile_t type) {
         case EXPLODING_BOMB:
             draw_rect(x, y, ILI9341_WHITE);
             break;
+        case BOMB_EXPLOSION:
+            draw_rect(x, y, ILI9341_WHITE);
+            draw_circle(x, y, ILI9341_OLIVE);
+            break;
+        case UPGRADE_EXPLOSION_BOMB_SIZE:
+            draw_rect(x,y, ILI9341_WHITE);
+            draw_circle(x,y, ILI9341_MAROON);
+            break;
+        case UPGRADE_BOMB_SIZE:
+            draw_rect(x,y, ILI9341_BLACK);
+            draw_circle(x, y, ILI9341_MAROON);
+            break;
+        case UPGRADE_EXPLOSION_BOMB_COUNT:
+            draw_rect(x,y, ILI9341_WHITE);
+            draw_circle(x,y, ILI9341_CASET);
+            break;
+        case UPGRADE_BOMB_COUNT:
+            draw_rect(x,y, ILI9341_BLACK);
+            draw_circle(x, y, ILI9341_CASET);
+            break;
     }
 }
 
@@ -32,7 +52,7 @@ void draw_rect(int x, int y, uint16_t color) {
     tft.fillRect(x, y, WORLD_TILE_SIZE, WORLD_TILE_SIZE, color);
 }
 
-void draw_rect(int x, int y, int width, int height, uint16_t color){
+void draw_rect(int x, int y, int width, int height, uint16_t color) {
     tft.fillRect(x, y, width, height, color);
 }
 
@@ -43,7 +63,7 @@ void draw_circle(int x, int y, uint16_t color) {
     tft.fillCircle(x, y, (WORLD_TILE_SIZE / 2), color);
 }
 
-void draw_background(int color){
+void draw_background(int color) {
     tft.fillScreen(color);
 }
 

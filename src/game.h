@@ -2,6 +2,7 @@
 #define GAME_H
 
 #include "player.h"
+#include "touch.h"
 
 #include <nunchuck_funcs.h>
 #include <stdbool.h>

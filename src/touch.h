@@ -11,8 +11,10 @@ struct menu_t;
 // given mode.
 typedef enum {
     BUTTON_MODE_DEFAULT,
-    BUTTON_MODE_SINGLEPLAYER,
     BUTTON_MODE_MULTIPLAYER,
+    BUTTON_MODE_SINGLEPLAYER_RANDOM,
+    BUTTON_MODE_SINGLEPLAYER_PLUS,
+    BUTTON_MODE_SINGLEPLAYER_FULL,    
 } button_mode_t;
 
 // A component can be either a label or button, and is part of a menu.
@@ -37,12 +39,13 @@ typedef struct menu_t {
 // The menu screens that exist in the game.
 extern menu_t *menu_main;
 extern menu_t *menu_play;
+extern menu_t *menu_select_level;
 extern menu_t *menu_score;
 extern menu_t *menu_win;
 extern menu_t *menu_lose;
 
 // Component functions.
-component_t *button_new(char *text, menu_t *target, uint8_t start);
+component_t *button_new(char *text, menu_t *target, button_mode_t mode);
 component_t *label_new(char *text);
 void component_free(component_t *component);
 void component_draw(component_t *component, int index);
@@ -50,6 +53,7 @@ void component_draw(component_t *component, int index);
 // Menu functions.
 menu_t *menu_new(const char *title);
 void menu_free(menu_t *menu);
+void menus_free();
 
 void menu_set_component(menu_t *menu, int index, component_t *component);
 void menu_draw(menu_t *menu);
@@ -58,9 +62,8 @@ int menu_await_input();
 
 // Initializer functions.
 void touch_init();
-void menus_init();
+void menus_new();
 
 char *menu_get_score(int index, char *label);
-void component_change_text(component_t *component, int index, char *text);
 
 #endif /* TOUCH_H */

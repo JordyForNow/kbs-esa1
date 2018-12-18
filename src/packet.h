@@ -19,6 +19,7 @@ typedef struct {
             uint8_t x : 5;
             uint8_t y : 5;
         };
+        uint8_t size;
         uint16_t seed : 10;
     };
     uint8_t parity : 1;
@@ -30,6 +31,7 @@ uint16_t packet_encode(packet_t *p);
 void packet_free(packet_t packet);
 void packet_setup(uint16_t map_seed);
 void packet_send(method_t method, player_t *player);
+void packet_send_bomb(uint8_t size);
 uint8_t has_even_parity(uint16_t packet);
 packet_t *new_packet(uint8_t x, uint8_t y, method_t method);
 

@@ -2,6 +2,17 @@
 #include "defines.h"
 #include "network.h"
 
+inline void packet_send(packet_t packet) {
+    // Look at the packet as if it's an uint16_t.
+    uint16_t raw = packet_encode(&packet);
+
+    // Determine the value of the parity bit.
+    raw |= has_even_parity(raw) ? 0 : 1;
+
+    // Transmit the packet.
+    network_send(raw);
+}
+
 uint16_t packet_encode(packet_t *p) {
     return p->method == INIT 
     ? (p->method << 11) | (p->seed << 1) | (p->parity) 
@@ -35,17 +46,18 @@ void packet_send(method_t method, uint8_t x, uint8_t y) {
     packet.y = y;
     packet.parity = 0;
 
-    // Look at the packet as if it's an uint16_t.
-    uint16_t raw = packet_encode(&packet);
-
-    // Determine the value of the parity bit.
-    raw |= has_even_parity(raw) ? 0 : 1;
-
-    // Transmit the packet.
-    network_send(raw);
+    packet_send(packet);
 }
 
-void packet_send()
+void packet_send_bomb(uint8_t size) {
+     // Construct the packet.
+    packet_t packet;
+    packet.method = PLACE_BOMB;
+    packet.size = size;
+    packet.parity = 0;
+
+    packet_send(packet);
+}
 
 // Send communication packet with map seed.
 void packet_setup(uint16_t map_seed) {
@@ -55,14 +67,7 @@ void packet_setup(uint16_t map_seed) {
     packet.seed = map_seed;
     packet.parity = 0;
 
-    // Look at the packet as if it's an uint16_t.
-    uint16_t raw = packet_encode(&packet);
-
-    // Determine the value of the parity bit.
-    raw |= has_even_parity(raw) ? 0 : 1;
-
-    // Transmit the packet.
-    network_send(raw);
+    packet_send(packet);
 }
 
 // Check if packet needs a parity bit.

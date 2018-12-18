@@ -7,6 +7,7 @@ Adafruit_STMPE610 ts = Adafruit_STMPE610(STMPE_CS);
 
 menu_t *menu_main = NULL;
 menu_t *menu_play = NULL;
+menu_t *menu_select_level = NULL;
 menu_t *menu_score = NULL;
 menu_t *menu_win = NULL;
 menu_t *menu_lose = NULL;
@@ -63,8 +64,16 @@ void menu_free(menu_t *menu) {
         if (menu->components[i])
             component_free(menu->components[i]);
     }
-
     free(menu);
+}
+
+void menus_free() {
+    menu_free(menu_main);
+    menu_free(menu_play);
+    menu_free(menu_select_level);
+    menu_free(menu_score);
+    menu_free(menu_win);
+    menu_free(menu_lose);
 }
 
 void menu_set_component(menu_t *menu, int index, component_t *component) {
@@ -103,8 +112,11 @@ button_mode_t menu_loop(menu_t *menu) {
             continue;
 
         // If this starts the game, do that now.
-        if (component->mode != BUTTON_MODE_DEFAULT)
-            return component->mode;
+        if (component->mode != BUTTON_MODE_DEFAULT) {
+            button_mode_t mode = component->mode;
+            menus_free();
+            return mode;
+        }
 
         // If it is a menu button, it should go to the next menu.
         if (component->target) {
@@ -160,9 +172,10 @@ void touch_init() {
     tft.setRotation(1);
 }
 
-void menus_init() {
+void menus_new() {
     menu_main = menu_new("BOMBERMAN");
     menu_play = menu_new("PLAY GAME");
+    menu_select_level = menu_new("SELECT LEVEL");
     menu_score = menu_new("HIGH SCORES");
     menu_lose = menu_new("GAME ENDED");
     menu_win = menu_new("GAME ENDED");
@@ -172,9 +185,15 @@ void menus_init() {
     menu_set_component(menu_main, 1, button_new("High scores", menu_score, BUTTON_MODE_DEFAULT));
 
     // menu_play
-    menu_set_component(menu_play, 0, button_new("Singleplayer", NULL, BUTTON_MODE_SINGLEPLAYER));
     menu_set_component(menu_play, 1, button_new("Multiplayer", NULL, BUTTON_MODE_MULTIPLAYER ));
+    menu_set_component(menu_play, 0, button_new("Singleplayer", menu_select_level, BUTTON_MODE_DEFAULT));
     menu_set_component(menu_play, 3, button_new("Back", menu_main, BUTTON_MODE_DEFAULT));
+
+    // menu_select_level
+    menu_set_component(menu_select_level, 0, button_new("Random", NULL, BUTTON_MODE_SINGLEPLAYER_RANDOM));
+    menu_set_component(menu_select_level, 1, button_new("Level 1", NULL, BUTTON_MODE_SINGLEPLAYER_PLUS));
+    menu_set_component(menu_select_level, 2, button_new("Level 2", NULL, BUTTON_MODE_SINGLEPLAYER_FULL));
+    menu_set_component(menu_select_level, 3, button_new("Back", menu_play, BUTTON_MODE_DEFAULT));
 
     // menu_score
     // Get the 3 highest scores from eeprom and display them in a list.
@@ -189,7 +208,10 @@ void menus_init() {
     menu_set_component(menu_lose, 3, button_new("Back", menu_main, BUTTON_MODE_DEFAULT));
 
     // menu_win
-    menu_set_component(menu_win, 1, label_new("You win!"));
+    float score = score_get();
+    sprintf(label, "Score: %u", (int)score);
+    menu_set_component(menu_win, 0, label_new("You win!"));
+    menu_set_component(menu_win, 2, label_new(label));
     menu_set_component(menu_win, 3, button_new("Back", menu_main, BUTTON_MODE_DEFAULT));
 }
 
@@ -199,9 +221,4 @@ char *menu_get_score(int index, char *label) {
 
     sprintf(label, "%u. %u", index+1, score);
     return label;
-}
-
-void component_change_text(component_t *component, int index, char *text) {
-    free(component->text);
-    component->text = strdup(text);
 }

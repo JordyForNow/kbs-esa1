@@ -4,6 +4,10 @@
 #define DEBUG 0
 #define SEGMENTS_ENABLE 1
 
+// Set to 1 if the TFT-backlight is connected to Arduino PIN 10.
+// If the screen is connected directly, set this define to 0.
+#define ENABLE_DIMMING_BACKLIGHT 1
+
 // The length to clear the corner from boxes.
 #define GAME_STARTING_AREA 4
 
@@ -43,8 +47,19 @@
 #define WORLD_WIDTH 17
 #define WORLD_HEIGHT 13
 
-// Defines how large a bombs explosion should be.
-#define BOMB_EXPLODE_SIZE 2
+// The properties a tile can have.
+#define TILE_MASK_IS_EXPLODING 1
+#define TILE_MASK_IS_BOMB 2
+#define TILE_MASK_IS_SIZE_UPGRADE 4
+#define TILE_MASK_IS_UPGRADE 8
+
+// The maximum amount of bombs a player can have.
+#define MAX_BOMB_COUNT 7
+// The maximum size the explosion of a bomb can be.
+#define MAX_BOMB_SIZE 7
+// Chance for a box to drop an upgrade.
+#define BOMB_EXPLODE_SIZE_DROP_CHANCE 15
+#define BOMB_COUNT_UPGRADE_CHANCE 15
 // Defines after how many seconds the bomb should explode.
 #define BOMB_EXPLODE_AGE (3 * GAME_UPDATE_FREQUENCY)
 // Defines after how many seconds the bomb should destroy.
@@ -54,9 +69,15 @@
 // How many seconds a player should be invinsible to bombs after being hit.
 #define HIT_DURATION (5 * GAME_UPDATE_FREQUENCY)
 
-// The ports which the screen is connected to.
-#define TFT_CS 7
+// The PIN which the screen is connected to.
 #define TFT_DC 9
+// If the TFT brightness doesn't need to be changd the TFT_CS
+// can be connected to PIN 10, otherwise this needs to be PIN 7.
+#if ENABLE_DIMMING_BACKLIGHT
+#define TFT_CS 7
+#else
+#define TFT_CS 10
+#endif /* ENABLE_DIMMING_BACKLIGHT */
 
 //////////////
 //Networking//

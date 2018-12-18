@@ -67,8 +67,10 @@ inline void opponent_move(uint8_t x, uint8_t y){
 
 inline void opponent_place_bomb(uint8_t x, uint8_t y){
     player_t *player = get_opponent();
-    if(!player->bomb)
-        player_place_bomb(world, player);
+    int bomb_index = bomb_allowed(player, world);
+    if (bomb_index < MAX_BOMB_COUNT) {
+        player_place_bomb(world, player, bomb_index);
+    }
 }
 
 inline void opponent_lose_live(uint8_t x, uint8_t y){
@@ -151,7 +153,7 @@ void game_init(button_mode_t game_mode) {
         player_1_host = world_multiplayer_generate(world, TCNT0);
     }
     else {
-        world_generate(world, TCNT0);
+        world_generate(world, TCNT0, game_mode);
     }
 
     score_set_box_count(world_get_box_count(world));
@@ -209,7 +211,6 @@ bool game_update() {
     // Increment game time each game update.
     game_time++;
 
-    LOGLN("Updating");
     should_update = 0;
 
     // Collect the definitive inputs. These are the button inputs
@@ -252,11 +253,10 @@ void game_trigger_update() {
 }
 
 
-
 bool game_is_multiplayer() {
     return multiplayer;
 }
 
-unsigned long *game_get_time(){
+unsigned long *game_get_time() {
     return &game_time;
 }
