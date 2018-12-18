@@ -1,4 +1,3 @@
-#ifdef USART_ENABLED = 1
 #include "usart.h"
 #include "defines.h"
 #include "game.h"
@@ -10,7 +9,6 @@
 buffer_t * incoming_data, * outgoing_data;
 volatile bool acknowledged = false;
 volatile bool first_byte = true;
-volatile bool retry = false;
 uint8_t currently_sending[2], currently_receiving[2];
 packet_t incoming_packet;
 bool waiting = false;
@@ -47,9 +45,6 @@ void send_bytes() {
 bool usart_update() {
     // The game should be halted because the networking trafic has not been acknowledged yet.
     if (waiting && !acknowledged) {
-        if (retry)
-            send_bytes();
-        retry = false;
         return false;
         
     }
@@ -106,10 +101,6 @@ bool usart_available() {
     return buffer_available(incoming_data) >= 2;
 }
 
-void resend() {
-    retry = true;
-}
-
 ISR(USART_RX_vect) {
     uint8_t temp = UDR0;
     if (first_byte && temp == NETWORK_ACK_BYTE)
@@ -123,5 +114,3 @@ ISR(USART_RX_vect) {
     if (!first_byte) 
         usart_acknowledge();
 }
-
-#endif /*USART_ENABLED*/

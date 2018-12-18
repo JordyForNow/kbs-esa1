@@ -1,14 +1,13 @@
 #include "network.h"
 #include "usart.h"
 
-void network_init(){
+void network_init() {
     usart_init();
 }
 
 bool network_update() {
     return usart_update();
 }
-
 
 void network_send(uint16_t data) {
     usart_send(data);

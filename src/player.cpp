@@ -71,7 +71,8 @@ uint8_t player_move(player_t *player, uint8_t inputs, world_t *world, uint8_t re
 
     // Check if we want to and can move into the new tile.
     if ((new_x != player->x || new_y != player->y)
-    && (new_tile != WALL && new_tile != BOX && new_tile != BOMB)) {
+    && (new_tile != WALL && new_tile != BOX && new_tile != BOMB 
+    && new_tile != UPGRAGE_BOX_BOM_COUNT && new_tile != UPGRAGE_BOX_BOM_SIZE)) {
         // Store where we were, so we can rerender the tile once we've moved.
         uint8_t old_x = player->x;
         uint8_t old_y = player->y;
@@ -87,10 +88,10 @@ uint8_t player_move(player_t *player, uint8_t inputs, world_t *world, uint8_t re
         // If next position is a power-up.
         if (new_tile & TILE_MASK_IS_UPGRADE) {
             // If the next position is a size power-up.
-            if (new_tile & TILE_MASK_IS_SIZE_UPGRADE) {
-                player_increment_bomb_size(player);
-            } else {
+            if (new_tile & TILE_MASK_IS_COUNT_UPGRADE) {
                 player_increment_bomb_count(player);
+            } else {
+                player_increment_bomb_size(player);
             }
         }
 
@@ -131,13 +132,15 @@ void player_update(world_t *world, player_t *player, uint8_t inputs) {
         }
     }
 
-    redraw = player_move(player, inputs, world, redraw);
+    if (player->is_main) {
+        redraw = player_move(player, inputs, world, redraw);
 
-    // Place a bomb if necessary.
-    int bomb_index = bomb_allowed(player, world);
-    if (bomb_index < MAX_BOMB_COUNT && inputs & (1 << INPUT_BUTTON_C)) {
-        player_place_bomb(world, player, bomb_index);
-        redraw = 1;
+        // Place a bomb if necessary.
+        int bomb_index = bomb_allowed(player, world);
+        if (bomb_index < MAX_BOMB_COUNT && inputs & (1 << INPUT_BUTTON_C)) {
+            player_place_bomb(world, player, bomb_index);
+            redraw = 1;
+        }
     }
 
     // Redraw our player only if we have to.

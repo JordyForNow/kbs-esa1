@@ -6,6 +6,21 @@
 
 #define SEED_MASK 0b01111111111
 
+inline void set_box(world_t *world, uint8_t x, uint8_t y) {
+    tile_t tile = BOX;
+    uint8_t random_number = random(100);
+    if (random_number < BOMB_EXPLODE_SIZE_DROP_CHANCE) {
+        // Check if a size power-up should drop.
+        tile = UPGRAGE_BOX_BOM_SIZE;
+
+    } else if (random_number < BOMB_EXPLODE_SIZE_DROP_CHANCE + BOMB_COUNT_UPGRADE_CHANCE) {
+        // Check if a bomb count power-up should drop.
+        tile = UPGRAGE_BOX_BOM_COUNT;
+    }
+
+    world_set_tile(world, x, y, tile);
+}
+
 world_t *world_new(uint8_t player_count) {
     world_t *world = (world_t *)calloc(sizeof(world_t), 1);
     if (!world)
@@ -59,13 +74,13 @@ void world_generate(world_t *world, unsigned long seed, button_mode_t mode) {
                     // Put boxes in the 3 horizontal and vertical center rows and colums.
                     if ((x > WORLD_WIDTH / 2 - 2 && x  < WORLD_WIDTH / 2 + 2 )
                     || ( y > WORLD_HEIGHT / 2 - 2 && y < WORLD_HEIGHT / 2 + 2)) { 
-                        world_set_tile(world, x, y, BOX);
+                        set_box(world, x, y);
                     }
                 } else if (mode == BUTTON_MODE_SINGLEPLAYER_FULL) {
-                    world_set_tile(world, x, y, BOX);
+                    set_box(world, x, y);
                 } else {
                     if (random(0, 2)) { 
-                        world_set_tile(world, x, y, BOX);
+                        set_box(world, x, y);
                     }
                 }
             }
@@ -106,7 +121,8 @@ uint8_t world_count_boxes(world_t *world) {
     uint8_t total = 0;
     for (int y = 0; y < WORLD_HEIGHT; y++) {
         for (int x = 0; x < WORLD_WIDTH; x++) {
-            if (world->tiles[x][y] == BOX) {
+            tile_t tile = world->tiles[x][y];
+            if ( tile == BOX || tile == UPGRAGE_BOX_BOM_COUNT || tile == UPGRADE_BOMB_SIZE ) {
                 total++;
             }
         }

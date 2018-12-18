@@ -1,6 +1,8 @@
 #ifndef TOUCH_H
 #define TOUCH_H
 
+#include "defines.h"
+
 #include <Adafruit_STMPE610.h>
 
 // Predeclare menu_t since it has a circular dependency with component_t.

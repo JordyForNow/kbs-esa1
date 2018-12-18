@@ -5,6 +5,7 @@
 #include "network.h"
 #include "touch.h"
 #include "score.h"
+#include "usart.h"
 
 #include <Adafruit_GFX.h>
 #include <Adafruit_ILI9341.h>
@@ -67,7 +68,9 @@ int main() {
             if (network_update())
                 game_update();
         
-        score_calculate();
+        if (!game_is_multiplayer) {
+            score_calculate();
+        }
         
         // Clean up the game.
         game_free();

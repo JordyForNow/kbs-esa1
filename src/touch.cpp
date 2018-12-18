@@ -197,7 +197,7 @@ void menus_new() {
 
     // menu_score
     // Get the 3 highest scores from eeprom and display them in a list.
-    char label[10];
+    char label[15];
     for (int i = 0; i < 3; i++) {
         menu_set_component(menu_score, i, label_new(menu_get_score(i, label)));
     }

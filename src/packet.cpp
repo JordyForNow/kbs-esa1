@@ -14,19 +14,29 @@ inline void packet_send(packet_t packet) {
 }
 
 uint16_t packet_encode(packet_t *p) {
-    return p->method == INIT 
-    ? (p->method << 11) | (p->seed << 1) | (p->parity) 
-    : (p->method << 11) + (p->x << 6) + (p->y << 1) + (p->parity);
+    switch (p->method) {
+        case INIT:
+            return (p->method << 11) | (p->seed << 1) | (p->parity);
+        case PLACE_BOMB: 
+            return (p->method << 11) | (p->size << 1) | (p->parity);
+        default:
+            return (p->method << 11) + (p->x << 6) + (p->y << 1) + (p->parity);
+    }
 }
 
 void packet_decode(packet_t *p, uint16_t i) {
     p->method = (method_t) ((i >> 11) & 0b111);
 
-    if (p->method == INIT) {
-        p->seed = (i >> 1) & 0b1111111111;
-    } else {
-        p->x = (i >> 6) & 0b11111;
-        p->y = (i >> 1) & 0b11111;
+    switch (p->method) {
+        case INIT:
+            p->seed = (i >> 1) & 0b1111111111;
+            break;
+        case PLACE_BOMB: 
+            p->size = (i >> 1) & 0b11111;
+            break;
+        default:
+            p->x = (i >> 6) & 0b11111;
+            p->y = (i >> 1) & 0b11111;
     }
 
     p->parity = i & 0b1;
@@ -38,12 +48,12 @@ void packet_free(packet_t* packet) {
 }
 
 // Send a packet with a method and the location of the player.
-void packet_send(method_t method, uint8_t x, uint8_t y) {
+void packet_send(method_t method, player_t *player) {
     // Construct the packet.
     packet_t packet;
     packet.method = method;
-    packet.x = x;
-    packet.y = y;
+    packet.x = player->x;
+    packet.y = player->y;
     packet.parity = 0;
 
     packet_send(packet);

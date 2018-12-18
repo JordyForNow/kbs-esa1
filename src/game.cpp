@@ -3,7 +3,6 @@
 #include "player.h"
 #include "render.h"
 #include "network.h"
-#include "usart.h"
 #include "packet.h"
 #include "world.h"
 #include "score.h"
@@ -61,13 +60,21 @@ inline void opponent_move(uint8_t x, uint8_t y){
     player->x = x;
     player->y = y;
 
+    tile_t tile = world_get_tile(world, x, y);
+
+    if (tile & TILE_MASK_IS_UPGRADE) {
+        world_set_tile(world, x, y, (tile_t) (tile & TILE_MASK_IS_EXPLODING));
+    }
+
     world_redraw_tile(world, oldx, oldy);
     draw_player(player);
 }
 
-inline void opponent_place_bomb(uint8_t x, uint8_t y){
+inline void opponent_place_bomb(uint8_t size){
     player_t *player = get_opponent();
+    player->bomb_size = size;
     int bomb_index = bomb_allowed(player, world);
+
     if (bomb_index < MAX_BOMB_COUNT) {
         player_place_bomb(world, player, bomb_index);
     }
@@ -106,7 +113,7 @@ inline void collect_nunchuck_inputs() {
 }
 
 inline void recieve_networking_data() {
-    if (network_available())
+    if (multiplayer && network_available())
     {
         packet_t *packet = network_receive();
 
@@ -120,7 +127,7 @@ inline void recieve_networking_data() {
                     opponent_lose_live(packet->x, packet->y);
                     break;
                 case PLACE_BOMB:
-                    opponent_place_bomb(packet->x, packet->y);
+                    opponent_place_bomb(packet->size);
                     break;
                 default:
                     break;
@@ -169,6 +176,9 @@ void game_init(button_mode_t game_mode) {
     // Create the opponent if playing in multiplayer mode
     if (multiplayer) {
         player_t *player2 = player_new(15, 11, !player_1_host);
+
+        //set the bom count for the opponent to the maximum amount;        
+        player_1_host ? player2->bomb_count = MAX_BOMB_COUNT: player->bomb_count = MAX_BOMB_COUNT;
         draw_player(player2);
 
         world->players[1] = player2;
