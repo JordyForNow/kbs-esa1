@@ -13,4 +13,4 @@ void usart_acknowledge();
 bool usart_available();
 void usart_clear();
 
-#endif
+#endif /* USART_H */

@@ -1,3 +1,4 @@
+#if USART_ENABLED
 #include "usart.h"
 #include "defines.h"
 #include "game.h"
@@ -106,6 +107,7 @@ void usart_clear() {
     buffer_clear(outgoing_data);
 }
 
+#if USART_ENABLED
 ISR(USART_RX_vect) {
     uint8_t temp = UDR0;
     if (first_byte && temp == NETWORK_ACK_BYTE)
@@ -119,3 +121,5 @@ ISR(USART_RX_vect) {
     if (!first_byte) 
         usart_acknowledge();
 }
+
+#endif /* USART_ENABLED */
