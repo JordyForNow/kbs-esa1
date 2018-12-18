@@ -2,6 +2,7 @@
 #include "defines.h"
 #include "render.h"
 #include "score.h"
+#include "game.h"
 
 Adafruit_STMPE610 ts = Adafruit_STMPE610(STMPE_CS);
 
@@ -11,6 +12,7 @@ menu_t *menu_select_level = NULL;
 menu_t *menu_score = NULL;
 menu_t *menu_win = NULL;
 menu_t *menu_lose = NULL;
+menu_t *menu_waiting = NULL;
 
 component_t *button_new(const char *text, menu_t *target, button_mode_t mode) {
     component_t *button = (component_t *)malloc(sizeof(component_t));
@@ -208,10 +210,15 @@ void menus_new() {
     menu_set_component(menu_lose, 3, button_new("Back", menu_main, BUTTON_MODE_DEFAULT));
 
     // menu_win
-    float score = score_get();
-    sprintf(label, "Score: %u", (int)score);
-    menu_set_component(menu_win, 0, label_new("You win!"));
-    menu_set_component(menu_win, 2, label_new(label));
+    int win_pos = 1;
+    if (!game_is_multiplayer()) {
+        float score = score_get();
+        sprintf(label, "Score: %u", (int)score);
+        menu_set_component(menu_win, 2, label_new(label));
+        win_pos = 0;
+    }
+    
+    menu_set_component(menu_win, win_pos, label_new("You win!"));
     menu_set_component(menu_win, 3, button_new("Back", menu_main, BUTTON_MODE_DEFAULT));
 }
 

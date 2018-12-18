@@ -81,10 +81,6 @@ uint8_t player_move(player_t *player, uint8_t inputs, world_t *world, uint8_t re
         player->x = new_x;
         player->y = new_y;
 
-        // Send move player packet.
-        if(player->is_main && game_is_multiplayer())
-            packet_send(MOVE, player);
-
         // If next position is a power-up.
         if (new_tile & TILE_MASK_IS_UPGRADE) {
             // If the next position is a size power-up.
@@ -103,6 +99,10 @@ uint8_t player_move(player_t *player, uint8_t inputs, world_t *world, uint8_t re
             // Remove a life if the player is not invincible.
             player_on_hit(player);
         }
+
+        // Send move player packet.
+        if(player->is_main && game_is_multiplayer())
+            packet_send(MOVE, player);
 
         world_set_tile(world, new_x, new_y, exploding ? EXPLODING_BOMB : EMPTY);
 

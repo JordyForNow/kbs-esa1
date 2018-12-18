@@ -11,5 +11,6 @@ void usart_send(uint16_t bytes);
 packet_t* usart_receive();
 void usart_acknowledge();
 bool usart_available();
+void usart_clear();
 
 #endif

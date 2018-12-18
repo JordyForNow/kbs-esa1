@@ -12,5 +12,6 @@ packet_t* network_receive();
 bool network_available();
 void network_acknowledge();
 void network_resend();
+void network_clear();
 
 #endif /* NETWORK_H */

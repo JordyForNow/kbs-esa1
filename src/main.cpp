@@ -55,11 +55,6 @@ int main() {
         // Show the menu.
         button_mode_t mode = menu_loop(menu);
 
-        // Singleplayer/ Multiplayer
-
-        // Paint background black.
-        draw_background(ILI9341_BLACK);
-
         // Set up the game.
         game_init(mode);
         

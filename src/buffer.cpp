@@ -18,6 +18,12 @@ buffer_t *buffer_new(uint8_t capacity) {
     return buffer;
 }
 
+void buffer_clear(buffer_t *buffer) {
+    buffer->count = 0;
+    buffer->head = 0;
+    buffer->tail = 0;
+}
+
 void buffer_free(buffer_t *buffer) {
     if (!buffer)
         return;

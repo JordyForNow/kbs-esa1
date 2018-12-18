@@ -82,10 +82,9 @@ inline void opponent_place_bomb(uint8_t size){
 
 inline void opponent_lose_live(uint8_t x, uint8_t y){
     player_t *player = get_opponent();
-    player_on_hit(player);
+    player->hit_duration = 0;
 
-    // Set the hit duration 1 higher than the hit duration function because the player will update this update-cycle
-    player->hit_duration++;
+    player_on_hit(player);
     
     opponent_move(x, y);
 }
@@ -194,6 +193,7 @@ player_t *game_get_local_player() {
 
 void game_free() {
     world_free(world);
+    network_clear();
     segments_hide();
 }
 

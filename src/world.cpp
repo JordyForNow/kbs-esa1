@@ -59,6 +59,10 @@ void world_generate(world_t *world, unsigned long seed){
 }
 
 void world_generate(world_t *world, unsigned long seed, button_mode_t mode) {
+    // Clear the screen.
+    draw_background(ILI9341_BLACK);
+    
+    // Set the seed for the generation of the ma 
     randomSeed(seed);
 
     for (int y = 0; y < WORLD_HEIGHT; y++) {
@@ -102,19 +106,25 @@ void world_generate(world_t *world, unsigned long seed, button_mode_t mode) {
 }
 
 bool world_multiplayer_generate(world_t *world, unsigned long seed) {
-    seed &= SEED_MASK; 
+    seed &= SEED_MASK;
 
     packet_setup(seed);
+    
+    menu_waiting = menu_new("Waiting...");
+    menu_draw(menu_waiting);
 
     while (!network_available()) 
         network_update();
-
-    packet_t *packet = network_receive();
-    if (packet) {
-        world_generate(world, packet->seed ^ seed);
-        return packet->seed <= seed;
-    }
     
+    while (1) {
+        packet_t *packet = network_receive();
+        if (packet->method == INIT) {
+            world_generate(world, packet->seed ^ seed);
+            menu_free(menu_waiting);
+            return packet->seed <= seed;
+        }
+        network_update();
+    }
 }
 
 uint8_t world_count_boxes(world_t *world) {

@@ -101,6 +101,11 @@ bool usart_available() {
     return buffer_available(incoming_data) >= 2;
 }
 
+void usart_clear() {
+    buffer_clear(incoming_data);
+    buffer_clear(outgoing_data);
+}
+
 ISR(USART_RX_vect) {
     uint8_t temp = UDR0;
     if (first_byte && temp == NETWORK_ACK_BYTE)

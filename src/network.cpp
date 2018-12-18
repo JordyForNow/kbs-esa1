@@ -24,3 +24,7 @@ bool network_available() {
 void network_acknowledge() {
     usart_acknowledge();
 }
+
+void network_clear() {
+    usart_clear();
+}
