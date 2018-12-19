@@ -7,19 +7,23 @@
 #include <Adafruit_ILI9341.h>
 
 // The possible items a tile can contain.
-// Fourth bit says it's a power up.
-// First bit says it's exploding.
+// LSB says it's a power up.
+// MSB says it's exploding.
+// If its a power up then the left middle bit represents if the upgrade is in a box
+// and the right middle bit says which type the upgrade is. 
 typedef enum {
     EMPTY = 0b0000,
     BOMB = 0b0010,
-    WALL = 0b0100,
-    BOX = 0b0110,
+    WALL = 0b0110,
+    BOX = 0b0100,
     EXPLODING_BOMB = 0b0001,
     BOMB_EXPLOSION = 0b0011,
-    UPGRADE_EXPLOSION_BOMB_SIZE = 0b1101,
-    UPGRADE_BOMB_SIZE = 0b1100,
+    UPGRADE_EXPLOSION_BOMB_SIZE = 0b1001,
+    UPGRADE_BOMB_SIZE = 0b1000,
+    UPGRADE_BOX_BOMB_SIZE = 0b1100, 
     UPGRADE_EXPLOSION_BOMB_COUNT = 0b1011,
     UPGRADE_BOMB_COUNT = 0b1010,
+    UPGRADE_BOX_BOMB_COUNT = 0b1110, 
 } tile_t;
 
 struct world_t;
@@ -36,8 +40,9 @@ typedef struct world_t {
 
 world_t *world_new(uint8_t player_count);
 void world_free(world_t *world);
-void world_generate(world_t *world, unsigned long seed);
-void world_generate(world_t *world, unsigned long seed, button_mode_t mode);
+void world_generate(world_t *world, uint16_t seed);
+bool world_multiplayer_generate(world_t *world, uint16_t seed);
+void world_generate(world_t *world, uint16_t seed, button_mode_t mode);
 uint8_t world_count_boxes(world_t *world);
 
 void world_update(world_t *world, uint8_t inputs);

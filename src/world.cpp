@@ -1,6 +1,24 @@
 #include "world.h"
 #include "defines.h"
 #include "render.h"
+#include "packet.h"
+#include "network.h"
+
+#define SEED_MASK 0b01111111111
+
+inline void set_box(world_t *world, uint8_t x, uint8_t y) {
+    tile_t tile = BOX;
+    uint8_t random_number = random(100);
+    if (random_number < BOMB_EXPLODE_SIZE_DROP_CHANCE) {
+        // Check if a size power-up should drop.
+        tile = UPGRADE_BOX_BOMB_SIZE;
+    } else if (random_number < BOMB_EXPLODE_SIZE_DROP_CHANCE + BOMB_COUNT_UPGRADE_CHANCE) {
+        // Check if a bomb count power-up should drop.
+        tile = UPGRADE_BOX_BOMB_COUNT;
+    }
+
+    world_set_tile(world, x, y, tile);
+}
 
 world_t *world_new(uint8_t player_count) {
     world_t *world = (world_t *)calloc(sizeof(world_t), 1);
@@ -35,11 +53,15 @@ void world_free(world_t *world) {
     free(world);
 }
 
-void world_generate(world_t *world, unsigned long seed){
+void world_generate(world_t *world, uint16_t seed){
     world_generate(world, seed, BUTTON_MODE_SINGLEPLAYER_RANDOM);
 }
 
-void world_generate(world_t *world, unsigned long seed, button_mode_t mode) {
+void world_generate(world_t *world, uint16_t seed, button_mode_t mode) {
+    // Clear the screen.
+    draw_background(ILI9341_BLACK);
+    
+    // Set the seed for the generation of the map.
     randomSeed(seed);
 
     for (int y = 0; y < WORLD_HEIGHT; y++) {
@@ -55,13 +77,13 @@ void world_generate(world_t *world, unsigned long seed, button_mode_t mode) {
                     // Put boxes in the 3 horizontal and vertical center rows and colums.
                     if ((x > WORLD_WIDTH / 2 - 2 && x  < WORLD_WIDTH / 2 + 2 )
                     || ( y > WORLD_HEIGHT / 2 - 2 && y < WORLD_HEIGHT / 2 + 2)) { 
-                        world_set_tile(world, x, y, BOX);
+                        set_box(world, x, y);
                     }
                 } else if (mode == BUTTON_MODE_SINGLEPLAYER_FULL) {
-                    world_set_tile(world, x, y, BOX);
+                    set_box(world, x, y);
                 } else {
                     if (random(0, 2)) { 
-                        world_set_tile(world, x, y, BOX);
+                        set_box(world, x, y);
                     }
                 }
             }
@@ -82,11 +104,34 @@ void world_generate(world_t *world, unsigned long seed, button_mode_t mode) {
     world->boxes = world_count_boxes(world);
 }
 
+bool world_multiplayer_generate(world_t *world, uint16_t seed) {
+    seed &= SEED_MASK;
+
+    packet_setup(seed);
+    
+    menu_waiting = menu_new("Waiting...");
+    menu_draw(menu_waiting);
+
+    while (!network_available()) 
+        network_update();
+    
+    while (1) {
+        packet_t *packet = network_receive();
+        if (packet->id == PACKET_INIT) {
+            world_generate(world, packet->seed ^ seed);
+            menu_free(menu_waiting);
+            return packet->seed <= seed;
+        }
+        network_update();
+    }
+}
+
 uint8_t world_count_boxes(world_t *world) {
     uint8_t total = 0;
     for (int y = 0; y < WORLD_HEIGHT; y++) {
         for (int x = 0; x < WORLD_WIDTH; x++) {
-            if (world->tiles[x][y] == BOX) {
+            tile_t tile = world->tiles[x][y];
+            if (tile == BOX || tile == UPGRADE_BOX_BOMB_COUNT || tile == UPGRADE_BOX_BOMB_SIZE) {
                 total++;
             }
         }

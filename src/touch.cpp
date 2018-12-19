@@ -2,6 +2,7 @@
 #include "defines.h"
 #include "render.h"
 #include "score.h"
+#include "game.h"
 
 Adafruit_STMPE610 ts = Adafruit_STMPE610(STMPE_CS);
 
@@ -11,6 +12,7 @@ menu_t *menu_select_level = NULL;
 menu_t *menu_score = NULL;
 menu_t *menu_win = NULL;
 menu_t *menu_lose = NULL;
+menu_t *menu_waiting = NULL;
 
 component_t *button_new(const char *text, menu_t *target, button_mode_t mode) {
     component_t *button = (component_t *)malloc(sizeof(component_t));
@@ -185,6 +187,7 @@ void menus_new() {
     menu_set_component(menu_main, 1, button_new("High scores", menu_score, BUTTON_MODE_DEFAULT));
 
     // menu_play
+    menu_set_component(menu_play, 1, button_new("Multiplayer", NULL, BUTTON_MODE_MULTIPLAYER));
     menu_set_component(menu_play, 0, button_new("Singleplayer", menu_select_level, BUTTON_MODE_DEFAULT));
     menu_set_component(menu_play, 3, button_new("Back", menu_main, BUTTON_MODE_DEFAULT));
 
@@ -195,8 +198,8 @@ void menus_new() {
     menu_set_component(menu_select_level, 3, button_new("Back", menu_play, BUTTON_MODE_DEFAULT));
 
     // menu_score
-    // Get the 3 highest scores from eeprom and display them in a list.
-    char label[10];
+    // Get the 3 highest scores from EEPROM and display them in a list.
+    char label[15];
     for (int i = 0; i < 3; i++) {
         menu_set_component(menu_score, i, label_new(menu_get_score(i, label)));
     }
@@ -207,10 +210,15 @@ void menus_new() {
     menu_set_component(menu_lose, 3, button_new("Back", menu_main, BUTTON_MODE_DEFAULT));
 
     // menu_win
-    float score = score_get();
-    sprintf(label, "Score: %u", (int)score);
-    menu_set_component(menu_win, 0, label_new("You win!"));
-    menu_set_component(menu_win, 2, label_new(label));
+    int win_pos = 1;
+    if (!game_is_multiplayer()) {
+        float score = score_get();
+        sprintf(label, "Score: %u", (int)score);
+        menu_set_component(menu_win, 2, label_new(label));
+        win_pos = 0;
+    }
+    
+    menu_set_component(menu_win, win_pos, label_new("You win!"));
     menu_set_component(menu_win, 3, button_new("Back", menu_main, BUTTON_MODE_DEFAULT));
 }
 
