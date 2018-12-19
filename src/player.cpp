@@ -1,11 +1,12 @@
+#include "player.h"
+
+#include "bomb.h"
 #include "defines.h"
+#include "game.h"
 #include "packet.h"
 #include "render.h"
-#include "game.h"
-#include "world.h"
-#include "player.h"
-#include "bomb.h"
 #include "segments.h"
+#include "world.h"
 
 // Create a new player struct.
 player_t *player_new(uint8_t x, uint8_t y, uint8_t is_main) {

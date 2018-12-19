@@ -1,6 +1,7 @@
-#include "defines.h"
 #include "usart.h"
+
 #include "buffer.h"
+#include "defines.h"
 #include "game.h"
 
 #define BUFFER_MAXIMUM_CAPACITY 16

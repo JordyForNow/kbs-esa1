@@ -1,8 +1,8 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include "touch.h"
 #include "player.h"
+#include "touch.h"
 
 #include <stdbool.h>
 #include <nunchuck_funcs.h>

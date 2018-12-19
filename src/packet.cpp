@@ -1,6 +1,7 @@
+#include "packet.h"
+
 #include "defines.h"
 #include "network.h"
-#include "packet.h"
 
 // The position in the uint16 of all the packet elements. 
 #define ID_POSITION 11

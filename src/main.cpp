@@ -1,11 +1,11 @@
 #include "defines.h"
-#include "network.h"
-#include "usart.h"
-#include "render.h"
-#include "touch.h"
 #include "game.h"
+#include "network.h"
+#include "render.h"
 #include "score.h"
 #include "segments.h"
+#include "touch.h"
+#include "usart.h"
 
 #include <Arduino.h>
 

@@ -1,12 +1,13 @@
+#include "game.h"
+
 #include "defines.h"
 #include "network.h"
-#include "render.h"
-#include "touch.h"
-#include "game.h"
-#include "world.h"
 #include "player.h"
+#include "render.h"
 #include "score.h"
 #include "segments.h"
+#include "touch.h"
+#include "world.h"
 
 volatile bool should_poll = false;
 static int should_update = 0;

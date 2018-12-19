@@ -1,8 +1,8 @@
 #ifndef RENDER_H
 #define RENDER_H
 
-#include "world.h"
 #include "player.h"
+#include "world.h"
 
 #include <Adafruit_GFX.h>
 #include <Adafruit_ILI9341.h>
