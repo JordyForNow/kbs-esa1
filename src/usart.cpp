@@ -45,10 +45,8 @@ void send_bytes() {
 
 bool usart_update() {
     // The game should be halted because the networking trafic has not been acknowledged yet.
-    if (waiting && !acknowledged) {
+    if (waiting && !acknowledged)
         return false;
-        
-    }
 
     waiting = false;
 
@@ -110,8 +108,7 @@ void usart_clear() {
 #if USART_ENABLED
 ISR(USART_RX_vect) {
     uint8_t temp = UDR0;
-    if (first_byte && temp == NETWORK_ACK_BYTE)
-    {
+    if (first_byte && temp == NETWORK_ACK_BYTE){
         acknowledged = true;
         return;
     }
@@ -121,5 +118,4 @@ ISR(USART_RX_vect) {
     if (!first_byte) 
         usart_acknowledge();
 }
-
 #endif /* USART_ENABLED */

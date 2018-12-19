@@ -1,13 +1,13 @@
 #include "game.h"
 #include "defines.h"
-#include "player.h"
-#include "render.h"
 #include "network.h"
 #include "packet.h"
-#include "world.h"
+#include "player.h"
+#include "render.h"
 #include "score.h"
 #include "segments.h"
 #include "touch.h"
+#include "world.h"
 
 volatile bool should_poll = false;
 static int should_update = 0;
@@ -26,9 +26,9 @@ game_state_t game_state = GAME_STATE_RUNNING;
 /*******************
  * Local functions *
  *******************/
-inline player_t *get_opponent(){
-    for(int i =0; i<world->player_count; i++){
-        if(!world->players[i]->is_main)
+inline player_t *get_opponent() {
+    for (int i = 0; i < world->player_count; i++) {
+        if (!world->players[i]->is_main)
             return world->players[i];
     }
 }
@@ -51,7 +51,7 @@ inline bool has_game_ended() {
     return game_state != GAME_STATE_RUNNING;
 }
 
-inline void opponent_move(uint8_t x, uint8_t y){
+inline void opponent_move(uint8_t x, uint8_t y) {
     player_t *player = get_opponent();
 
     uint8_t oldx = player->x;
@@ -63,14 +63,14 @@ inline void opponent_move(uint8_t x, uint8_t y){
     tile_t tile = world_get_tile(world, x, y);
 
     if (tile & TILE_MASK_IS_UPGRADE) {
-        world_set_tile(world, x, y, (tile_t) (tile & TILE_MASK_IS_EXPLODING));
+        world_set_tile(world, x, y, (tile_t)(tile & TILE_MASK_IS_EXPLODING));
     }
 
     world_redraw_tile(world, oldx, oldy);
     draw_player(player);
 }
 
-inline void opponent_place_bomb(uint8_t size){
+inline void opponent_place_bomb(uint8_t size) {
     player_t *player = get_opponent();
     player->bomb_size = size;
     int bomb_index = bomb_allowed(player, world);
@@ -80,12 +80,12 @@ inline void opponent_place_bomb(uint8_t size){
     }
 }
 
-inline void opponent_lose_live(uint8_t x, uint8_t y){
+inline void opponent_lose_live(uint8_t x, uint8_t y) {
     player_t *player = get_opponent();
     player->hit_duration = 0;
 
     player_on_hit(player);
-    
+
     opponent_move(x, y);
 }
 
@@ -112,12 +112,10 @@ inline void collect_nunchuck_inputs() {
 }
 
 inline void recieve_networking_data() {
-    if (multiplayer && network_available())
-    {
+    if (multiplayer && network_available()) {
         packet_t *packet = network_receive();
 
-        if (packet)
-        {
+        if (packet) {
             switch (packet->method) {
                 case MOVE:
                     opponent_move(packet->x, packet->y);
@@ -143,7 +141,7 @@ inline void recieve_networking_data() {
 void game_init(button_mode_t game_mode) {
     // Reset variables when a game is restarting.
     game_state = GAME_STATE_RUNNING;
-    
+
     multiplayer = game_mode == BUTTON_MODE_MULTIPLAYER;
 
     game_time = 0;
@@ -157,8 +155,7 @@ void game_init(button_mode_t game_mode) {
     bool player_1_host = true;
     if (multiplayer) {
         player_1_host = world_multiplayer_generate(world, TCNT0);
-    }
-    else {
+    } else {
         world_generate(world, TCNT0, game_mode);
     }
 
@@ -167,17 +164,17 @@ void game_init(button_mode_t game_mode) {
     // Create the local player and show the lives on the 7-segment display.
     player_t *player = player_new(1, 1, player_1_host);
     player_show_lives(player);
-    
+
     draw_player(player);
-    
+
     world->players[0] = player;
 
     // Create the opponent if playing in multiplayer mode
     if (multiplayer) {
         player_t *player2 = player_new(15, 11, !player_1_host);
 
-        //set the bom count for the opponent to the maximum amount;        
-        player_1_host ? player2->bomb_count = MAX_BOMB_COUNT: player->bomb_count = MAX_BOMB_COUNT;
+        //set the bom count for the opponent to the maximum amount;
+        player_1_host ? player2->bomb_count = MAX_BOMB_COUNT : player->bomb_count = MAX_BOMB_COUNT;
         draw_player(player2);
 
         world->players[1] = player2;
@@ -185,8 +182,8 @@ void game_init(button_mode_t game_mode) {
 }
 
 player_t *game_get_local_player() {
-    for(int i =0; i<world->player_count; i++){
-        if(world->players[i]->is_main)
+    for (int i = 0; i < world->player_count; i++) {
+        if (world->players[i]->is_main)
             return world->players[i];
     }
 }
@@ -199,7 +196,6 @@ void game_free() {
 
 // Update the game, or do nothing if an update hasn't been triggered.
 bool game_update() {
-
     recieve_networking_data();
 
     // Don't poll or update unless the timer tells us to.
@@ -217,7 +213,7 @@ bool game_update() {
     // Don't update unless it's time.
     if (should_update < GAME_INPUT_FACTOR)
         return false;
-    
+
     // Increment game time each game update.
     game_time++;
 
@@ -235,13 +231,13 @@ bool game_update() {
     if (((input_joy_x ^ x_mask) + x_mask) >= ((input_joy_y ^ y_mask) + y_mask)) {
         // The X-axis is more or equally prevalent.
         inputs |= (input_joy_x < -INPUT_JOY_THRESHOLD) << INPUT_JOY_LEFT;
-        inputs |= (input_joy_x >  INPUT_JOY_THRESHOLD) << INPUT_JOY_RIGHT;
+        inputs |= (input_joy_x > INPUT_JOY_THRESHOLD) << INPUT_JOY_RIGHT;
     } else {
         // The Y-axis is more prevalent.
         inputs |= (input_joy_y < -INPUT_JOY_THRESHOLD) << INPUT_JOY_UP;
-        inputs |= (input_joy_y >  INPUT_JOY_THRESHOLD) << INPUT_JOY_DOWN;
+        inputs |= (input_joy_y > INPUT_JOY_THRESHOLD) << INPUT_JOY_DOWN;
     }
-    
+
     // Reset the input trackers.
     input_buttons = 0;
     input_joy_x = 0;
@@ -261,7 +257,6 @@ game_state_t game_get_state() {
 void game_trigger_update() {
     should_poll = true;
 }
-
 
 bool game_is_multiplayer() {
     return multiplayer;

@@ -1,12 +1,11 @@
 #include "player.h"
-#include "game.h"
 #include "bomb.h"
 #include "defines.h"
+#include "game.h"
+#include "packet.h"
 #include "render.h"
 #include "segments.h"
-#include "packet.h"
 #include "world.h"
-#include "game.h"
 
 // Create a new player struct.
 player_t *player_new(uint8_t x, uint8_t y, uint8_t is_main) {
@@ -70,9 +69,8 @@ uint8_t player_move(player_t *player, uint8_t inputs, world_t *world, uint8_t re
     tile_t new_tile = world_get_tile(world, new_x, new_y);
 
     // Check if we want to and can move into the new tile.
-    if ((new_x != player->x || new_y != player->y)
-    && (new_tile != WALL && new_tile != BOX && new_tile != BOMB 
-    && new_tile != UPGRAGE_BOX_BOM_COUNT && new_tile != UPGRAGE_BOX_BOM_SIZE)) {
+    if ((new_x != player->x || new_y != player->y) && (new_tile != WALL && new_tile != BOX 
+    && new_tile != BOMB && new_tile != UPGRADE_BOX_BOMB_COUNT && new_tile != UPGRADE_BOX_BOMB_SIZE)) {
         // Store where we were, so we can rerender the tile once we've moved.
         uint8_t old_x = player->x;
         uint8_t old_y = player->y;
@@ -92,7 +90,7 @@ uint8_t player_move(player_t *player, uint8_t inputs, world_t *world, uint8_t re
         }
 
         bool exploding = false;
-        
+
         // If next position is exploded.
         if (new_tile & TILE_MASK_IS_EXPLODING) {
             exploding = true;
@@ -101,7 +99,7 @@ uint8_t player_move(player_t *player, uint8_t inputs, world_t *world, uint8_t re
         }
 
         // Send move player packet.
-        if(player->is_main && game_is_multiplayer())
+        if (player->is_main && game_is_multiplayer())
             packet_send(MOVE, player);
 
         world_set_tile(world, new_x, new_y, exploding ? EXPLODING_BOMB : EMPTY);
@@ -159,13 +157,13 @@ uint8_t player_on_hit(player_t *player) {
         player->lives--;
 
         // Send lose live packet and update the lives display for the local player.
-        if(player->is_main) {
+        if (player->is_main) {
             player_show_lives(player);
             if (game_is_multiplayer())
                 packet_send(LOSE_LIVE, player);
         }
     }
-    
+
     return 1;
 }
 
@@ -189,7 +187,7 @@ uint8_t bomb_allowed(player_t *player, world_t *world) {
 void player_place_bomb(world_t *world, player_t *player, uint8_t bomb_index) {
     player->bombs[bomb_index] = bomb_new(player->x, player->y, player->bomb_size);
     world_set_tile(world, player->bombs[bomb_index]->x, player->bombs[bomb_index]->y, BOMB);
-    
-    if(player->is_main && game_is_multiplayer())
+
+    if (player->is_main && game_is_multiplayer())
         packet_send_bomb(player->bomb_size);
 }
