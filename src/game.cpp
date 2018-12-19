@@ -2,7 +2,7 @@
 #include "defines.h"
 #include "network.h"
 #include "packet.h"
-#include "player1.h"
+#include "player.h"
 #include "render.h"
 #include "score.h"
 #include "segments.h"
