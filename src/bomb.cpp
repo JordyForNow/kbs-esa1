@@ -56,7 +56,7 @@ void bomb_explode_tile(world_t *world, uint8_t x, uint8_t y, bool is_origin) {
     if (current_tile & TILE_MASK_IS_UPGRADE || (current_tile & TILE_MASK_IS_BOMB && !is_origin)) {
         // Check if a powerup or a bomb is currently present then replace it with the exploded version.
         // But a bomb shouldn't be replaced if its the origin of the explosion.
-        tile = (tile_t)(current_tile & (~BOX) | TILE_MASK_IS_EXPLODING);
+        tile = (tile_t)((current_tile & (~BOX)) | TILE_MASK_IS_EXPLODING);
     }
 
     world_set_tile(world, x, y, tile);
@@ -85,7 +85,7 @@ void bomb_explode(world_t *world, bomb_t *bomb) {
             if (tile_temp == WALL) {
                 // A wall can't be broken.
                 break;
-            } else if (tile_temp == BOX || tile_temp == UPGRAGE_BOX_BOMB_COUNT || tile_temp == UPGRAGE_BOX_BOMB_SIZE) {
+            } else if (tile_temp == BOX || tile_temp == UPGRADE_BOX_BOMB_COUNT || tile_temp == UPGRADE_BOX_BOMB_SIZE) {
                 // Subtract 1 from the total number of boxes and stop the explosion.
                 bomb_explode_tile(world, x_temp, y_temp, false);
                 world_subtract_boxes(world, 1);

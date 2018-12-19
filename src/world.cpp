@@ -11,11 +11,10 @@ inline void set_box(world_t *world, uint8_t x, uint8_t y) {
     uint8_t random_number = random(100);
     if (random_number < BOMB_EXPLODE_SIZE_DROP_CHANCE) {
         // Check if a size power-up should drop.
-        tile = UPGRAGE_BOX_BOM_SIZE;
-
+        tile = UPGRADE_BOX_BOMB_SIZE;
     } else if (random_number < BOMB_EXPLODE_SIZE_DROP_CHANCE + BOMB_COUNT_UPGRADE_CHANCE) {
         // Check if a bomb count power-up should drop.
-        tile = UPGRAGE_BOX_BOM_COUNT;
+        tile = UPGRADE_BOX_BOMB_COUNT;
     }
 
     world_set_tile(world, x, y, tile);
@@ -54,22 +53,22 @@ void world_free(world_t *world) {
     free(world);
 }
 
-void world_generate(world_t *world, unsigned long seed){
+void world_generate(world_t *world, uint16_t seed){
     world_generate(world, seed, BUTTON_MODE_SINGLEPLAYER_RANDOM);
 }
 
-void world_generate(world_t *world, unsigned long seed, button_mode_t mode) {
+void world_generate(world_t *world, uint16_t seed, button_mode_t mode) {
     // Clear the screen.
     draw_background(ILI9341_BLACK);
     
-    // Set the seed for the generation of the ma 
+    // Set the seed for the generation of the map.
     randomSeed(seed);
 
     for (int y = 0; y < WORLD_HEIGHT; y++) {
         for (int x = 0; x < WORLD_WIDTH; x++) {
             if (x == 0 || x == (WORLD_WIDTH - 1) || y == 0 || y == (WORLD_HEIGHT - 1)) {
                 // Make vertical and horizontal walls.
-                  world_set_tile(world, x, y, WALL);
+                world_set_tile(world, x, y, WALL);
             } else if (y > 0 && y < (WORLD_HEIGHT - 1) && x > 0 && x < (WORLD_WIDTH - 1)) {
                 // If it isn't a sidewall, put walls in the field or put some boxes in the field.
                 if (y % 2 == 0 && x % 2 == 0) {
@@ -105,7 +104,7 @@ void world_generate(world_t *world, unsigned long seed, button_mode_t mode) {
     world->boxes = world_count_boxes(world);
 }
 
-bool world_multiplayer_generate(world_t *world, unsigned long seed) {
+bool world_multiplayer_generate(world_t *world, uint16_t seed) {
     seed &= SEED_MASK;
 
     packet_setup(seed);
@@ -132,7 +131,7 @@ uint8_t world_count_boxes(world_t *world) {
     for (int y = 0; y < WORLD_HEIGHT; y++) {
         for (int x = 0; x < WORLD_WIDTH; x++) {
             tile_t tile = world->tiles[x][y];
-            if ( tile == BOX || tile == UPGRAGE_BOX_BOM_COUNT || tile == UPGRADE_BOMB_SIZE ) {
+            if ( tile == BOX || tile == UPGRADE_BOX_BOMB_COUNT || tile == UPGRADE_BOX_BOMB_SIZE ) {
                 total++;
             }
         }
@@ -176,7 +175,7 @@ void world_update(world_t *world, uint8_t inputs) {
 
     // Update all players once all bombs have been updated.
     for (int i = 0; i < world->player_count; i++) {
-            player_update(world, world->players[i], inputs);
+        player_update(world, world->players[i], inputs);
     }
 }
 

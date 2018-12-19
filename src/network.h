@@ -7,7 +7,7 @@
 
 void network_init();
 bool network_update();
-void  network_send(uint16_t);
+void  network_send(uint16_t data);
 packet_t* network_receive();
 bool network_available();
 void network_acknowledge();

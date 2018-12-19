@@ -7,13 +7,6 @@
 #include "score.h"
 #include "usart.h"
 
-#include <Adafruit_GFX.h>
-#include <Adafruit_ILI9341.h>
-#include <Adafruit_STMPE610.h>
-#include <Arduino.h>
-#include <SPI.h>
-#include <Wire.h>
-
 void timer1_init();
 void tft_brightness_init();
 void adc_init();
@@ -63,7 +56,7 @@ int main() {
             if (network_update())
                 game_update();
         
-        if (!game_is_multiplayer) {
+        if (!game_is_multiplayer()) {
             score_calculate();
         }
         

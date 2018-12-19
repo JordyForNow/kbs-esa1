@@ -2,6 +2,16 @@
 #include "defines.h"
 #include "network.h"
 
+#define METHOD_POS 11
+#define METHOD_SIZE 0b111
+#define FIRST_DATA_POS 1
+#define SECOND_DATA_POS 6
+
+//This is used for 5 bits data
+#define DATA_SIZE 0b11111
+//This is used for 10 bits data
+#define BIG_DATA_SIZE 0b1111111111
+
 inline void packet_send(packet_t packet) {
     // Look at the packet as if it's an uint16_t.
     uint16_t raw = packet_encode(&packet);
@@ -16,27 +26,30 @@ inline void packet_send(packet_t packet) {
 uint16_t packet_encode(packet_t *p) {
     switch (p->method) {
         case INIT:
-            return (p->method << 11) | (p->seed << 1) | (p->parity);
+            return (p->method << METHOD_POS) | (p->seed << FIRST_DATA_POS) | (p->parity);
         case PLACE_BOMB: 
-            return (p->method << 11) | (p->size << 1) | (p->parity);
+            return (p->method << METHOD_POS) | (p->size << FIRST_DATA_POS) | (p->parity);
         default:
-            return (p->method << 11) + (p->x << 6) + (p->y << 1) + (p->parity);
+            return (p->method << METHOD_POS) + (p->x << SECOND_DATA_POS) + (p->y << FIRST_DATA_POS) + (p->parity);
     }
 }
 
 void packet_decode(packet_t *p, uint16_t i) {
-    p->method = (method_t) ((i >> 11) & 0b111);
+    
+    // Get the method type from the incoming data
+    p->method = (method_t) ((i >> METHOD_POS) & METHOD_SIZE);
 
+    // Fill the packet based on the method type
     switch (p->method) {
         case INIT:
-            p->seed = (i >> 1) & 0b1111111111;
+            p->seed = (i >> FIRST_DATA_POS) & BIG_DATA_SIZE;
             break;
         case PLACE_BOMB: 
-            p->size = (i >> 1) & 0b11111;
+            p->size = (i >> FIRST_DATA_POS) & DATA_SIZE;
             break;
         default:
-            p->x = (i >> 6) & 0b11111;
-            p->y = (i >> 1) & 0b11111;
+            p->x = (i >> SECOND_DATA_POS) & DATA_SIZE;
+            p->y = (i >> FIRST_DATA_POS) & DATA_SIZE;
     }
 
     p->parity = i & 0b1;

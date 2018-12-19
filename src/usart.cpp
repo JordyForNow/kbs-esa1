@@ -109,13 +109,13 @@ void usart_clear() {
 
 #if USART_ENABLED
 ISR(USART_RX_vect) {
-    uint8_t temp = UDR0;
-    if (first_byte && temp == NETWORK_ACK_BYTE){
+    uint8_t incoming_byte = UDR0;
+    if (first_byte && incoming_byte == NETWORK_ACK_BYTE) {
         acknowledged = true;
         return;
     }
     first_byte = !first_byte;
-    buffer_write(incoming_data, temp);
+    buffer_write(incoming_data, incoming_byte);
 
     if (!first_byte) 
         usart_acknowledge();
