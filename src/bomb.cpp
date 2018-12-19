@@ -1,7 +1,7 @@
-#include "bomb.h"
 #include "defines.h"
-#include "player.h"
 #include "world.h"
+#include "player.h"
+#include "bomb.h"
 
 // Addition for x and y axis in every direction.
 int bomb_explode_addition[BOMB_DIRECTION_COUNT][2] = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};

@@ -1,8 +1,8 @@
-#include "game.h"
 #include "defines.h"
-#include "player.h"
 #include "render.h"
+#include "game.h"
 #include "world.h"
+#include "player.h"
 #include "score.h"
 #include "segments.h"
 

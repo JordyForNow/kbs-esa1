@@ -1,9 +1,11 @@
 #include "defines.h"
-#include "game.h"
 #include "render.h"
-#include "segments.h"
 #include "touch.h"
+#include "game.h"
 #include "score.h"
+#include "segments.h"
+
+#include <Arduino.h>
 
 void timer1_init();
 void tft_brightness_init();

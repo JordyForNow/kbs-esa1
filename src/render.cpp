@@ -1,5 +1,5 @@
-#include "render.h"
 #include "defines.h"
+#include "render.h"
 
 Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC);
 

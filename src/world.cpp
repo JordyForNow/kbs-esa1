@@ -1,6 +1,6 @@
-#include "world.h"
 #include "defines.h"
 #include "render.h"
+#include "world.h"
 
 world_t *world_new(uint8_t player_count) {
     world_t *world = (world_t *)calloc(sizeof(world_t), 1);

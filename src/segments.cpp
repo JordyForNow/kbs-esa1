@@ -1,5 +1,5 @@
-#include "segments.h"
 #include "defines.h"
+#include "segments.h"
 
 static uint8_t segments_numbers[] = {
     0b10001000, // 0

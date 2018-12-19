@@ -1,8 +1,8 @@
-#include "score.h"
 #include "defines.h"
+#include "touch.h"
 #include "game.h"
 #include "player.h"
-#include "touch.h"
+#include "score.h"
 
 // Calculation variables.
 uint8_t total_boxes = 0;
