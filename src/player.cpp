@@ -71,7 +71,7 @@ uint8_t player_move(player_t *player, uint8_t inputs, world_t *world, uint8_t re
     // Check if we want to and can move into the new tile.
     if ((new_x != player->x || new_y != player->y) && (new_tile != WALL && new_tile != BOX 
     && new_tile != BOMB && new_tile != UPGRADE_BOX_BOMB_COUNT && new_tile != UPGRADE_BOX_BOMB_SIZE)) {
-        // Store where we were, so we can rerender the tile once we've moved.
+        // Store where we were, so we can redraw the tile once we've moved.
         uint8_t old_x = player->x;
         uint8_t old_y = player->y;
 
@@ -104,7 +104,7 @@ uint8_t player_move(player_t *player, uint8_t inputs, world_t *world, uint8_t re
 
         world_set_tile(world, new_x, new_y, exploding ? EXPLODING_BOMB : EMPTY);
 
-        // Rerender the tile we came from, and render the player on top of the new tile.
+        // Redraw the tile we came from, and draw the player on top of the new tile.
         world_redraw_tile(world, old_x, old_y);
         return 1;
     } else if (world_get_tile(world, player->x, player->y) == EXPLODING_BOMB && player_on_hit(player)) {
@@ -116,7 +116,7 @@ uint8_t player_move(player_t *player, uint8_t inputs, world_t *world, uint8_t re
     return redraw;
 }
 
-// Process user input and optionally rerender the player.
+// Process user input and optionally redraw the player.
 void player_update(world_t *world, player_t *player, uint8_t inputs) {
     uint8_t redraw = 0;
 

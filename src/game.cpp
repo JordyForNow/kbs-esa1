@@ -169,11 +169,11 @@ void game_init(button_mode_t game_mode) {
 
     world->players[0] = player;
 
-    // Create the opponent if playing in multiplayer mode
+    // Create the opponent if playing in multiplayer mode.
     if (multiplayer) {
         player_t *player2 = player_new(15, 11, !player_1_host);
 
-        //set the bom count for the opponent to the maximum amount;
+        //set the bom count for the opponent to the maximum amount.
         player_1_host ? player2->bomb_count = MAX_BOMB_COUNT : player->bomb_count = MAX_BOMB_COUNT;
         draw_player(player2);
 
