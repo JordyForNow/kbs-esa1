@@ -1,4 +1,3 @@
-#if USART_ENABLED
 #include "usart.h"
 #include "defines.h"
 #include "game.h"
@@ -15,21 +14,24 @@ packet_t incoming_packet;
 bool waiting = false;
 
 void usart_init() {
-   // enable double speed.
-   UCSR0A |= (1 << U2X0);
-   // Set baud rate.
-   int16_t ubbr = (F_CPU / (8ul * USART_BAUD_RATE)) - 1;
-   UBRR0H = (uint8_t) (ubbr / 256);
-   UBRR0L = (uint8_t) (ubbr);
+    // Enable double speed.
+    UCSR0A |= (1 << U2X0);
+    // Set baud rate.
+    int16_t ubbr = (F_CPU / (8ul * USART_BAUD_RATE)) - 1;
+    UBRR0H = (uint8_t) (ubbr / 256);
+    UBRR0L = (uint8_t) (ubbr);
 
-   // Enable Receiver and Transmitter and Reciever interrupt.
-   UCSR0B = (1 << TXEN0) | (1 << RXEN0) | (1 << RXCIE0);
+    // Enable Receiver and Transmitter.
+    UCSR0B = (1 << TXEN0) | (1 << RXEN0);
 
-   UDR0 = 't';
+    #if USART_ENABLED
+    // Enable receiver interupts only if the interrupt is actualy used.
+    UCSR0B |= (1 << RXCIE0);
+    #endif /* USART_ENABLED */
 
-   // Create the incoming and outgoing data buffers.
-   incoming_data = buffer_new(BUFFER_MAXIMUM_CAPACITY);
-   outgoing_data = buffer_new(BUFFER_MAXIMUM_CAPACITY);
+    // Create the incoming and outgoing data buffers.
+    incoming_data = buffer_new(BUFFER_MAXIMUM_CAPACITY);
+    outgoing_data = buffer_new(BUFFER_MAXIMUM_CAPACITY);
 }
 
 void usart_wait_until_available() {
