@@ -118,7 +118,7 @@ uint8_t player_move(player_t *player, uint8_t inputs, world_t *world, uint8_t re
 
 // Process user input and optionally redraw the player.
 void player_update(world_t *world, player_t *player, uint8_t inputs) {
-    uint8_t redraw = 0;
+    bool redraw = false;
 
     // Decrease our invincibility.
     if (player->hit_duration) {
@@ -126,7 +126,7 @@ void player_update(world_t *world, player_t *player, uint8_t inputs) {
 
         // If we are no longer invincible, redraw.
         if (!player->hit_duration) {
-            redraw = 1;
+            redraw = true;
         }
     }
 
@@ -137,7 +137,7 @@ void player_update(world_t *world, player_t *player, uint8_t inputs) {
         int bomb_index = bomb_allowed(player, world);
         if (bomb_index < MAX_BOMB_COUNT && inputs & (1 << INPUT_BUTTON_C)) {
             player_place_bomb(world, player, bomb_index);
-            redraw = 1;
+            redraw = true;
         }
     }
 
@@ -148,9 +148,9 @@ void player_update(world_t *world, player_t *player, uint8_t inputs) {
 
 // Whenever the player should take damage, we check if they are invincible and
 // deal the damage if they are not.
-uint8_t player_on_hit(player_t *player) {
+bool player_on_hit(player_t *player) {
     if (player->hit_duration)
-        return 0;
+        return false;
 
     player->hit_duration = HIT_DURATION;
     if (player->lives) {
@@ -164,7 +164,7 @@ uint8_t player_on_hit(player_t *player) {
         }
     }
 
-    return 1;
+    return false;
 }
 
 // Show the lives of the given player on the seven segment display using TWI.

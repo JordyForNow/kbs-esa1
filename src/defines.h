@@ -79,16 +79,13 @@
 #define TFT_CS 10
 #endif /* ENABLE_DIMMING_BACKLIGHT */
 
-//////////////
-//Networking//
-//////////////
+/*************
+* Networking *
+*************/
 
-//Usart settings
+// Usart settings
 #define USART_ENABLED 1
 #define USART_BAUD_RATE 115200
-
-// Extra colors to use in the screen.
-#define ILI9341_BROWN 0x6100
 
 // The STMPE610 uses hardware SPI on the shield, and #8.
 #define STMPE_CS 8

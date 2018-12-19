@@ -56,7 +56,7 @@ void bomb_explode_tile(world_t *world, uint8_t x, uint8_t y, bool is_origin) {
     if (current_tile & TILE_MASK_IS_UPGRADE || (current_tile & TILE_MASK_IS_BOMB && !is_origin)) {
         // Check if a powerup or a bomb is currently present then replace it with the exploded version.
         // But a bomb shouldn't be replaced if its the origin of the explosion.
-        tile = (tile_t)((current_tile & (~BOX)) | TILE_MASK_IS_EXPLODING);
+        tile = (tile_t)((current_tile & ~BOX) | TILE_MASK_IS_EXPLODING);
     }
 
     world_set_tile(world, x, y, tile);

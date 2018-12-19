@@ -2,7 +2,7 @@
 #include "defines.h"
 #include "network.h"
 #include "packet.h"
-#include "player.h"
+#include "player1.h"
 #include "render.h"
 #include "score.h"
 #include "segments.h"
@@ -34,7 +34,7 @@ inline player_t *get_opponent() {
 }
 
 inline bool has_game_ended() {
-    // Check if the player has died.
+    // Check if the player1 has died.
     if (!(game_get_local_player())->lives)
         game_state = GAME_STATE_LOST;
 
@@ -52,13 +52,13 @@ inline bool has_game_ended() {
 }
 
 inline void opponent_move(uint8_t x, uint8_t y) {
-    player_t *player = get_opponent();
+    player_t *player1 = get_opponent();
 
-    uint8_t oldx = player->x;
-    uint8_t oldy = player->y;
+    uint8_t oldx = player1->x;
+    uint8_t oldy = player1->y;
 
-    player->x = x;
-    player->y = y;
+    player1->x = x;
+    player1->y = y;
 
     tile_t tile = world_get_tile(world, x, y);
 
@@ -67,24 +67,24 @@ inline void opponent_move(uint8_t x, uint8_t y) {
     }
 
     world_redraw_tile(world, oldx, oldy);
-    draw_player(player);
+    draw_player(player1);
 }
 
 inline void opponent_place_bomb(uint8_t size) {
-    player_t *player = get_opponent();
-    player->bomb_size = size;
-    int bomb_index = bomb_allowed(player, world);
+    player_t *player1 = get_opponent();
+    player1->bomb_size = size;
+    int bomb_index = bomb_allowed(player1, world);
 
     if (bomb_index < MAX_BOMB_COUNT) {
-        player_place_bomb(world, player, bomb_index);
+        player_place_bomb(world, player1, bomb_index);
     }
 }
 
 inline void opponent_lose_live(uint8_t x, uint8_t y) {
-    player_t *player = get_opponent();
-    player->hit_duration = 0;
+    player_t *player1 = get_opponent();
+    player1->hit_duration = 0;
 
-    player_on_hit(player);
+    player_on_hit(player1);
 
     opponent_move(x, y);
 }
@@ -111,7 +111,7 @@ inline void collect_nunchuck_inputs() {
     }
 }
 
-inline void recieve_networking_data() {
+inline void receive_networking_data() {
     if (multiplayer && network_available()) {
         packet_t *packet = network_receive();
 
@@ -152,9 +152,9 @@ void game_init(button_mode_t game_mode) {
     // Draw the world with blocks and walls.
     world = world_new(multiplayer ? 2 : 1);
 
-    bool player_1_host = true;
+    bool player1_is_host = true;
     if (multiplayer) {
-        player_1_host = world_multiplayer_generate(world, TCNT0);
+        player1_is_host = world_multiplayer_generate(world, TCNT0);
     } else {
         world_generate(world, TCNT0, game_mode);
     }
@@ -162,19 +162,19 @@ void game_init(button_mode_t game_mode) {
     score_set_box_count(world_get_box_count(world));
 
     // Create the local player and show the lives on the 7-segment display.
-    player_t *player = player_new(1, 1, player_1_host);
-    player_show_lives(player);
+    player_t *player1 = player_new(1, 1, player1_is_host);
+    player_show_lives(player1);
 
-    draw_player(player);
+    draw_player(player1);
 
-    world->players[0] = player;
+    world->players[0] = player1;
 
     // Create the opponent if playing in multiplayer mode.
     if (multiplayer) {
-        player_t *player2 = player_new(15, 11, !player_1_host);
+        player_t *player2 = player_new(15, 11, !player1_is_host);
 
-        //set the bom count for the opponent to the maximum amount.
-        player_1_host ? player2->bomb_count = MAX_BOMB_COUNT : player->bomb_count = MAX_BOMB_COUNT;
+        // Set the bomb count for the opponent to the maximum amount.
+        player1_is_host ? player2->bomb_count = MAX_BOMB_COUNT : player1->bomb_count = MAX_BOMB_COUNT;
         draw_player(player2);
 
         world->players[1] = player2;
@@ -196,7 +196,7 @@ void game_free() {
 
 // Update the game, or do nothing if an update hasn't been triggered.
 bool game_update() {
-    recieve_networking_data();
+    receive_networking_data();
 
     // Don't poll or update unless the timer tells us to.
     if (!should_poll)

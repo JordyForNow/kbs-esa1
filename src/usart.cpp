@@ -55,7 +55,7 @@ bool usart_update() {
     if (buffer_available(outgoing_data) < 2)
         return true;
 
-    // Read the ints that need to be send into the currently sending array which can be reused during retries.
+    // Read the ints that need to be send into the currently sending array so they can be reused during retries.
     buffer_read(outgoing_data, currently_sending, 2);
 
     send_bytes();

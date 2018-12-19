@@ -21,10 +21,6 @@ bool network_available() {
     return usart_available();
 }
 
-void network_acknowledge() {
-    usart_acknowledge();
-}
-
 void network_clear() {
     usart_clear();
 }
