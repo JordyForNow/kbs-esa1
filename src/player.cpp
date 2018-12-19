@@ -1,10 +1,11 @@
 #include "player.h"
 #include "bomb.h"
 #include "defines.h"
+#include "game.h"
+#include "packet.h"
 #include "render.h"
 #include "segments.h"
 #include "world.h"
-#include "game.h"
 
 // Create a new player struct.
 player_t *player_new(uint8_t x, uint8_t y, uint8_t is_main) {
@@ -68,9 +69,9 @@ uint8_t player_move(player_t *player, uint8_t inputs, world_t *world, uint8_t re
     tile_t new_tile = world_get_tile(world, new_x, new_y);
 
     // Check if we want to and can move into the new tile.
-    if ((new_x != player->x || new_y != player->y)
-    && (new_tile != WALL && new_tile != BOX && new_tile != BOMB)) {
-        // Store where we were, so we can rerender the tile once we've moved.
+    if ((new_x != player->x || new_y != player->y) && (new_tile != WALL && new_tile != BOX 
+    && new_tile != BOMB && new_tile != UPGRADE_BOX_BOMB_COUNT && new_tile != UPGRADE_BOX_BOMB_SIZE)) {
+        // Store where we were, so we can redraw the tile once we've moved.
         uint8_t old_x = player->x;
         uint8_t old_y = player->y;
 
@@ -81,15 +82,15 @@ uint8_t player_move(player_t *player, uint8_t inputs, world_t *world, uint8_t re
         // If next position is a power-up.
         if (new_tile & TILE_MASK_IS_UPGRADE) {
             // If the next position is a size power-up.
-            if (new_tile & TILE_MASK_IS_SIZE_UPGRADE) {
-                player_increment_bomb_size(player);
-            } else {
+            if (new_tile & TILE_MASK_IS_COUNT_UPGRADE) {
                 player_increment_bomb_count(player);
+            } else {
+                player_increment_bomb_size(player);
             }
         }
 
         bool exploding = false;
-        
+
         // If next position is exploded.
         if (new_tile & TILE_MASK_IS_EXPLODING) {
             exploding = true;
@@ -97,11 +98,15 @@ uint8_t player_move(player_t *player, uint8_t inputs, world_t *world, uint8_t re
             player_on_hit(player);
         }
 
+        // Send move player packet.
+        if (player->is_main && game_is_multiplayer())
+            packet_send(PACKET_MOVE, player);
+
         world_set_tile(world, new_x, new_y, exploding ? EXPLODING_BOMB : EMPTY);
 
-        // Rerender the tile we came from, and render the player on top of the new tile.
+        // Redraw the tile we came from, and draw the player on top of the new tile.
         world_redraw_tile(world, old_x, old_y);
-        redraw = 1;
+        return 1;
     } else if (world_get_tile(world, player->x, player->y) == EXPLODING_BOMB && player_on_hit(player)) {
         // If we don't want to move or we are unable to, we should check if we
         // are standing inside an explosion. If we are, we might have to take damage.
@@ -111,9 +116,9 @@ uint8_t player_move(player_t *player, uint8_t inputs, world_t *world, uint8_t re
     return redraw;
 }
 
-// Process user input and optionally rerender the player.
+// Process user input and optionally redraw the player.
 void player_update(world_t *world, player_t *player, uint8_t inputs) {
-    uint8_t redraw = 0;
+    bool redraw = false;
 
     // Decrease our invincibility.
     if (player->hit_duration) {
@@ -121,17 +126,19 @@ void player_update(world_t *world, player_t *player, uint8_t inputs) {
 
         // If we are no longer invincible, redraw.
         if (!player->hit_duration) {
-            redraw = 1;
+            redraw = true;
         }
     }
 
-    redraw = player_move(player, inputs, world, redraw);
+    if (player->is_main) {
+        redraw = player_move(player, inputs, world, redraw);
 
-    // Place a bomb if necessary.
-    int bomb_index = bomb_allowed(player, world);
-    if (bomb_index < MAX_BOMB_COUNT && inputs & (1 << INPUT_BUTTON_C)) {
-        player_place_bomb(world, player, bomb_index);
-        redraw = 1;
+        // Place a bomb if necessary.
+        int bomb_index = bomb_allowed(player, world);
+        if (bomb_index < MAX_BOMB_COUNT && inputs & (1 << INPUT_BUTTON_C)) {
+            player_place_bomb(world, player, bomb_index);
+            redraw = true;
+        }
     }
 
     // Redraw our player only if we have to.
@@ -141,16 +148,23 @@ void player_update(world_t *world, player_t *player, uint8_t inputs) {
 
 // Whenever the player should take damage, we check if they are invincible and
 // deal the damage if they are not.
-uint8_t player_on_hit(player_t *player) {
+bool player_on_hit(player_t *player) {
     if (player->hit_duration)
-        return 0;
+        return false;
 
     player->hit_duration = HIT_DURATION;
-    if (player->lives)
+    if (player->lives) {
         player->lives--;
 
-    player_show_lives(player);
-    return 1;
+        // Send lose live packet and update the lives display for the local player.
+        if (player->is_main) {
+            player_show_lives(player);
+            if (game_is_multiplayer())
+                packet_send(PACKET_LOSE_LIFE, player);
+        }
+    }
+
+    return false;
 }
 
 // Show the lives of the given player on the seven segment display using TWI.
@@ -173,4 +187,7 @@ uint8_t bomb_allowed(player_t *player, world_t *world) {
 void player_place_bomb(world_t *world, player_t *player, uint8_t bomb_index) {
     player->bombs[bomb_index] = bomb_new(player->x, player->y, player->bomb_size);
     world_set_tile(world, player->bombs[bomb_index]->x, player->bombs[bomb_index]->y, BOMB);
+
+    if (player->is_main && game_is_multiplayer())
+        packet_send_bomb(player->bomb_size);
 }

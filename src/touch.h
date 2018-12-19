@@ -45,6 +45,7 @@ extern menu_t *menu_select_level;
 extern menu_t *menu_score;
 extern menu_t *menu_win;
 extern menu_t *menu_lose;
+extern menu_t *menu_waiting;
 
 // Component functions.
 component_t *button_new(char *text, menu_t *target, button_mode_t mode);
