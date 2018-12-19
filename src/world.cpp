@@ -78,7 +78,6 @@ void world_generate(world_t *world, unsigned long seed, button_mode_t mode) {
         world_set_tile(world, (WORLD_WIDTH - 1 - i), (WORLD_HEIGHT - 2), EMPTY);
         world_set_tile(world, (WORLD_WIDTH - 2), (WORLD_HEIGHT - 1 - i), EMPTY);
     }
-    world_set_tile(world, 5, 5, WALL);
 
     world->boxes = world_count_boxes(world);
 }
@@ -136,7 +135,7 @@ void world_update(world_t *world, uint8_t inputs) {
 }
 
 uint8_t world_set_tile(world_t *world, uint8_t x, uint8_t y, tile_t tile) {
-    // Do not accidentally override walls
+    // Do not accidentally override walls.
     if (world_get_tile(world, x, y) == WALL)
         return 0;
     
