@@ -50,7 +50,7 @@
 // The properties a tile can have.
 #define TILE_MASK_IS_EXPLODING 0b0001
 #define TILE_MASK_IS_BOMB 0b0010
-#define TILE_MASK_IS_COUNT_UPGRADE 0b1010
+#define TILE_MASK_IS_COUNT_UPGRADE 0b0010
 #define TILE_MASK_IS_UPGRADE 0b1000
 
 // The maximum amount of bombs a player can have.

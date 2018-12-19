@@ -116,7 +116,7 @@ inline void recieve_networking_data() {
         packet_t *packet = network_receive();
 
         if (packet) {
-            switch (packet->method) {
+            switch (packet->id) {
                 case MOVE:
                     opponent_move(packet->x, packet->y);
                     break;

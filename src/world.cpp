@@ -117,7 +117,7 @@ bool world_multiplayer_generate(world_t *world, uint16_t seed) {
     
     while (1) {
         packet_t *packet = network_receive();
-        if (packet->method == INIT) {
+        if (packet->id == INIT) {
             world_generate(world, packet->seed ^ seed);
             menu_free(menu_waiting);
             return packet->seed <= seed;

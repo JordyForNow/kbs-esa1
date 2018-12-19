@@ -69,17 +69,6 @@ void usart_send(uint16_t bytes) {
     buffer_write(outgoing_data, bytes);
 }
 
-int validate_incoming_data(uint16_t data) {
-    int count = 1;
-
-    for (int i = 0; i < 16; i++) {
-        if (data & (1 << i))
-            count++;
-    }
-
-    return count % 2;
-}
-
 packet_t* usart_receive() {
     if (buffer_available(incoming_data) < 2)
         return NULL;
@@ -90,7 +79,7 @@ packet_t* usart_receive() {
     // Interpret the two bytes in currently_receiving as a packet.
     packet_decode(&incoming_packet, ((((uint16_t) currently_receiving[0]) << 8) | currently_receiving[1]));
 
-    return validate_incoming_data(packet_encode(&incoming_packet)) ? &incoming_packet : NULL;
+    return has_even_parity(packet_encode(&incoming_packet)) ? &incoming_packet : NULL;
 }
 
 void usart_acknowledge() {
