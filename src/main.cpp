@@ -1,11 +1,14 @@
 #include "defines.h"
 #include "render.h"
+#include "segments.h"
+#include "network.h"
 #include "touch.h"
 #include "game.h"
 #include "score.h"
 #include "segments.h"
 
 #include <Arduino.h>
+#include "usart.h"
 
 void timer1_init();
 void tft_brightness_init();
@@ -27,6 +30,7 @@ int main() {
     LOGLN("TFT started!");
 
     timer1_init();
+    network_init();
 
     // Don't read the potentiometer if the dimming of the TFT is disabled.
     #if ENABLE_DIMMING_BACKLIGHT
@@ -47,19 +51,17 @@ int main() {
         // Show the menu.
         button_mode_t mode = menu_loop(menu);
 
-        // Singleplayer/ Multiplayer
-
-        // Paint background black.
-        draw_background(ILI9341_BLACK);
-
         // Set up the game.
         game_init(mode);
         
         // Update the game until it ends.
         while (!game_get_state())
-            game_update();
-
-        score_calculate();
+            if (network_update())
+                game_update();
+        
+        if (!game_is_multiplayer()) {
+            score_calculate();
+        }
         
         // Clean up the game.
         game_free();

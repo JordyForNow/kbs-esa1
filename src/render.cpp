@@ -17,6 +17,8 @@ void draw_tile(int x, int y, tile_t type) {
             draw_rect(x, y, ILI9341_DARKGREY);
             break;
         case BOX:
+        case UPGRADE_BOX_BOMB_COUNT:
+        case UPGRADE_BOX_BOMB_SIZE:
             draw_rect(x, y, ILI9341_BROWN);
             break;
         case EMPTY:

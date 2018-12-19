@@ -1,7 +1,7 @@
 #ifndef DEFINES_H
 #define DEFINES_H
 
-#define DEBUG 1
+#define DEBUG 0
 #define SEGMENTS_ENABLE 1
 
 // Set to 1 if the TFT-backlight is connected to Arduino PIN 10.
@@ -48,10 +48,10 @@
 #define WORLD_HEIGHT 13
 
 // The properties a tile can have.
-#define TILE_MASK_IS_EXPLODING 1
-#define TILE_MASK_IS_BOMB 2
-#define TILE_MASK_IS_SIZE_UPGRADE 4
-#define TILE_MASK_IS_UPGRADE 8
+#define TILE_MASK_IS_EXPLODING 0b0001
+#define TILE_MASK_IS_BOMB 0b0010
+#define TILE_MASK_IS_COUNT_UPGRADE 0b0010
+#define TILE_MASK_IS_UPGRADE 0b1000
 
 // The maximum amount of bombs a player can have.
 #define MAX_BOMB_COUNT 7
@@ -78,6 +78,14 @@
 #else
 #define TFT_CS 10
 #endif /* ENABLE_DIMMING_BACKLIGHT */
+
+/*************
+* Networking *
+*************/
+
+// Usart settings
+#define USART_ENABLED 1
+#define USART_BAUD_RATE 115200
 
 // The STMPE610 uses hardware SPI on the shield, and #8.
 #define STMPE_CS 8

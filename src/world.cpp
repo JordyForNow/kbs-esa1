@@ -1,6 +1,24 @@
 #include "defines.h"
 #include "render.h"
 #include "world.h"
+#include "packet.h"
+#include "network.h"
+
+#define SEED_MASK 0b01111111111
+
+inline void set_box(world_t *world, uint8_t x, uint8_t y) {
+    tile_t tile = BOX;
+    uint8_t random_number = random(100);
+    if (random_number < BOMB_EXPLODE_SIZE_DROP_CHANCE) {
+        // Check if a size power-up should drop.
+        tile = UPGRADE_BOX_BOMB_SIZE;
+    } else if (random_number < BOMB_EXPLODE_SIZE_DROP_CHANCE + BOMB_COUNT_UPGRADE_CHANCE) {
+        // Check if a bomb count power-up should drop.
+        tile = UPGRADE_BOX_BOMB_COUNT;
+    }
+
+    world_set_tile(world, x, y, tile);
+}
 
 world_t *world_new(uint8_t player_count) {
     world_t *world = (world_t *)calloc(sizeof(world_t), 1);
@@ -35,11 +53,15 @@ void world_free(world_t *world) {
     free(world);
 }
 
-void world_generate(world_t *world, unsigned long seed){
+void world_generate(world_t *world, uint16_t seed){
     world_generate(world, seed, BUTTON_MODE_SINGLEPLAYER_RANDOM);
 }
 
-void world_generate(world_t *world, unsigned long seed, button_mode_t mode) {
+void world_generate(world_t *world, uint16_t seed, button_mode_t mode) {
+    // Clear the screen.
+    draw_background(ILI9341_BLACK);
+    
+    // Set the seed for the generation of the map.
     randomSeed(seed);
 
     for (int y = 0; y < WORLD_HEIGHT; y++) {
@@ -55,13 +77,13 @@ void world_generate(world_t *world, unsigned long seed, button_mode_t mode) {
                     // Put boxes in the 3 horizontal and vertical center rows and colums.
                     if ((x > WORLD_WIDTH / 2 - 2 && x  < WORLD_WIDTH / 2 + 2 )
                     || ( y > WORLD_HEIGHT / 2 - 2 && y < WORLD_HEIGHT / 2 + 2)) { 
-                        world_set_tile(world, x, y, BOX);
+                        set_box(world, x, y);
                     }
                 } else if (mode == BUTTON_MODE_SINGLEPLAYER_FULL) {
-                    world_set_tile(world, x, y, BOX);
+                    set_box(world, x, y);
                 } else {
                     if (random(0, 2)) { 
-                        world_set_tile(world, x, y, BOX);
+                        set_box(world, x, y);
                     }
                 }
             }
@@ -82,11 +104,34 @@ void world_generate(world_t *world, unsigned long seed, button_mode_t mode) {
     world->boxes = world_count_boxes(world);
 }
 
+bool world_multiplayer_generate(world_t *world, uint16_t seed) {
+    seed &= SEED_MASK;
+
+    packet_setup(seed);
+    
+    menu_waiting = menu_new("Waiting...");
+    menu_draw(menu_waiting);
+
+    while (!network_available()) 
+        network_update();
+    
+    while (1) {
+        packet_t *packet = network_receive();
+        if (packet->id == PACKET_INIT) {
+            world_generate(world, packet->seed ^ seed);
+            menu_free(menu_waiting);
+            return packet->seed <= seed;
+        }
+        network_update();
+    }
+}
+
 uint8_t world_count_boxes(world_t *world) {
     uint8_t total = 0;
     for (int y = 0; y < WORLD_HEIGHT; y++) {
         for (int x = 0; x < WORLD_WIDTH; x++) {
-            if (world->tiles[x][y] == BOX) {
+            tile_t tile = world_get_tile(world, x, y);
+            if (tile == BOX || tile == UPGRADE_BOX_BOMB_COUNT || tile == UPGRADE_BOX_BOMB_SIZE) {
                 total++;
             }
         }
@@ -136,11 +181,28 @@ void world_update(world_t *world, uint8_t inputs) {
 
 uint8_t world_set_tile(world_t *world, uint8_t x, uint8_t y, tile_t tile) {
     // Do not accidentally override walls.
-    if (world->tiles[x][y] == WALL)
+    if (world_get_tile(world, x, y) == WALL)
         return 0;
+    
+    // Set data in specific nibble.
+    int index_x = x / 2;
+    int nibble = x % 2;
 
-    world->tiles[x][y] = tile;
+    // Set most significant or least significant four bits.
+    if (!nibble) {
+        // Reset bits.
+        world->tiles[index_x][y] &= ~0xF0;
+        // Set bits.
+        world->tiles[index_x][y] |= (tile << 4) & 0xF0;
+    } else {
+        // Reset bits.
+        world->tiles[index_x][y] &= ~0xF;
+        // Set bits
+        world->tiles[index_x][y] |= tile & 0xF;
+    }
+
     world_redraw_tile(world, x, y);
+
     return 1;
 }
 
@@ -153,11 +215,23 @@ int world_get_box_count(world_t *world) {
 }
 
 tile_t world_get_tile(world_t *world, uint8_t x, uint8_t y) {
-    return world->tiles[x][y];
+    // Retrieve data from specific nibble.
+    uint8_t tile = 0;
+    int index_x = x / 2;
+    int nibble = x % 2;
+
+    // Retrieve most significant or least significant four bits.
+    if (!nibble) {
+        tile |= (world->tiles[index_x][y] >> 4);
+    } else {
+        tile = (world->tiles[index_x][y] & 0xF);
+    }
+
+    return (tile_t)tile;
 }
 
 void world_redraw_tile(world_t *world, uint8_t x, uint8_t y) {
-    draw_tile(x, y, world->tiles[x][y]);
+    draw_tile(x, y, world_get_tile(world, x, y));
 
     player_t *player = world_get_player(world, x, y);
     if (player)
@@ -198,10 +272,12 @@ void world_set_explosion_counter(world_t *world, uint8_t x, uint8_t y, uint8_t v
     if (x) {
         // Reset bits.
         world->tile_explosion_duration[index_x][y] &= ~0xF0;
+        // Set bits.
         world->tile_explosion_duration[index_x][y] |= (value << 4) & 0xF0;
     } else {
         // Reset bits.
         world->tile_explosion_duration[index_x][y] &= ~0xF;
+        // Set bits.
         world->tile_explosion_duration[index_x][y] |= value & 0xF;
     }
 }
