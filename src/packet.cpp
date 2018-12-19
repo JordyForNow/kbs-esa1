@@ -2,15 +2,18 @@
 #include "defines.h"
 #include "network.h"
 
-#define ID_POS 11
-#define ID_SIZE 0b111
-#define FIRST_DATA_POS 1
-#define SECOND_DATA_POS 6
+// The position in the uint16 of all the packet elements. 
+#define ID_POSITION 11
+#define X_POSITION 1
+#define Y_POSITION 6
+#define SEED_POSITION 1
+#define SIZE_POSITION 1
 
-// This is used for 5 bits data.
-#define DATA_SIZE 0b11111
-// This is used for 10 bits data.
-#define BIG_DATA_SIZE 0b1111111111
+// The masks for all packet elements.
+#define ID_MASK 0b111
+#define LOCATION_MASK 0b11111
+#define BOMB_SIZE_MASK 0b11111
+#define SEED_MASK 0b1111111111
 
 inline void packet_send(packet_t packet) {
     // Look at the packet as if it's an uint16_t.
@@ -26,30 +29,30 @@ inline void packet_send(packet_t packet) {
 uint16_t packet_encode(packet_t *p) {
     switch (p->id) {
         case INIT:
-            return (p->id << ID_POS) | (p->seed << FIRST_DATA_POS) | (p->parity);
+            return (p->id << ID_POSITION) | (p->seed << SEED_POSITION) | (p->parity);
         case PLACE_BOMB: 
-            return (p->id << ID_POS) | (p->size << FIRST_DATA_POS) | (p->parity);
+            return (p->id << ID_POSITION) | (p->size << SIZE_POSITION) | (p->parity);
         default:
-            return (p->id << ID_POS) + (p->x << SECOND_DATA_POS) + (p->y << FIRST_DATA_POS) + (p->parity);
+            return (p->id << ID_POSITION) + (p->x << X_POSITION) + (p->y << Y_POSITION) + (p->parity);
     }
 }
 
 void packet_decode(packet_t *p, uint16_t to_decode) {
     
     // Get the method type from the incoming data.
-    p->id = (identifier_t) ((to_decode >> ID_POS) & ID_SIZE);
+    p->id = (identifier_t) ((to_decode >> ID_POSITION) & ID_MASK);
 
     // Fill the packet based on the method type.
     switch (p->id) {
         case INIT:
-            p->seed = (to_decode >> FIRST_DATA_POS) & BIG_DATA_SIZE;
+            p->seed = (to_decode >> SEED_POSITION) & SEED_MASK;
             break;
         case PLACE_BOMB: 
-            p->size = (to_decode >> FIRST_DATA_POS) & DATA_SIZE;
+            p->size = (to_decode >> SIZE_POSITION) & BOMB_SIZE_MASK;
             break;
         default:
-            p->x = (to_decode >> SECOND_DATA_POS) & DATA_SIZE;
-            p->y = (to_decode >> FIRST_DATA_POS) & DATA_SIZE;
+            p->x = (to_decode >> X_POSITION) & LOCATION_MASK;
+            p->y = (to_decode >> Y_POSITION) & LOCATION_MASK;
     }
 
     p->parity = to_decode & 0b1;
