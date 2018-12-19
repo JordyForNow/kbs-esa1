@@ -31,7 +31,7 @@ struct world_t;
 #include "player.h"
 
 typedef struct world_t {
-    tile_t tiles[WORLD_WIDTH][WORLD_HEIGHT];
+    uint8_t tiles[WORLD_WIDTH / 2 + 1][WORLD_HEIGHT];
     uint8_t tile_explosion_duration[(WORLD_WIDTH - 1) / 2][WORLD_HEIGHT - 2];
     player_t **players;
     uint8_t player_count;
