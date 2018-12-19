@@ -85,7 +85,7 @@ void bomb_explode(world_t *world, bomb_t *bomb) {
             if (tile_temp == WALL) {
                 // A wall can't be broken.
                 break;
-            } else if (tile_temp == BOX || tile_temp == UPGRAGE_BOX_BOM_COUNT || tile_temp == UPGRAGE_BOX_BOM_SIZE) {
+            } else if (tile_temp == BOX || tile_temp == UPGRAGE_BOX_BOMB_COUNT || tile_temp == UPGRAGE_BOX_BOMB_SIZE) {
                 // Subtract 1 from the total number of boxes and stop the explosion.
                 bomb_explode_tile(world, x_temp, y_temp, false);
                 world_subtract_boxes(world, 1);

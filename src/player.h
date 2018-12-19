@@ -21,7 +21,6 @@ typedef struct player_t {
 } player_t;
 
 player_t *player_new(uint8_t x, uint8_t y, uint8_t is_main);
-player_t *player_new(uint8_t x, uint8_t y, uint8_t is_main, uint8_t bombs);
 void player_free(player_t *player);
 
 void player_update(world_t *world, player_t *player, uint8_t inputs);
