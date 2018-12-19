@@ -11,7 +11,6 @@ volatile bool acknowledged = false;
 volatile bool first_byte = true;
 uint8_t currently_sending[2], currently_receiving[2];
 packet_t incoming_packet;
-bool waiting = false;
 
 void usart_init() {
     // Enable double speed.
@@ -47,10 +46,8 @@ void send_bytes() {
 
 bool usart_update() {
     // The game should be halted because the networking trafic has not been acknowledged yet.
-    if (waiting && !acknowledged)
+    if (!acknowledged)
         return false;
-
-    waiting = false;
 
     if (buffer_available(outgoing_data) < 2)
         return true;
@@ -59,7 +56,6 @@ bool usart_update() {
     buffer_read(outgoing_data, currently_sending, 2);
 
     send_bytes();
-    waiting = true;
     acknowledged = false;
     return true;
 }

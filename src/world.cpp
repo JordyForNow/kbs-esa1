@@ -131,7 +131,7 @@ uint8_t world_count_boxes(world_t *world) {
     for (int y = 0; y < WORLD_HEIGHT; y++) {
         for (int x = 0; x < WORLD_WIDTH; x++) {
             tile_t tile = world->tiles[x][y];
-            if ( tile == BOX || tile == UPGRADE_BOX_BOMB_COUNT || tile == UPGRADE_BOX_BOMB_SIZE ) {
+            if (tile == BOX || tile == UPGRADE_BOX_BOMB_COUNT || tile == UPGRADE_BOX_BOMB_SIZE) {
                 total++;
             }
         }

@@ -9,8 +9,8 @@
 // The possible items a tile can contain.
 // LSB says it's a power up.
 // MSB says it's exploding.
-// If its a power up the left middle bit represents if the upgrade is in a box
-// and the right middle bit says the type of upgrade. 
+// If its a power up then the left middle bit represents if the upgrade is in a box
+// and the right middle bit says which type the upgrade is. 
 typedef enum {
     EMPTY = 0b0000,
     BOMB = 0b0010,

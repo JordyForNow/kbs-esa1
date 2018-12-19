@@ -187,7 +187,7 @@ void menus_new() {
     menu_set_component(menu_main, 1, button_new("High scores", menu_score, BUTTON_MODE_DEFAULT));
 
     // menu_play
-    menu_set_component(menu_play, 1, button_new("Multiplayer", NULL, BUTTON_MODE_MULTIPLAYER ));
+    menu_set_component(menu_play, 1, button_new("Multiplayer", NULL, BUTTON_MODE_MULTIPLAYER));
     menu_set_component(menu_play, 0, button_new("Singleplayer", menu_select_level, BUTTON_MODE_DEFAULT));
     menu_set_component(menu_play, 3, button_new("Back", menu_main, BUTTON_MODE_DEFAULT));
 
@@ -198,7 +198,7 @@ void menus_new() {
     menu_set_component(menu_select_level, 3, button_new("Back", menu_play, BUTTON_MODE_DEFAULT));
 
     // menu_score
-    // Get the 3 highest scores from eeprom and display them in a list.
+    // Get the 3 highest scores from EEPROM and display them in a list.
     char label[15];
     for (int i = 0; i < 3; i++) {
         menu_set_component(menu_score, i, label_new(menu_get_score(i, label)));
