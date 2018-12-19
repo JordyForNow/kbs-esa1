@@ -78,6 +78,7 @@ void world_generate(world_t *world, unsigned long seed, button_mode_t mode) {
         world_set_tile(world, (WORLD_WIDTH - 1 - i), (WORLD_HEIGHT - 2), EMPTY);
         world_set_tile(world, (WORLD_WIDTH - 2), (WORLD_HEIGHT - 1 - i), EMPTY);
     }
+    world_set_tile(world, 5, 5, WALL);
 
     world->boxes = world_count_boxes(world);
 }
@@ -86,7 +87,7 @@ uint8_t world_count_boxes(world_t *world) {
     uint8_t total = 0;
     for (int y = 0; y < WORLD_HEIGHT; y++) {
         for (int x = 0; x < WORLD_WIDTH; x++) {
-            if (world->tiles[x][y] == BOX) {
+            if (world_get_tile(world, x, y) == BOX) {
                 total++;
             }
         }
@@ -135,12 +136,29 @@ void world_update(world_t *world, uint8_t inputs) {
 }
 
 uint8_t world_set_tile(world_t *world, uint8_t x, uint8_t y, tile_t tile) {
-    // Do not accidentally override walls.
-    if (world->tiles[x][y] == WALL)
+    // Do not accidentally override walls
+    if (world_get_tile(world, x, y) == WALL)
         return 0;
+    
+    // Set data in specific nibble.
+    int index_x = x / 2;
+    int nibble = x % 2;
 
-    world->tiles[x][y] = tile;
+    // Set most significant or least significant four bits.
+    if (!nibble) {
+        // Reset bits.
+        world->tiles[index_x][y] &= ~0xF0;
+        // Set bits.
+        world->tiles[index_x][y] |= (tile << 4) & 0xF0;
+    } else {
+        // Reset bits.
+        world->tiles[index_x][y] &= ~0xF;
+        // Set bits
+        world->tiles[index_x][y] |= tile & 0xF;
+    }
+
     world_redraw_tile(world, x, y);
+
     return 1;
 }
 
@@ -153,11 +171,23 @@ int world_get_box_count(world_t *world) {
 }
 
 tile_t world_get_tile(world_t *world, uint8_t x, uint8_t y) {
-    return world->tiles[x][y];
+    // Retrieve data from specific nibble.
+    uint8_t tile = 0;
+    int index_x = x / 2;
+    int nibble = x % 2;
+
+    // Retrieve most significant or least significant four bits.
+    if (!nibble) {
+        tile |= (world->tiles[index_x][y] >> 4);
+    } else {
+        tile = (world->tiles[index_x][y] & 0xF);
+    }
+
+    return (tile_t)tile;
 }
 
 void world_redraw_tile(world_t *world, uint8_t x, uint8_t y) {
-    draw_tile(x, y, world->tiles[x][y]);
+    draw_tile(x, y, world_get_tile(world, x, y));
 
     player_t *player = world_get_player(world, x, y);
     if (player)
@@ -198,10 +228,12 @@ void world_set_explosion_counter(world_t *world, uint8_t x, uint8_t y, uint8_t v
     if (x) {
         // Reset bits.
         world->tile_explosion_duration[index_x][y] &= ~0xF0;
+        // Set bits.
         world->tile_explosion_duration[index_x][y] |= (value << 4) & 0xF0;
     } else {
         // Reset bits.
         world->tile_explosion_duration[index_x][y] &= ~0xF;
+        // Set bits.
         world->tile_explosion_duration[index_x][y] |= value & 0xF;
     }
 }
