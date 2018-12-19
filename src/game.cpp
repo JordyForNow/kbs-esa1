@@ -1,12 +1,12 @@
 #include "defines.h"
+#include "network.h"
 #include "render.h"
+#include "touch.h"
 #include "game.h"
 #include "world.h"
 #include "player.h"
 #include "score.h"
 #include "segments.h"
-#include "touch.h"
-#include "world.h"
 
 volatile bool should_poll = false;
 static int should_update = 0;
@@ -30,6 +30,7 @@ inline player_t *get_opponent() {
         if (!world->players[i]->is_main)
             return world->players[i];
     }
+    return NULL;
 }
 
 inline bool has_game_ended() {
@@ -185,6 +186,7 @@ player_t *game_get_local_player() {
         if (world->players[i]->is_main)
             return world->players[i];
     }
+    return NULL;
 }
 
 void game_free() {

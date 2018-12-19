@@ -1,8 +1,8 @@
 #include "defines.h"
+#include "network.h"
+#include "packet.h"
 #include "render.h"
 #include "world.h"
-#include "packet.h"
-#include "network.h"
 
 #define SEED_MASK 0b01111111111
 

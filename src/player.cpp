@@ -1,5 +1,4 @@
 #include "defines.h"
-#include "game.h"
 #include "packet.h"
 #include "render.h"
 #include "game.h"

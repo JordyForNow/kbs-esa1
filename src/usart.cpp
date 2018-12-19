@@ -1,7 +1,7 @@
-#include "usart.h"
 #include "defines.h"
-#include "game.h"
+#include "usart.h"
 #include "buffer.h"
+#include "game.h"
 
 #define BUFFER_MAXIMUM_CAPACITY 16
 #define NETWORK_ACK_BYTE 0b11000000
