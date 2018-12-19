@@ -34,7 +34,7 @@ inline player_t *get_opponent() {
 }
 
 inline bool has_game_ended() {
-    // Check if the player1 has died.
+    // Check if the player has died.
     if (!(game_get_local_player())->lives)
         game_state = GAME_STATE_LOST;
 
@@ -52,13 +52,13 @@ inline bool has_game_ended() {
 }
 
 inline void opponent_move(uint8_t x, uint8_t y) {
-    player_t *player1 = get_opponent();
+    player_t *player = get_opponent();
 
-    uint8_t oldx = player1->x;
-    uint8_t oldy = player1->y;
+    uint8_t oldx = player->x;
+    uint8_t oldy = player->y;
 
-    player1->x = x;
-    player1->y = y;
+    player->x = x;
+    player->y = y;
 
     tile_t tile = world_get_tile(world, x, y);
 
@@ -67,24 +67,24 @@ inline void opponent_move(uint8_t x, uint8_t y) {
     }
 
     world_redraw_tile(world, oldx, oldy);
-    draw_player(player1);
+    draw_player(player);
 }
 
 inline void opponent_place_bomb(uint8_t size) {
-    player_t *player1 = get_opponent();
-    player1->bomb_size = size;
-    int bomb_index = bomb_allowed(player1, world);
+    player_t *player = get_opponent();
+    player->bomb_size = size;
+    int bomb_index = bomb_allowed(player, world);
 
     if (bomb_index < MAX_BOMB_COUNT) {
-        player_place_bomb(world, player1, bomb_index);
+        player_place_bomb(world, player, bomb_index);
     }
 }
 
 inline void opponent_lose_live(uint8_t x, uint8_t y) {
-    player_t *player1 = get_opponent();
-    player1->hit_duration = 0;
+    player_t *player = get_opponent();
+    player->hit_duration = 0;
 
-    player_on_hit(player1);
+    player_on_hit(player);
 
     opponent_move(x, y);
 }
