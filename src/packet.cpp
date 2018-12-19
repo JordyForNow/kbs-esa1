@@ -28,9 +28,9 @@ inline void packet_send(packet_t packet) {
 
 uint16_t packet_encode(packet_t *p) {
     switch (p->id) {
-        case INIT:
+        case PACKET_INIT:
             return (p->id << ID_POSITION) | (p->seed << SEED_POSITION) | (p->parity);
-        case PLACE_BOMB: 
+        case PACKET_PLACE_BOMB: 
             return (p->id << ID_POSITION) | (p->size << SIZE_POSITION) | (p->parity);
         default:
             return (p->id << ID_POSITION) + (p->x << X_POSITION) + (p->y << Y_POSITION) + (p->parity);
@@ -44,10 +44,10 @@ void packet_decode(packet_t *p, uint16_t to_decode) {
 
     // Fill the packet based on the method type.
     switch (p->id) {
-        case INIT:
+        case PACKET_INIT:
             p->seed = (to_decode >> SEED_POSITION) & SEED_MASK;
             break;
-        case PLACE_BOMB: 
+        case PACKET_PLACE_BOMB: 
             p->size = (to_decode >> SIZE_POSITION) & BOMB_SIZE_MASK;
             break;
         default:
@@ -78,7 +78,7 @@ void packet_send(identifier_t identifier, player_t *player) {
 void packet_send_bomb(uint8_t size) {
      // Construct the packet.
     packet_t packet;
-    packet.id = PLACE_BOMB;
+    packet.id = PACKET_PLACE_BOMB;
     packet.size = size;
     packet.parity = 0;
 
@@ -89,7 +89,7 @@ void packet_send_bomb(uint8_t size) {
 void packet_setup(uint16_t map_seed) {
     // Declare packet variable equal to given map seed.
     packet_t packet;
-    packet.id = INIT;
+    packet.id = PACKET_INIT;
     packet.seed = map_seed;
     packet.parity = 0;
 

@@ -100,7 +100,7 @@ uint8_t player_move(player_t *player, uint8_t inputs, world_t *world, uint8_t re
 
         // Send move player packet.
         if (player->is_main && game_is_multiplayer())
-            packet_send(MOVE, player);
+            packet_send(PACKET_MOVE, player);
 
         world_set_tile(world, new_x, new_y, exploding ? EXPLODING_BOMB : EMPTY);
 
@@ -160,7 +160,7 @@ bool player_on_hit(player_t *player) {
         if (player->is_main) {
             player_show_lives(player);
             if (game_is_multiplayer())
-                packet_send(LOSE_LIVE, player);
+                packet_send(PACKET_LOSE_LIFE, player);
         }
     }
 

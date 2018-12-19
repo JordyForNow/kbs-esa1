@@ -117,13 +117,13 @@ inline void receive_networking_data() {
 
         if (packet) {
             switch (packet->id) {
-                case MOVE:
+                case PACKET_MOVE:
                     opponent_move(packet->x, packet->y);
                     break;
-                case LOSE_LIVE:
+                case PACKET_LOSE_LIFE:
                     opponent_lose_live(packet->x, packet->y);
                     break;
-                case PLACE_BOMB:
+                case PACKET_PLACE_BOMB:
                     opponent_place_bomb(packet->size);
                     break;
                 default:

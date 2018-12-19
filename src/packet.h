@@ -6,10 +6,10 @@
 #include <stdbool.h>
 
 typedef enum __attribute__ ((__packed__)) {
-    MOVE = 0b000,
-    LOSE_LIVE = 0b010,
-    PLACE_BOMB = 0b001,
-    INIT = 0b100,
+    PACKET_MOVE = 0b000,
+    PACKET_LOSE_LIFE = 0b010,
+    PACKET_PLACE_BOMB = 0b001,
+    PACKET_INIT = 0b100,
 } identifier_t;
 
 typedef struct {
