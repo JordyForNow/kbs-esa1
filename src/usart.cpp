@@ -7,7 +7,7 @@
 #define NETWORK_ACK_BYTE 0b11000000
 
 buffer_t * incoming_data, * outgoing_data;
-volatile bool acknowledged = false;
+volatile bool acknowledged = true;
 volatile bool first_byte = true;
 uint8_t currently_sending[2], currently_receiving[2];
 packet_t incoming_packet;
