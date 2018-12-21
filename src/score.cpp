@@ -1,4 +1,5 @@
 #include "score.h"
+
 #include "defines.h"
 #include "game.h"
 #include "player.h"

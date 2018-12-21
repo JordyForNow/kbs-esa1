@@ -1,4 +1,5 @@
 #include "bomb.h"
+
 #include "defines.h"
 #include "player.h"
 #include "world.h"
@@ -43,8 +44,8 @@ bomb_t *bomb_update(world_t *world, bomb_t *bomb) {
 void bomb_explode_tile(world_t *world, uint8_t x, uint8_t y, bool is_origin) {
     tile_t tile = EXPLODING_BOMB;
     player_t *player = world_get_player(world, x, y);
-    if (player && player->is_main && player_on_hit(player))
-        LOGLN("Damage from exploding bomb");
+    if (player && player->is_main)
+        player_on_hit(player);
 
     // Reset the explosion counter of the corresponding tile.
     // X and Y - 1, because the outer walls are not within the tile explosion counter array.

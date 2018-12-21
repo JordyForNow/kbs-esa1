@@ -1,5 +1,6 @@
 #ifndef USART_H
 #define USART_H
+
 #include "packet.h"
 
 #include <stdint.h>
