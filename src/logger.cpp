@@ -17,17 +17,6 @@ void logger_init() {
     #endif
 }
 
-void info(const char *fmt, ...) {
-    #if DEBUG
-    va_list va;
-    va_start(va, fmt);
-    vsnprintf(buff, LOGGER_BUFFER_SIZE - 1, fmt, va);
-    va_end(va);
-
-    serial.print(buff);
-    #endif
-}
-
 void debug(const char *fmt, ...) {
     #if DEBUG
     char buff[LOGGER_BUFFER_SIZE];

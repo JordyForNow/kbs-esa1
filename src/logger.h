@@ -4,7 +4,6 @@
 #include <stdint.h>
 
 void logger_init();
-void info(const char *fmt, ...);
 void debug(const char *fmt, ...);
 void debug_bits(uint32_t num, uint8_t bits);
 
