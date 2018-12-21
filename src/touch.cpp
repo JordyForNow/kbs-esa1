@@ -2,6 +2,7 @@
 
 #include "defines.h"
 #include "game.h"
+#include "logger.h"
 #include "score.h"
 #include "render.h"
 
