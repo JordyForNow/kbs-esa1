@@ -7,7 +7,7 @@
 #define BUFFER_MAXIMUM_CAPACITY 16
 #define NETWORK_ACK_BYTE 0b11000000
 
-buffer_t * incoming_data, * outgoing_data;
+buffer_t incoming_data, outgoing_data;
 volatile bool acknowledged = true;
 volatile bool first_byte = true;
 uint8_t currently_sending[2], currently_receiving[2];
@@ -30,8 +30,8 @@ void usart_init() {
     #endif /* USART_ENABLED */
 
     // Create the incoming and outgoing data buffers.
-    incoming_data = buffer_new(BUFFER_MAXIMUM_CAPACITY);
-    outgoing_data = buffer_new(BUFFER_MAXIMUM_CAPACITY);
+    buffer_init(&incoming_data);
+    buffer_init(&outgoing_data);
 }
 
 void usart_wait_until_available() {
@@ -50,11 +50,11 @@ bool usart_update() {
     if (!acknowledged)
         return false;
 
-    if (buffer_available(outgoing_data) < 2)
+    if (buffer_available(&outgoing_data) < 2)
         return true;
 
     // Read the ints that need to be send into the currently sending array so they can be reused during retries.
-    buffer_read(outgoing_data, currently_sending, 2);
+    buffer_read(&outgoing_data, currently_sending, 2);
 
     send_bytes();
     acknowledged = false;
@@ -62,16 +62,16 @@ bool usart_update() {
 }
 
 void usart_send(uint16_t bytes) {
-    buffer_write(outgoing_data, bytes >> 8);
-    buffer_write(outgoing_data, bytes);
+    buffer_write(&outgoing_data, bytes >> 8);
+    buffer_write(&outgoing_data, bytes);
 }
 
 packet_t* usart_receive() {
-    if (buffer_available(incoming_data) < 2)
+    if (buffer_available(&incoming_data) < 2)
         return NULL;
 
     // Read two bytes into the currently_receiving array.
-    buffer_read(incoming_data, currently_receiving, 2);
+    buffer_read(&incoming_data, currently_receiving, 2);
 
     // Interpret the two bytes in currently_receiving as a packet.
     packet_decode(&incoming_packet, ((((uint16_t) currently_receiving[0]) << 8) | currently_receiving[1]));
@@ -85,12 +85,12 @@ void usart_acknowledge() {
 }
 
 bool usart_available() {
-    return buffer_available(incoming_data) >= 2;
+    return buffer_available(&incoming_data) >= 2;
 }
 
 void usart_clear() {
-    buffer_clear(incoming_data);
-    buffer_clear(outgoing_data);
+    buffer_init(&incoming_data);
+    buffer_init(&outgoing_data);
 }
 
 #if USART_ENABLED
@@ -101,9 +101,9 @@ ISR(USART_RX_vect) {
         return;
     }
     first_byte = !first_byte;
-    buffer_write(incoming_data, incoming_byte);
+    buffer_write(&incoming_data, incoming_byte);
 
-    if (!first_byte) 
+    if (!first_byte)
         usart_acknowledge();
 }
 #endif /* USART_ENABLED */
