@@ -83,7 +83,10 @@
 * Networking *
 *************/
 
-// Usart settings
+// Networking inbound and outbound buffer size.
+#define BUFFER_SIZE 16
+
+// Usart settings.
 #define USART_ENABLED 1
 #define USART_BAUD_RATE 115200
 
