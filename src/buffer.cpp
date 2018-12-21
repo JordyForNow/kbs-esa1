@@ -41,9 +41,3 @@ uint8_t buffer_available(buffer_t *buffer) {
 uint8_t buffer_space(buffer_t *buffer) {
     return BUFFER_SIZE - buffer->count;
 }
-
-void buffer_clear(buffer_t *buffer) {
-    buffer->count = 0;
-    buffer->head = 0;
-    buffer->tail = 0;
-}

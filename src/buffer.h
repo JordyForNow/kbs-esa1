@@ -20,6 +20,5 @@ bool buffer_write(buffer_t *buffer, uint8_t value);
 bool buffer_write(buffer_t *buffer, uint8_t *arr, int n);
 uint8_t buffer_available(buffer_t *buffer);
 uint8_t buffer_space(buffer_t *buffer);
-void buffer_clear(buffer_t *buffer);
 
 #endif /* BUFFER_H */

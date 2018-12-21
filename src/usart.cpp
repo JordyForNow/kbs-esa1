@@ -89,8 +89,8 @@ bool usart_available() {
 }
 
 void usart_clear() {
-    buffer_clear(&incoming_data);
-    buffer_clear(&outgoing_data);
+    buffer_init(&incoming_data);
+    buffer_init(&outgoing_data);
 }
 
 #if USART_ENABLED
