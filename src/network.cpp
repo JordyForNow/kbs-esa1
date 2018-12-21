@@ -1,5 +1,8 @@
 #include "network.h"
+
 #include "usart.h"
+
+packet_t incoming_packet;
 
 void network_init() {
     usart_init();
@@ -14,7 +17,8 @@ void network_send(uint16_t data) {
 }
 
 packet_t* network_receive() {
-    return usart_receive();
+    packet_decode(&incoming_packet, usart_receive() );
+    return &incoming_packet;
 }
 
 bool network_available() {

@@ -10,7 +10,6 @@ buffer_t * incoming_data, * outgoing_data;
 volatile bool acknowledged = true;
 volatile bool first_byte = true;
 uint8_t currently_sending[2], currently_receiving[2];
-packet_t incoming_packet;
 
 void usart_init() {
     // Enable double speed.
@@ -65,17 +64,17 @@ void usart_send(uint16_t bytes) {
     buffer_write(outgoing_data, bytes);
 }
 
-packet_t* usart_receive() {
+uint16_t usart_receive() {
     if (buffer_available(incoming_data) < 2)
         return NULL;
 
     // Read two bytes into the currently_receiving array.
     buffer_read(incoming_data, currently_receiving, 2);
 
-    // Interpret the two bytes in currently_receiving as a packet.
-    packet_decode(&incoming_packet, ((((uint16_t) currently_receiving[0]) << 8) | currently_receiving[1]));
+    // Interpret the two bytes in currently_receiving as a uint16_t.
+    uint16_t data = ((((uint16_t) currently_receiving[0]) << 8) | currently_receiving[1]);
 
-    return has_even_parity(packet_encode(&incoming_packet)) ? &incoming_packet : NULL;
+    return has_even_parity(data) ? data : NULL;
 }
 
 void usart_acknowledge() {
