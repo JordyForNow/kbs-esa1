@@ -109,10 +109,10 @@ uint8_t player_move(player_t *player, uint8_t inputs, world_t *world, uint8_t re
         // Redraw the tile we came from, and draw the player on top of the new tile.
         world_redraw_tile(world, old_x, old_y);
         return 1;
-    } else if (world_get_tile(world, player->x, player->y) == EXPLODING_BOMB && player_on_hit(player)) {
+    } else if (world_get_tile(world, player->x, player->y) == EXPLODING_BOMB) {
         // If we don't want to move or we are unable to, we should check if we
         // are standing inside an explosion. If we are, we might have to take damage.
-        debug("[player] Damage from standing in explosion\n");
+        player_on_hit(player);
     }
 
     return redraw;

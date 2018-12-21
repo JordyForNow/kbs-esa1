@@ -170,7 +170,6 @@ void touch_init() {
         debug("[touch] Couldn't start touchscreen\n");
         while (1);
     }
-    debug("[touch] Touchscreen started\n");
 
     // Use the screen in landscape mode.
     tft.setRotation(1);
