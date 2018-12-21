@@ -2,6 +2,7 @@
 
 #include "defines.h"
 #include "game.h"
+#include "logger.h"
 #include "score.h"
 #include "render.h"
 
@@ -166,10 +167,10 @@ int menu_await_input() {
 
 void touch_init() {
     if (!ts.begin()) {
-        LOGLN("Couldn't start touchscreen");
+        debug("[touch] Couldn't start touchscreen\n");
         while (1);
     }
-    LOGLN("Touchscreen started");
+    debug("[touch] Touchscreen started\n");
 
     // Use the screen in landscape mode.
     tft.setRotation(1);
@@ -218,7 +219,7 @@ void menus_new() {
         menu_set_component(menu_win, 2, label_new(label));
         win_pos = 0;
     }
-    
+
     menu_set_component(menu_win, win_pos, label_new("You win!"));
     menu_set_component(menu_win, 3, button_new("Back", menu_main, BUTTON_MODE_DEFAULT));
 }

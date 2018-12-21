@@ -1,5 +1,6 @@
 #include "defines.h"
 #include "game.h"
+#include "logger.h"
 #include "network.h"
 #include "render.h"
 #include "score.h"
@@ -7,7 +8,7 @@
 #include "touch.h"
 #include "usart.h"
 
-#include <Arduino.h>
+#include <Wire.h>
 
 void timer1_init();
 void tft_brightness_init();
@@ -23,10 +24,10 @@ int main() {
     nunchuck_init();
 
     // Serial.begin() but only if DEBUG is high.
-    LOG_INIT();
+    logger_init();
 
     tft.begin();
-    LOGLN("TFT started!");
+    debug("[main] TFT started!\n");
 
     timer1_init();
     network_init();
@@ -52,16 +53,16 @@ int main() {
 
         // Set up the game.
         game_init(mode);
-        
+
         // Update the game until it ends.
         while (!game_get_state())
             if (network_update())
                 game_update();
-        
+
         if (!game_is_multiplayer()) {
             score_calculate();
         }
-        
+
         // Clean up the game.
         game_free();
 
@@ -82,7 +83,7 @@ ISR(TIMER1_OVF_vect) {
 void timer1_init() {
     cli();
 
-    LOGLN("Setting up Timer1");
+    debug("[main] Setting up Timer1\n");
 
     // Set up the timer in Fast PWM mode with the top at OCR1A.
     TCCR1A = (1 << WGM10) | (1 << WGM11);
@@ -125,7 +126,7 @@ void adc_init() {
 
     // Use A0 as the input for the ADC.
     ADMUX = 0x00;
-    
+
     // Turn on reference voltage.
     ADMUX |= (1 << REFS0);
 
@@ -137,14 +138,14 @@ void adc_init() {
 
     // Interrupt on Timer1 compare match B.
     ADCSRB = (1 << ADTS2) | (1 << ADTS1);
-    
+
     // Trigger first update.
     ADCSRA |= (1 << ADSC);
 }
 
 // This interrupt is thrown when the ADC is ready with the conversion.
 // The value from the ADC is from 0-1023 and needs to be mapped to 0-TIMER1_TOP.
-// The mapped value is put in OCR1B to set the right duty cycle so that 
+// The mapped value is put in OCR1B to set the right duty cycle so that
 // the TFT has the right brightness.
 ISR(ADC_vect) {
     OCR1B = map(ADC, 0, 1023, 0, TIMER1_TOP);

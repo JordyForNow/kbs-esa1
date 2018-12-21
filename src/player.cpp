@@ -3,6 +3,7 @@
 #include "bomb.h"
 #include "defines.h"
 #include "game.h"
+#include "logger.h"
 #include "packet.h"
 #include "render.h"
 #include "segments.h"
@@ -70,7 +71,7 @@ uint8_t player_move(player_t *player, uint8_t inputs, world_t *world, uint8_t re
     tile_t new_tile = world_get_tile(world, new_x, new_y);
 
     // Check if we want to and can move into the new tile.
-    if ((new_x != player->x || new_y != player->y) && (new_tile != WALL && new_tile != BOX 
+    if ((new_x != player->x || new_y != player->y) && (new_tile != WALL && new_tile != BOX
     && new_tile != BOMB && new_tile != UPGRADE_BOX_BOMB_COUNT && new_tile != UPGRADE_BOX_BOMB_SIZE)) {
         // Store where we were, so we can redraw the tile once we've moved.
         uint8_t old_x = player->x;
@@ -111,7 +112,7 @@ uint8_t player_move(player_t *player, uint8_t inputs, world_t *world, uint8_t re
     } else if (world_get_tile(world, player->x, player->y) == EXPLODING_BOMB && player_on_hit(player)) {
         // If we don't want to move or we are unable to, we should check if we
         // are standing inside an explosion. If we are, we might have to take damage.
-        LOGLN("Damage from standing in explosion");
+        debug("[player] Damage from standing in explosion\n");
     }
 
     return redraw;
