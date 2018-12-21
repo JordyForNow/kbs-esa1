@@ -8,7 +8,7 @@
 #include "touch.h"
 #include "usart.h"
 
-#include <Wire.h>
+#include <Arduino.h>
 
 void timer1_init();
 void tft_brightness_init();
