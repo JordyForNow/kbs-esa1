@@ -4,8 +4,8 @@
 #include "player.h"
 #include "touch.h"
 
-#include <nunchuck_funcs.h>
 #include <stdbool.h>
+#include <nunchuck_funcs.h>
 
 typedef enum {
     GAME_STATE_RUNNING,

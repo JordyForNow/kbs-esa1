@@ -1,11 +1,13 @@
 #include "defines.h"
 #include "game.h"
-#include "render.h"
-#include "segments.h"
 #include "network.h"
-#include "touch.h"
+#include "render.h"
 #include "score.h"
+#include "segments.h"
+#include "touch.h"
 #include "usart.h"
+
+#include <Arduino.h>
 
 void timer1_init();
 void tft_brightness_init();

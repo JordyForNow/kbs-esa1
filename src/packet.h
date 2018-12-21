@@ -1,5 +1,6 @@
 #ifndef PACKET_H
 #define PACKET_H
+
 #include "player.h"
 
 #include <stdint.h>

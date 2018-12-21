@@ -1,5 +1,6 @@
 #ifndef NETWORK_H
 #define NETWORK_H
+
 #include "packet.h"
 
 #include <stdint.h>

@@ -1,4 +1,5 @@
 #include "network.h"
+
 #include "usart.h"
 
 void network_init() {

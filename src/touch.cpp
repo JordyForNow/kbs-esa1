@@ -1,8 +1,9 @@
 #include "touch.h"
+
 #include "defines.h"
-#include "render.h"
-#include "score.h"
 #include "game.h"
+#include "score.h"
+#include "render.h"
 
 Adafruit_STMPE610 ts = Adafruit_STMPE610(STMPE_CS);
 
