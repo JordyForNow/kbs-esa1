@@ -17,7 +17,7 @@ void network_send(uint16_t data) {
 }
 
 packet_t* network_receive() {
-    packet_decode(&incoming_packet, usart_receive() );
+    packet_decode(&incoming_packet, usart_receive());
     return &incoming_packet;
 }
 
