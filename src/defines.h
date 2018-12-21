@@ -110,19 +110,4 @@
 // Extra color(s) to use in the screen.
 #define ILI9341_BROWN 0x6100
 
-// Logging macros that only do something when DEBUG is enabled.
-// They print messages in the following style: [src/game.cpp] updating().
-// It includes the source file where the logging call originated from.
-#if DEBUG
-// If DEBUG is enabled, enable logging.
-#define LOG_INIT() Serial.begin(115200);
-#define LOG(msg) Serial.print("[" __FILE__ "] " msg);
-#define LOGLN(msg) Serial.println("[" __FILE__ "] " msg);
-#else
-// If DEBUG is disabled, don't log anything.
-#define LOG_INIT() {};
-#define LOG(msg) {};
-#define LOGLN(msg) {};
-#endif /* DEBUG */
-
 #endif /* DEFINES_H */
