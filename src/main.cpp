@@ -27,8 +27,6 @@ int main() {
     logger_init();
 
     tft.begin();
-    debug("[main] TFT started!\n");
-
     timer1_init();
     network_init();
 
@@ -82,8 +80,6 @@ ISR(TIMER1_OVF_vect) {
 
 void timer1_init() {
     cli();
-
-    debug("[main] Setting up Timer1\n");
 
     // Set up the timer in Fast PWM mode with the top at OCR1A.
     TCCR1A = (1 << WGM10) | (1 << WGM11);

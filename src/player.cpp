@@ -3,7 +3,6 @@
 #include "bomb.h"
 #include "defines.h"
 #include "game.h"
-#include "logger.h"
 #include "packet.h"
 #include "render.h"
 #include "segments.h"

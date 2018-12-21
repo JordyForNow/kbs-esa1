@@ -1,7 +1,6 @@
 #include "bomb.h"
 
 #include "defines.h"
-#include "logger.h"
 #include "player.h"
 #include "world.h"
 
