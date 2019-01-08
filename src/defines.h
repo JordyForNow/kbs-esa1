@@ -1,7 +1,7 @@
 #ifndef DEFINES_H
 #define DEFINES_H
 
-#define DEBUG 1
+#define DEBUG 0
 #define SEGMENTS_ENABLE 1
 
 // Set to 1 if the TFT-backlight is connected to Arduino PIN 10.
