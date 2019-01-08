@@ -2,7 +2,6 @@
 #define INFRALED_H
 
 #include <stdint.h>
-#include <SoftwareSerial.h>
 
 typedef enum {
     IR_FREQ_38K = 53,
