@@ -13,7 +13,6 @@ bool network_update();
 void  network_send(uint16_t data);
 packet_t* network_receive();
 bool network_available();
-void network_resend();
 void network_clear();
 
 #endif /* NETWORK_H */
