@@ -1,9 +1,9 @@
 #ifndef INFRALED_H
 #define INFRALED_H
 
-#include <stdint.h>
-#include <avr/io.h>
 #include <avr/interrupt.h>
+#include <avr/io.h>
+#include <stdint.h>
 
 typedef enum {
     IR_FREQ_38K = 53,
