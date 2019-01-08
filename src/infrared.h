@@ -24,4 +24,4 @@ uint8_t ir_space();
 
 void ir_clear();
 
-#endif
+#endif /* INFRARED_H */
