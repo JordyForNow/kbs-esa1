@@ -394,7 +394,6 @@ ISR(INT0_vect) {
     // Store the bit.
     recv_data |= (uint32_t)(length > 4) << recv_data_bits;
     recv_data_bits++;
-    // debug("[recv] bit=%u\tlen=%u\tval=%u\n", recv_data_bits - 1, length, length > 4);
 
     // Store the byte, when necessary.
     if (recv_data_bits == FRAME_BITS_PAYLOAD
