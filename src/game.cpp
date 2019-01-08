@@ -192,6 +192,7 @@ player_t *game_get_local_player() {
 
 void game_free() {
     world_free(world);
+    network_disable();
     network_clear();
     segments_hide();
 }

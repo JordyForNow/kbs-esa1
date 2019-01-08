@@ -1,7 +1,7 @@
 #ifndef DEFINES_H
 #define DEFINES_H
 
-#define DEBUG 0
+#define DEBUG 1
 #define SEGMENTS_ENABLE 1
 
 // Set to 1 if the TFT-backlight is connected to Arduino PIN 10.
@@ -87,8 +87,12 @@
 #define BUFFER_SIZE 16
 
 // Usart settings.
-#define USART_ENABLED 1
+#define USART_ENABLED 0
 #define USART_BAUD_RATE 115200
+
+// IR settings.
+#define IR_ENABLED (!USART_ENABLED)
+#define IR_FREQUENCY IR_FREQ_56K
 
 // The STMPE610 uses hardware SPI on the shield, and #8.
 #define STMPE_CS 8
