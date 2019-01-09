@@ -61,7 +61,7 @@ void world_generate(world_t *world, uint16_t seed){
 void world_generate(world_t *world, uint16_t seed, button_mode_t mode) {
     // Clear the screen.
     draw_background(ILI9341_BLACK);
-    
+
     // Set the seed for the generation of the map.
     randomSeed(seed);
 
@@ -77,13 +77,13 @@ void world_generate(world_t *world, uint16_t seed, button_mode_t mode) {
                 } else if (mode == BUTTON_MODE_SINGLEPLAYER_PLUS) {
                     // Put boxes in the 3 horizontal and vertical center rows and colums.
                     if ((x > WORLD_WIDTH / 2 - 2 && x  < WORLD_WIDTH / 2 + 2 )
-                    || ( y > WORLD_HEIGHT / 2 - 2 && y < WORLD_HEIGHT / 2 + 2)) { 
+                    || ( y > WORLD_HEIGHT / 2 - 2 && y < WORLD_HEIGHT / 2 + 2)) {
                         set_box(world, x, y);
                     }
                 } else if (mode == BUTTON_MODE_SINGLEPLAYER_FULL) {
                     set_box(world, x, y);
                 } else {
-                    if (random(0, 2)) { 
+                    if (random(0, 2)) {
                         set_box(world, x, y);
                     }
                 }
@@ -108,14 +108,15 @@ void world_generate(world_t *world, uint16_t seed, button_mode_t mode) {
 bool world_multiplayer_generate(world_t *world, uint16_t seed) {
     seed &= SEED_MASK;
 
+    network_enable();
     packet_setup(seed);
-    
+
     menu_waiting = menu_new("Waiting...");
     menu_draw(menu_waiting);
 
-    while (!network_available()) 
+    while (!network_available())
         network_update();
-    
+
     while (1) {
         packet_t *packet = network_receive();
         if (packet->id == PACKET_INIT) {
@@ -166,7 +167,7 @@ void world_update(world_t *world, uint8_t inputs) {
 
                 // Remove exploding bit from nibble.
                 tile = (tile_t)(tile & ~1);
-                
+
                 world_set_tile(world, x + 1, y + 1, tile);
             }
             if (value)
@@ -184,7 +185,7 @@ uint8_t world_set_tile(world_t *world, uint8_t x, uint8_t y, tile_t tile) {
     // Do not accidentally override walls.
     if (world_get_tile(world, x, y) == WALL)
         return 0;
-    
+
     // Set data in specific nibble.
     int index_x = x / 2;
     int nibble = x % 2;
