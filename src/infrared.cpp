@@ -3,24 +3,39 @@
 #include "buffer.h"
 #include "logger.h"
 
+// In the IR protocol every "thing" we send is not called a packet, but
+// rather a "frame". There are two types of frames: payload frames and
+// acknowledgement frames. The payload frame consists out of the frame
+// parts: TYPE, ID, PAYLOAD, PAYLOAD and PARITY. The acknowledge frame
+// consists only out of the TYPE and ID parts.
+
+// Each part has defines describing how many bits wide said part is,
+// and a bitmask that can be used to extract those bits.
+
+// The PARITY part of a payload frame.
 #define FRAME_PARITY_BITS 7
 #define FRAME_PARITY_MASK 0b1111111
 #define FRAME_PARITY_DEFAULT 73
 
+// The PAYLOAD part of a payload frame.
 #define FRAME_PAYLOAD_BITS 7
 #define FRAME_PAYLOAD_MASK 0b1111111
 #define FRAME_PAYLOAD_LENGTH 2
 
+// The ID part of a payload or acknowledgement frame.
 #define FRAME_ID_BITS 3
 #define FRAME_ID_MASK 0b111
 #define FRAME_ID_MODULO (FRAME_ID_MASK + 1)
 
+// The TYPE part of a payload or acknowledgement frame.
 #define FRAME_TYPE_BITS 1
 #define FRAME_TYPE_MASK 0b1
 
+// The possible values for the TYPE part of a frame.
 #define FRAME_TYPE_VALUE_ACKNOWLEDGE 0b1
 #define FRAME_TYPE_VALUE_PAYLOAD 0b0
 
+// The amount of bits used by acknowledgement or payload frames.
 #define FRAME_BITS_ACKNOWLEDGE (FRAME_TYPE_BITS + FRAME_ID_BITS)
 #define FRAME_BITS_PAYLOAD (FRAME_TYPE_BITS + FRAME_ID_BITS + \
     (FRAME_PAYLOAD_BITS * FRAME_PAYLOAD_LENGTH) + FRAME_PARITY_BITS)
